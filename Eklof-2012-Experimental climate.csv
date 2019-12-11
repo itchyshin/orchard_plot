@@ -1,0 +1,35 @@
+ExptID,First author,Publication year,Journal,Research group,Year of study,Country,Latitute,Experiment type,Unit area,Unit volume,Salinity group,Plant type,Length,Predator type,Predator density,Nutrient enrichment,Grazer type,Relative amphipods,Relative gastropods,mean_treatment,SD_treatment,SE,N_treatment,mean_control,SD_control,SE,N_control
+1,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1978,usa,27,Lab,0.01,0.02,marine,seagrass,21,Fish,100,0,amphipod,1,1.97,8.8,11.1,5.55,4,4,4.3,2.15,4
+1,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1978,usa,27,Lab,0.01,0.02,marine,seagrass,21,Fish,100,0,gastropod,0.51,1,17.3,9.3,4.65,4,11,4.9,2.45,4
+2,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1978,usa,27,Field,0.25,0.13,marine,seagrass,21,Fish,4,0,amphipod,1,0.39,37.7,41.2,23.79,3,15.3,20,10,4
+2,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1978,usa,27,Field,0.25,0.13,marine,seagrass,21,Fish,4,0,gastropod,2.58,1,14.6,4.5,2.6,3,8.3,4.8,2.4,4
+3,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1979,usa,27,Lab,0.01,0.02,marine,seagrass,21,Shrimp,100,0,amphipod,1,0.17,35.3,26.3,13.15,4,2.5,2.9,1.45,4
+3,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1979,usa,27,Lab,0.01,0.02,marine,seagrass,21,Shrimp,100,0,gastropod,5.88,1,6,3.3,1.65,4,5.3,3.6,1.8,4
+4,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1979,usa,27,Field,0.25,0.13,marine,seagrass,21,Shrimp,4,0,amphipod,1,0.38,36.8,27,13.5,4,2,1.8,0.9,4
+4,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1979,usa,27,Field,0.25,0.13,marine,seagrass,21,Shrimp,4,0,gastropod,2.67,1,13.8,13.9,6.95,4,2.8,2.9,1.45,4
+5,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1979,usa,27,Lab,0.01,0.02,marine,seagrass,21,Shrimp,100,0,amphipod,1,0.05,19.2,21.2,10.6,4,2.3,0.5,0.25,4
+5,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1979,usa,27,Lab,0.01,0.02,marine,seagrass,21,Shrimp,100,0,gastropod,19.2,1,1,1,0.5,4,1.5,1,0.5,4
+6,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1979,usa,27,Field,0.25,0.13,marine,seagrass,21,Shrimp,4,0,amphipod,1,1.32,6.8,5.1,2.94,3,2.8,2.8,1.4,4
+6,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1979,usa,27,Field,0.25,0.13,marine,seagrass,22,Shrimp,4,0,gastropod,0.76,1,9,1.6,0.92,3,1.8,1.5,0.75,4
+7,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1979,usa,27,Lab,0.01,0.02,marine,seagrass,22,Shrimp,100,0,amphipod,1,0.4,20,19,9.5,4,5,6.4,3.2,4
+7,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1979,usa,27,Lab,0.01,0.02,marine,seagrass,22,Shrimp,100,0,gastropod,2.53,1,7.9,11.5,5.75,4,0.5,0.6,0.3,4
+8,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1979,usa,27,Field,0.25,0.13,marine,seagrass,22,Shrimp,4,0,amphipod,1,0.75,13.3,12,6.93,3,54.5,24,12,4
+8,Nelson,1981,Mar. Ecol. Prog. Ser.,nelson,1979,usa,27,Field,0.25,0.13,marine,seagrass,22,Shrimp,4,0,gastropod,1.33,1,10,6.1,3.52,3,11.8,6.8,3.4,4
+9,Richardsson,1998,Ecol. Freshw. Fish,Richard,1996,usa,43,Lab,2.25,2.7,freshwater,freshwater vegetation,42,Fish,4.9,0,amphipod,1,0.19,203.4,74.27,30.32,6,36.98,77.89,31.8,6
+9,Richardsson,1998,Ecol. Freshw. Fish,Richard,1996,usa,43,Lab,2.25,2.7,freshwater,freshwater vegetation,42,Fish,4.9,0,gastropod,5.33,1,38.18,46.15,18.84,6,46.86,46.15,18.84,6
+10,Eriksson,2009,Ecol. Appl.,eriks,2005,sweden,58,Field,0.25,0.25,brackish,macroalgae,70,Fish,na,0,amphipod,1,10.26,0.57,0.37,0.21,3,0.64,0.8,0.46,3
+10,Eriksson,2009,Ecol. Appl.,eriks,2005,sweden,58,Field,0.25,0.25,brackish,macroalgae,70,Fish,na,0,gastropod,0.36,3.73,1.56,0.37,0.21,3,0.43,0.61,0.35,3
+11,Lombardo,1997,Hydrobiologia,lomb,1995,usa,42,Lab,0.09,0.01,brackish,freshwater vegetation,7,Insect,22.2,0,amphipod,1,0,37.93,6.97,4.03,3,28.18,1.11,0.64,3
+11,Lombardo,1997,Hydrobiologia,lomb,1995,usa,42,Lab,0.09,0.01,freshwater,freshwater vegetation,7,Insect,22.2,0,gastropod,1,0,41.95,12.83,7.41,3,25.85,7.71,4.45,3
+12,Lombardo,1997,Hydrobiologia,lomb,1995,usa,42,Lab,0.09,0.01,freshwater,freshwater vegetation,7,Insect,22.2,0,amphipod,0,1,29.48,6.04,3.49,3,27.07,11.73,6.77,3
+12,Lombardo,1997,Hydrobiologia,lomb,1995,usa,42,Lab,0.09,0.01,freshwater,freshwater vegetation,7,Insect,22.2,0,gastropod,0,1,32.1,6.43,3.71,3,28.17,6.65,3.84,3
+13,Baden,2010,Limn. Ocean.,moksnes,2004,sweden,58,Field,0.2025,0.12,marine,seagrass,35,Fish,4.9,1,amphipod,1,1.81,0.14,0.18,0.06,8,0.02,0.04,0.01,8
+13,Baden,2010,Limn. Ocean.,moksnes,2004,sweden,58,Field,0.2025,0.12,marine,seagrass,35,Fish,4.9,1,gastropod,0.55,1,0.25,0.2,0.07,8,0.62,0.46,0.16,8
+14,Moksnes,2008,Oikos,moksnes,2003,sweden,58,Field,0.2025,0.12,marine,seagrass,42,Fish,4.9,0,amphipod,1,0.03,2.68,1.01,0.45,5,0.34,0.25,0.11,5
+14,Moksnes,2008,Oikos,moksnes,2003,sweden,58,Field,0.2025,0.12,marine,seagrass,42,Fish,4.9,1,gastropod,1,0.03,1.2,0.7,0.35,5,0.05,0.2,0.1,5
+15,Moksnes,2008,Oikos,moksnes,2003,sweden,58,Field,0.2025,0.12,marine,seagrass,42,Fish,4.9,0,amphipod,30.82,1,0.09,0.07,0.03,5,1.2,0.71,0.32,5
+15,Moksnes,2008,Oikos,moksnes,2003,sweden,58,Field,0.2025,0.12,marine,seagrass,42,Fish,4.9,1,gastropod,28.82,1,0.19,0.11,0.05,5,0.49,0.09,0.04,5
+16,Sieben,2010,Mar. Biol.,eriks,2007,sweden,58,Field,0.66,0.66,brackish,macroalgae,13,Fish,2.3,1,gastropod,1,0.62,0.08,0.05,0.02,5,0.02,0.01,0.01,5
+17,Sieben,2010,Mar. Biol.,eriks,2007,sweden,58,Field,0.66,0.66,brackish,macroalgae,13,Fish,2.3,1,gastropod,1.63,1,0.05,0.03,0.01,5,0.05,0.01,0.01,5
+18,Sieben ,2010,J Exp. Mar. Biol. Ecol,eriks,2008,sweden,57,Field,600,600,brackish,macroalgae,40,Fish,0.025,0,amphipod,1,13.18,20.31,0.22,0.16,2,14.94,10.56,0.01,2
+18,Sieben ,2010,J Exp. Mar. Biol. Ecol,eriks,2008,sweden,57,Field,600,600,brackish,macroalgae,40,Fish,0.025,0,gastropod,0.08,1,267.76,19.6,13.86,2,213.47,150.95,141.29,2

@@ -3,12 +3,7 @@
 rm(list=ls())
 
 # Load packages
-library(metafor)
-library(ggplot2)
-library(stringr)
-library(tidyverse)
-library(plyr)
-library(ggbeeswarm)
+pacman::p_load(metafor, ggplot2, stringr, tidyverse, plyr, ggbeeswarm)
 
 # Functions taken from Shins phylogeny MS
 
@@ -70,7 +65,7 @@ cont_gen <- function (name) {
 
 ################### Example: Zr effect size
 
-load("dat.lim2014.1.rda")
+load("data/dat.lim2014.1.rda")
 head(dat.lim2014.1)
 
 # The dataset comes from Lim et al. 2014. Evolution
@@ -121,7 +116,7 @@ dev.off()
    
 # ################### Example: d and lnCVR effect sizes
 
-load("dat.english2016.2.rda")
+load("data/dat.english2016.2.rda")
 head(dat.english2016.2)
 
 # The dataset comes from English and Uller 2016. Biology Letters, and re-analysed in Senior et al. 2017. Biology Letters for lnCVR
@@ -217,7 +212,7 @@ dev.off()
 
 # ################### Example: lnRR effect size
 
-dat.eklof2012<-read.csv("Eklof-2012-Experimental climate.csv")
+dat.eklof2012<-read.csv("data/Eklof-2012-Experimental climate.csv")
 head(dat.eklof2012)
 
 # The lnRR example comes from Eklof et al 2012. Ecology Letters

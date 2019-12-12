@@ -18,7 +18,10 @@ RoxygenNote: 6.1.1
 Imports: stats,
     graphics,
     utils,
-    purrr
+    purrr,
+    metafor,
+    tibble,
+    stringr
 Suggests: testthat,
     knitr,
     rmarkdown

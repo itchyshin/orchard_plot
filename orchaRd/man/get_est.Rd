@@ -2,14 +2,14 @@
 % Please edit documentation in R/mod_results.R
 \name{get_est}
 \alias{get_est}
-\title{: get_est}
+\title{get_est}
 \usage{
 get_est(model, mod = " ")
 }
 \arguments{
-\item{model:}{rma.mv object}
+\item{model}{rma.mv object}
 
-\item{mod:}{the name of a moderator}
+\item{mod}{the name of a moderator}
 }
 \description{
 Function gets estimates from rma objects (metafor)

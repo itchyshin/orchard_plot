@@ -2,13 +2,16 @@
 % Please edit documentation in R/mod_results.R
 \name{cont_gen}
 \alias{cont_gen}
-\title{Contrast name geneator}
+\title{cont_gen}
 \usage{
 cont_gen(name)
 }
 \arguments{
-\item{name:}{a vector of character strings}
+\item{name}{a vector of character strings}
+}
+\value{
+Returns a character string with all combinations of the moderator level names
 }
 \description{
-Creates all combinations of names
+Creates all combinations of moderator level names
 }

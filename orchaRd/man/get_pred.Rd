@@ -2,14 +2,14 @@
 % Please edit documentation in R/mod_results.R
 \name{get_pred}
 \alias{get_pred}
-\title{Function to get prediction intervals (crediblity intervals) from rma objects (metafor)}
+\title{get_pred}
 \usage{
 get_pred(model, mod = " ")
 }
 \arguments{
-\item{model:}{rma.mv object}
+\item{model}{rma.mv object}
 
-\item{mod:}{the name of a moderator}
+\item{mod}{the name of a moderator}
 }
 \description{
 Function to get prediction intervals (crediblity intervals) from rma objects (metafor)

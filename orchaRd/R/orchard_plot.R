@@ -1,10 +1,41 @@
-
+#' @title Zr_to_r
+#' @description Converts Zr back to r (Pearson's correlation coefficient)
+#' @param df data frame of results of class 'orchard'
+#' @return A data frame containing all the model results including mean effect size estimate, confidence and prediction intervals with estimates converted back to r
+#' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+#' @authors Daniel Noble - daniel.noble@anu.edu.au 
+#' @export
 
 Zr_to_r <- function(df){
 	return(sapply(df, tanh))
 }
 
 
+#' @title orchard_plot
+#' @description Using a metafor model object of class rma or rma.mv or a results table of class orchard, it creates a an orchard plot from mean effect size estimates for all levels of a given categorical moderator, their corresponding confidence intervals and prediction intervals
+#' @param object object of class 'rma.mv', 'rma' or 'orchard '
+#' @param mod the name of a moderator 
+#' @param data the data used to fit the rma.mv or rma model
+#' @param es_type the type of effect size used in the model, z-transformed Persons correlation coefficient (Zr) or standardised mean difference (i.e., Hedges/Cohen's d, g) (d)
+#' @return Orchard plot
+#' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+#' @authors Daniel Noble - daniel.noble@anu.edu.au
+#' @examples
+#' \dontrun{data(eklof) 
+#' eklof<-metafor::escalc(measure="ROM", n1i=N_control, sd1i=SD_control,
+#' m1i=mean_control, n2i=N_treatment, sd2i=SD_treatment, m2i=mean_treatment,
+#' data=eklof)
+#' # Add the unit level predictor
+#' eklof$Datapoint<-as.factor(seq(1, dim(eklof)[1], 1))
+#' # fit a MLMR - accouting for some non-independence
+#' eklof_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~ Grazer.type-1, random=list(~1|ExptID,
+#' ~1|Datapoint), data=eklof)
+#' results <- mod_results(eklof_MR, mod = "Grazer.type")
+#' orchard_plot(results, data = eklof, mod = Grazer.type, es_type = "Zr")
+#' # or
+#' orchard_plot(eklof_MR, data = eklof, mod = Grazer.type, es_type = "Zr")
+#' }
+#' @export
 
 
 orchard_plot(object, data, mod, es_type = c("d", "Zr"), ...) {
@@ -51,6 +82,14 @@ orchard_plot(object, data, mod, es_type = c("d", "Zr"), ...) {
 
 }
 
+
+
+
+
+
+
+
+###########################################
 test <- function(object, mod){
 	ggplot2::ggplot(data = object, aes(x = estimate, y = name)) +
 		ggplot2::scale_x_continuous(limits=lim) +

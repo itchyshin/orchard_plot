@@ -84,7 +84,6 @@ cont_gen <- function (name) {
 #' @return A data frame containing all the model results including mean effect size estimate, confidence and prediction intervals
 #' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
 #' @authors Daniel Noble - daniel.noble@anu.edu.au
-#' @return Data table (tibble) 
 #' @examples
 #' \dontrun{data(eklof) 
 #' eklof<-metafor::escalc(measure="ROM", n1i=N_control, sd1i=SD_control,
@@ -111,7 +110,7 @@ mod_results <- function(model, mod) {
 
 	model_results <- cbind(CI, PI[,-1])
 
-	class(model_results) <- 
+	class(model_results) <- "orchard"
 
 	return(model_results)
 

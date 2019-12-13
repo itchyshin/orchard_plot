@@ -9,9 +9,9 @@
 #' @authors Daniel Noble - daniel.noble@anu.edu.au
 #' @export
 
-get_est <- function (model, mod = " ") {
+get_est <- function (model, mod) {
 
-      name <- as.factor(stringr::str_replace(row.names(model$beta), mod, ""))
+      name <- as.factor(stringr::str_replace(row.names(model$beta), {{mod}}, ""))
   estimate <- as.numeric(model$beta)
    lowerCL <- model$ci.lb
    upperCL <- model$ci.ub 
@@ -30,9 +30,9 @@ get_est <- function (model, mod = " ") {
 #' @authors Daniel Noble - daniel.noble@anu.edu.au
 #' @export
 
-get_pred <- function (model, mod = " ") {
+get_pred <- function (model, mod) {
 
-  name <- as.factor(stringr::str_replace(row.names(model$beta), mod, ""))
+  name <- as.factor(stringr::str_replace(row.names(model$beta), {{mod}}, ""))
   len <- length(name)
   
   if(len != 1){
@@ -99,15 +99,15 @@ cont_gen <- function (name) {
 #' }
 #' @export
 #' 
-mod_results <- function(model, mod = "") { 
+mod_results <- function(model, mod) { 
 
 	if(all(class(model) %in% c("rma.mv", "rma")) == FALSE) {stop("Sorry, you need to fit a metafor model of class rma.mv or rma")}
 
 	# Get confidence intervals
-	CI <- get_est(model, mod = mod)
+	CI <- get_est(model, mod)
 
 	# Get prediction intervals
-	PI <- get_pred(model, mod = mod)
+	PI <- get_pred(model, mod)
 
 	model_results <- cbind(CI, PI[,-1])
 

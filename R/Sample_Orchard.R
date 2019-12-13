@@ -65,7 +65,7 @@ cont_gen <- function (name) {
 
 ################### Example: Zr effect size
 
-load("data/dat.lim2014.1.rda")
+load("orchaRd/data/dat.lim2014.1.rda")
 head(dat.lim2014.1)
 
 # The dataset comes from Lim et al. 2014. Evolution

@@ -56,15 +56,24 @@ test <- function(object, mod){
 	ggplot2::ggplot(data = object, aes(x = estimate, y = name)) +
 			ggplot2::scale_x_continuous(limits=lim) +
 		  	geom_quasirandom(data = data %>% filter(!is.na(!! mod)),  
-		                   aes(x = yi, y =!! mod, size = (N), colour =!! mod), groupOnX = FALSE, alpha=0.2) 
+		                   aes(x = yi, y = !!mod, size = (N), colour = !!mod), groupOnX = FALSE, alpha=0.2) 
 }
 
 test(data, "Phylum")
 
+dat_test <- data.frame(group = rep(c("yes", "no"), each =10), y = rnorm(20,0,1))
+
 fun <- function(data, mod){
 	mod <- rlang::enquo(mod)
-	tmp <- data %>% group_by(!!mod) %>% summarise(n = length(yi))
+	tmp <- data %>% group_by(!!mod) %>% summarise(n = length(y))
 	return(tmp)
 }
 
-fun(data, "Phylum")
+fun(dat_test, group) ## Doesn't work
+
+fun_2 <- function(data, mod){
+	tmp <- data %>% group_by({{mod}}) %>% summarise(n = length(y))
+	return(tmp)
+}
+
+fun_2(dat_test, group) ## Doesn't work

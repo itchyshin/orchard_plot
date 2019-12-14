@@ -4,7 +4,7 @@
 \alias{mod_results}
 \title{mod_results}
 \usage{
-mod_results(model, mod = "")
+mod_results(model, mod)
 }
 \arguments{
 \item{model}{rma.mv object}
@@ -13,8 +13,6 @@ mod_results(model, mod = "")
 }
 \value{
 A data frame containing all the model results including mean effect size estimate, confidence and prediction intervals
-
-Data table (tibble)
 }
 \description{
 Using a metafor model object of class rma or rma.mv it creates a table of model results containing the mean effect size estimates for all levels of a given categorical moderator, their corresponding confidence intervals and prediction intervals

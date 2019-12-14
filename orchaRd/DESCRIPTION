@@ -21,7 +21,9 @@ Imports: stats,
     purrr,
     metafor,
     tibble,
-    stringr
+    stringr,
+    ggplot2,
+    ggbeeswarm
 Suggests: testthat,
     knitr,
     rmarkdown

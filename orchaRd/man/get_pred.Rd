@@ -4,7 +4,7 @@
 \alias{get_pred}
 \title{get_pred}
 \usage{
-get_pred(model, mod = " ")
+get_pred(model, mod)
 }
 \arguments{
 \item{model}{rma.mv object}

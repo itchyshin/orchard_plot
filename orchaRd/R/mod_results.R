@@ -20,7 +20,7 @@ get_est <- function (model, mod) {
   return(table)
 }
 
-get_est(lim_MR, "Phylum")
+#get_est(lim_MR, "Phylum")
 
 #' @title get_pred
 #' @description Function to get prediction intervals (crediblity intervals) from rma objects (metafor)
@@ -57,7 +57,7 @@ get_pred <- function (model, mod) {
 }
 
 
-get_pred(lim_MR, "Phylum")
+#get_pred(lim_MR, "Phylum")
 
 #Here are links for how to do confidence regions for rma.mv regression lines
 #https://www.rdocumentation.org/packages/metafor/versions/1.9-9/topics/predict.rma

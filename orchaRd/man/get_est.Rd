@@ -4,7 +4,7 @@
 \alias{get_est}
 \title{get_est}
 \usage{
-get_est(model, mod = " ")
+get_est(model, mod)
 }
 \arguments{
 \item{model}{rma.mv object}

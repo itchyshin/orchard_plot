@@ -45,7 +45,7 @@ Zr_to_r <- function(df){
 #' @export
 
 
-orchard_plot <- function(object, data, mod, es_type = c("d", "Zr")) {
+orchard_plot <- function(object, data, mod, es_type = c("d", "Zr", "lnRR", "lnCVR")) {
 
 	if(any(class(object) %in% c("rma.mv", "rma"))){
 		object <- mod_results(object, mod)
@@ -58,10 +58,13 @@ orchard_plot <- function(object, data, mod, es_type = c("d", "Zr")) {
 		data$yi <- Zr_to_r(data$yi)
 		label <- "Correlation (r)"
 		lim = c(-1.1,1.1)
+		scale <- data[stats::complete.cases(data[,mod]), "N"]
 
 	}else{
-		label <- "Hedge's d"
-		lim = c(min(data$yi), max(data$yi))
+		label <- es_type
+		lim = c(min(data$yi)+0.2, max(data$yi)+0.2)
+		scale <- (1/sqrt(data[stats::complete.cases(data[,mod]), "vi"]))
+
 	}
 
 	 object$K <- as.vector(by(data, data[,mod], function(x) length(x[,"yi"])))
@@ -70,7 +73,7 @@ orchard_plot <- function(object, data, mod, es_type = c("d", "Zr")) {
 	  ggplot2::ggplot(data = object, aes(x = estimate, y = name)) +
 		ggplot2::scale_x_continuous(limits=lim) +
 	  	ggbeeswarm::geom_quasirandom(data = data[stats::complete.cases(data[,mod]),], 
-	                   aes(x = yi, y = data[,mod], size = (N), colour = data[,mod]), groupOnX = FALSE, alpha=0.2) + 
+	                   aes(x = yi, y = data[,mod], size = (scale), colour = data[,mod]), groupOnX = FALSE, alpha=0.2) + 
 	  	
 	  	# 95 %prediction interval (PI)
 	  	ggplot2::geom_errorbarh(aes(xmin = object$lowerPR, xmax = object$upperPR),  height = 0, show.legend = F, size = 0.5, alpha = 0.6) +

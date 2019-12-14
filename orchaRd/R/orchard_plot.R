@@ -11,6 +11,10 @@ Zr_to_r <- function(df){
 }
 
 
+get_K <- function(data, mod){
+ 	data.frame(data %>% dplyr::group_by( {{mod}}) %>% dplyr::summarise(K = n()))$K
+}
+
 #' @title orchard_plot
 #' @description Using a metafor model object of class rma or rma.mv or a results table of class orchard, it creates a an orchard plot from mean effect size estimates for all levels of a given categorical moderator, their corresponding confidence intervals and prediction intervals
 #' @param object object of class 'rma.mv', 'rma' or 'orchard '
@@ -34,17 +38,22 @@ Zr_to_r <- function(df){
 #' orchard_plot(results, data = eklof, mod = Grazer.type, es_type = "Zr")
 #' # or
 #' orchard_plot(eklof_MR, data = eklof, mod = Grazer.type, es_type = "Zr")
+#' 
+#' # Example 2
+#' mod_est <- mod_results(lim_MR, "Phylum")
+#' orchard_plot(mod_est, data = dat.lim2014.1, mod = "Phylum", es_type = "Zr")
+#' orchard_plot(lim_MR, data = dat.lim2014.1, mod = "Phylum", es_type = "Zr")
 #' }
 #' @export
 
 
-orchard_plot(object, data, mod, es_type = c("d", "Zr"), ...) {
+orchard_plot <- function(object, data, mod, es_type = c("d", "Zr")) {
 
 	if(any(class(object) %in% c("rma.mv", "rma"))){
-		object <- mod_results(object, mod = {{mod}})
+		object <- mod_results(object, mod)
 	}
 
-	if(match.arg(es_type) == "Zr"){
+	if(es_type == "Zr"){
 
 		cols <- sapply(object, is.numeric)
 		object[,cols] <- Zr_to_r(object[,cols])
@@ -52,19 +61,19 @@ orchard_plot(object, data, mod, es_type = c("d", "Zr"), ...) {
 		label <- "Correlation (r)"
 		lim = c(-1.1,1.1)
 
-	} else{
+	}else{
 		label <- "Hedge's d"
 		lim = c(min(data$yi), max(data$yi))
 	}
 
-	data[,mod] <- as.factor(data[,mod])
-	  object$K <- as.vector(by(data, data[,mod], function(x) length(x[,"yi"])))
+	 object$K <- as.vector(by(data, data[,mod], function(x) length(x[,"yi"])))
 
 	# Make the orchard plot
-	ggplot2::ggplot(data = object, aes(x = estimate, y = name) ) +
-		ggplot2::scale_x_continuous(limits = lim) +
-	  	ggbeeswarm::geom_quasirandom(data = data %>% filter(!is.na( {{mod}} )), 
-	                   aes(x = yi, y = {{mod}}, size = (N), colour = {{mod}} ), groupOnX = FALSE, alpha=0.2) + 
+	  ggplot2::ggplot(data = object, aes(x = estimate, y = name)) +
+		ggplot2::scale_x_continuous(limits=lim) +
+	  	ggbeeswarm::geom_quasirandom(data = data[complete.cases(data[,mod]),], 
+	                   aes(x = yi, y = data[,mod], size = (N), colour = data[,mod]), groupOnX = FALSE, alpha=0.2) + 
+	  	
 	  	# 95 %prediction interval (PI)
 	  	ggplot2::geom_errorbarh(aes(xmin = object$lowerPR, xmax = object$upperPR),  height = 0, show.legend = F, size = 0.5, alpha = 0.6) +
 	  	# 95 %CI
@@ -87,10 +96,8 @@ orchard_plot(object, data, mod, es_type = c("d", "Zr"), ...) {
 
 
 
-
-
 ###########################################
-test <- function(object, mod){
+plot_orchard <- function(object, mod, lim, data){
 	ggplot2::ggplot(data = object, aes(x = estimate, y = name)) +
 		ggplot2::scale_x_continuous(limits=lim) +
 	  	ggbeeswarm::geom_quasirandom(data = data %>% filter(!is.na({{mod}})), 
@@ -111,8 +118,13 @@ test <- function(object, mod){
 	  	ggplot2::theme(axis.text.y = element_text(size = 10, colour ="black",hjust = 0.5, angle = 45))
 }
 
-test(object, "Phylum")
+plot_orchard(lim_MR, Phylum)
 
+
+
+
+
+############################
 dat_test <- data.frame(group = rep(c("yes", "no"), each =10), y = rnorm(20,0,1))
 
 # Normally

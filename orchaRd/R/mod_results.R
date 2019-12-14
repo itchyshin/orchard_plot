@@ -10,7 +10,6 @@
 #' @export
 
 get_est <- function (model, mod) {
-
       name <- as.factor(stringr::str_replace(row.names(model$beta), {{mod}}, ""))
   estimate <- as.numeric(model$beta)
    lowerCL <- model$ci.lb
@@ -21,6 +20,7 @@ get_est <- function (model, mod) {
   return(table)
 }
 
+get_est(lim_MR, "Phylum")
 
 #' @title get_pred
 #' @description Function to get prediction intervals (crediblity intervals) from rma objects (metafor)
@@ -55,6 +55,9 @@ get_pred <- function (model, mod) {
 
 
 }
+
+
+get_pred(lim_MR, "Phylum")
 
 #Here are links for how to do confidence regions for rma.mv regression lines
 #https://www.rdocumentation.org/packages/metafor/versions/1.9-9/topics/predict.rma
@@ -110,17 +113,11 @@ mod_results <- function(model, mod) {
 
 	model_results <- cbind(CI, PI[,-1])
 
-	class(model_results) <- "orchard"
+	class(model_results) <- c("data.frame", "orchard")
 
 	return(model_results)
 
 }
-
-
-
-
-
-
 
 
 

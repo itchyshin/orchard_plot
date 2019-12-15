@@ -60,12 +60,12 @@ orchard_plot <- function(object, data, mod, es_type = c("d", "Zr", "lnRR", "lnCV
 		data_comlte$yi <- Zr_to_r(data_comlte$yi)
 		label <- "Correlation (r)"
 		lim = c(-1.1,1.1)
-		data_comlte$scale <- data_comlte[stats::complete.cases(data_comlte[,"vi"]),"N"]
+		data_comlte$scale <- data_comlte[,"N"]
 
 	}else{
 		label <- es_type
 		lim = c(min(data_comlte$yi)+0.2, max(data_comlte$yi)+0.2)
-		data_comlte$scale <- (1/sqrt(data_comlte[stats::complete.cases(data_comlte[,"vi"]), "vi"]))
+		data_comlte$scale <- (1/sqrt(data_comlte[,"vi"]))
 
 	}
 
@@ -74,9 +74,9 @@ orchard_plot <- function(object, data, mod, es_type = c("d", "Zr", "lnRR", "lnCV
 	# Make the orchard plot
 	  ggplot2::ggplot(data = object, aes(x = estimate, y = name)) +
 		
-		ggplot2::scale_x_continuous(limits=lim) +
+		#ggplot2::scale_x_continuous(limits=lim) +
 	  	
-	  	ggbeeswarm::geom_quasirandom(data = data_comlte, aes(x = yi, y = data_comlte[,mod], size = (scale), colour = data_comlte[,mod]), groupOnX = FALSE, alpha=0.2) + 
+	  	ggbeeswarm::geom_quasirandom(data = data_comlte, aes(x = yi, y = data_comlte[,mod], size = data_comlte[,"scale"], colour = data_comlte[,mod]), groupOnX = FALSE, alpha=alpha) + 
 	  	
 	  	# 95 %prediction interval (PI)
 	  	ggplot2::geom_errorbarh(aes(xmin = object$lowerPR, xmax = object$upperPR),  height = 0, show.legend = FALSE, size = 0.5, alpha = 0.6) +
@@ -95,7 +95,7 @@ orchard_plot <- function(object, data, mod, es_type = c("d", "Zr", "lnRR", "lnCV
 
 }
 
-orchard_plot(eklof_MR, data = dat.eklof2012, mod = "Grazer.type", es_type = "Zr", alpha = 0.8)
+orchard_plot(eklof_MR, data = dat.eklof2012, mod = "Grazer.type", es_type = "lnRR", alpha = 0.8)
 
 
  colour_ls <- c("#000000", "#E69F00", "#56B4E9", "#009E73",  "#F0E422",  "#0072B2",  "#D55E00", "#CC79A7", "#00008B", "#8B0A50", "#54FF9F", "#999999")

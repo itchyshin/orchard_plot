@@ -4,7 +4,7 @@ rm(list=ls())
 
 install_github("itchyshin/orchard_plot", subdir = "orchaRd")
 # Load packages
-pacman::p_load(metafor, ggplot2, stringr, tidyverse, plyr, ggbeeswarm)
+pacman::p_load(metafor, ggplot2, stringr, tidyverse, plyr, ggbeeswarm, patchwork)
 
 
 ################### Example: Zr effect size
@@ -31,7 +31,7 @@ lim_results <- mod_results(lim_MR, "Phylum")
 # Create a pdf of the orchard pplot
 pdf("Zr.pdf", height=7, width=7)
 
-  orchard_plot(lim_MR, data = dat.lim2014.1, mod = "Phylum", es_type = "Zr")
+  orchard_plot(lim_MR, data = dat.lim2014.1, mod = "Phylum", es_type = "Zr", alpha = 0.2)
   
 dev.off()  
    
@@ -39,7 +39,7 @@ dev.off()
 
 pdf("Zr.pdf", height=7, width=7)
 
-  orchard_plot(lim_results, data = dat.lim2014.1, mod = "Phylum", es_type = "Zr")
+  orchard_plot(lim_results, data = dat.lim2014.1, mod = "Phylum", es_type = "Zr", alpha = 0.9)
   
 dev.off()  
 
@@ -70,12 +70,12 @@ english_results <- mod_results(english_MR, "ManipType")
 # Open a pdf
 pdf("d.pdf", height=4, width=7)
   
-  orchard_plot(english_MR, data = dat.english2016.2, mod = "ManipType", es_type = "lnRR")
+  orchard_plot(english_MR, data = dat.english2016.2, mod = "ManipType", es_type = "lnRR", alpha = 0.7)
 
 dev.off()  
 
 # Alternatively with results
-  orchard_plot(english_results, data = dat.english2016.2, mod = "ManipType", es_type = "d")
+  orchard_plot(english_results, data = dat.english2016.2, mod = "ManipType", es_type = "lnRR", alpha = 0.2)
 
 # Now lets compare to lnCVR as in Senior et al. 2017
 
@@ -92,9 +92,9 @@ senior_results <- mod_results(senior_MR, "ManipType")
 
 # Open a pdf
 pdf("lnCVR.pdf", height=4, width=7)
-  library(patchwork)
-  p1 <- orchard_plot(english_results, data = dat.english2016.2, mod = "ManipType", es_type = "lnRR")
-  p2 <- orchard_plot(senior_MR, data = dat.english2016.2, mod = "ManipType", es_type = "lnCVR")
+  
+  p1 <- orchard_plot(english_results, data = dat.english2016.2, mod = "ManipType", es_type = "lnRR", alpha = 0.2)
+  p2 <- orchard_plot(senior_MR, data = dat.english2016.2, mod = "ManipType", es_type = "lnCVR", alpha = 0.8)
 
   p1+p2
 
@@ -102,7 +102,7 @@ dev.off()
 
 # ################### Example: lnRR effect size
 
-dat.eklof2012<-read.csv("./Eklof-2012-Experimental climate.csv")
+dat.eklof2012<-read.csv("./data/Eklof-2012-Experimental climate.csv")
 head(dat.eklof2012)
 
 # The lnRR example comes from Eklof et al 2012. Ecology Letters

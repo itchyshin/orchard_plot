@@ -45,7 +45,9 @@ Zr_to_r <- function(df){
 #' @export
 
 
-orchard_plot <- function(object, data, mod, es_type = c("d", "Zr", "lnRR", "lnCVR")) {
+orchard_plot <- function(object, data, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"), alpha = 0.8) {
+
+	data_comlte <- data[stats::complete.cases(data[,mod]),]
 
 	if(any(class(object) %in% c("rma.mv", "rma"))){
 		object <- mod_results(object, mod)
@@ -55,31 +57,32 @@ orchard_plot <- function(object, data, mod, es_type = c("d", "Zr", "lnRR", "lnCV
 
 		cols <- sapply(object, is.numeric)
 		object[,cols] <- Zr_to_r(object[,cols])
-		data$yi <- Zr_to_r(data$yi)
+		data_comlte$yi <- Zr_to_r(data_comlte$yi)
 		label <- "Correlation (r)"
 		lim = c(-1.1,1.1)
-		scale <- data[stats::complete.cases(data[,mod]), "N"]
+		data_comlte$scale <- data_comlte[stats::complete.cases(data_comlte[,"vi"]),"N"]
 
 	}else{
 		label <- es_type
-		lim = c(min(data$yi)+0.2, max(data$yi)+0.2)
-		scale <- (1/sqrt(data[stats::complete.cases(data[,mod]), "vi"]))
+		lim = c(min(data_comlte$yi)+0.2, max(data_comlte$yi)+0.2)
+		data_comlte$scale <- (1/sqrt(data_comlte[stats::complete.cases(data_comlte[,"vi"]), "vi"]))
 
 	}
 
-	 object$K <- as.vector(by(data, data[,mod], function(x) length(x[,"yi"])))
+	 object$K <- as.vector(by(data_comlte, data_comlte[,mod], function(x) length(x[,"yi"])))
 
 	# Make the orchard plot
 	  ggplot2::ggplot(data = object, aes(x = estimate, y = name)) +
+		
 		ggplot2::scale_x_continuous(limits=lim) +
-	  	ggbeeswarm::geom_quasirandom(data = data[stats::complete.cases(data[,mod]),], 
-	                   aes(x = yi, y = data[,mod], size = (scale), colour = data[,mod]), groupOnX = FALSE, alpha=0.2) + 
+	  	
+	  	ggbeeswarm::geom_quasirandom(data = data_comlte, aes(x = yi, y = data_comlte[,mod], size = (scale), colour = data_comlte[,mod]), groupOnX = FALSE, alpha=0.2) + 
 	  	
 	  	# 95 %prediction interval (PI)
-	  	ggplot2::geom_errorbarh(aes(xmin = object$lowerPR, xmax = object$upperPR),  height = 0, show.legend = F, size = 0.5, alpha = 0.6) +
+	  	ggplot2::geom_errorbarh(aes(xmin = object$lowerPR, xmax = object$upperPR),  height = 0, show.legend = FALSE, size = 0.5, alpha = 0.6) +
 	  	# 95 %CI
-	  	ggplot2::geom_errorbarh(aes(xmin = object$lowerCL, xmax = object$upperCL),  height = 0, show.legend = F, size = 1.2) +
-	  	ggplot2::geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = 0.3) +
+	  	ggplot2::geom_errorbarh(aes(xmin = object$lowerCL, xmax = object$upperCL),  height = 0, show.legend = FALSE, size = 1.2) +
+	  	ggplot2::geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = alpha) +
 	  	# creating dots and different size (bee-swarm and bubbles)
 	  	ggplot2::geom_point(aes(fill = object$name), size = 3, shape = 21) + #
 	  	# setting colours
@@ -92,3 +95,8 @@ orchard_plot <- function(object, data, mod, es_type = c("d", "Zr", "lnRR", "lnCV
 
 }
 
+orchard_plot(eklof_MR, data = dat.eklof2012, mod = "Grazer.type", es_type = "Zr", alpha = 0.8)
+
+
+ colour_ls <- c("#000000", "#E69F00", "#56B4E9", "#009E73",  "#F0E422",  "#0072B2",  "#D55E00", "#CC79A7", "#00008B", "#8B0A50", "#54FF9F", "#999999")
+	 cols <- sample(colour_ls, unique(data_comlte[,mod]))

@@ -127,7 +127,7 @@ eklof_results <- mod_results(eklof_MR, "Grazer.type")
 # Open a pdf
 pdf("lnRR.pdf", height=4, width=7)
 
-orchard_plot(eklof_results, data = dat.eklof2012, mod = "Grazer.type", es_type = "lnRR")
+  orchard_plot(eklof_results, data = dat.eklof2012, mod = "Grazer.type", es_type = "lnRR")
   
 dev.off()
 

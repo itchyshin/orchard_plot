@@ -59,12 +59,12 @@ orchard_plot <- function(object, data, mod, es_type = c("d", "Zr", "lnRR", "lnCV
 		object[,cols] <- Zr_to_r(object[,cols])
 		data_comlte$yi <- Zr_to_r(data_comlte$yi)
 		label <- "Correlation (r)"
-		lim = c(-1.1,1.1)
+		lim = c(-1.2,1.2)
 		data_comlte$scale <- data_comlte[,"N"]
 
 	}else{
 		label <- es_type
-		lim = c(min(data_comlte$yi)+0.2, max(data_comlte$yi)+0.2)
+		lim = c(min(data_comlte$yi)-(min(data_comlte$yi)*0.1), max(data_comlte$yi)+(max(data_comlte$yi)*0.1))
 		data_comlte$scale <- (1/sqrt(data_comlte[,"vi"]))
 
 	}
@@ -72,7 +72,7 @@ orchard_plot <- function(object, data, mod, es_type = c("d", "Zr", "lnRR", "lnCV
 	 object$K <- as.vector(by(data_comlte, data_comlte[,mod], function(x) length(x[,"yi"])))
 
 	# Make the orchard plot
-	  ggplot2::ggplot(data = object, aes(x = estimate, y = name)) +
+	  plot <- ggplot2::ggplot(data = object, aes(x = estimate, y = name)) +
 		
 		#ggplot2::scale_x_continuous(limits=lim) +
 	  	
@@ -92,6 +92,8 @@ orchard_plot <- function(object, data, mod, es_type = c("d", "Zr", "lnRR", "lnCV
 	  	ggplot2::theme_bw() +
 	  	ggplot2::theme(legend.position="none") +
 	  	ggplot2::theme(axis.text.y = element_text(size = 10, colour ="black",hjust = 0.5, angle = 45))
+
+	  return(plot)
 
 }
 

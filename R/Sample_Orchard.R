@@ -93,13 +93,18 @@ senior_results <- mod_results(senior_MR, "ManipType")
 # Open a pdf
 pdf("lnCVR.pdf", height=4, width=7)
   
-  p1 <- orchard_plot(english_results, data = dat.english2016.2, mod = "ManipType", es_type = "lnRR", alpha = 0.2)
-  p2 <- orchard_plot(senior_MR, data = dat.english2016.2, mod = "ManipType", es_type = "lnCVR", alpha = 0.8)
-
-  p1+p2
+  #Here is an example of how you can "add" and customize the default plots. 
+ 	orchard_plot(senior_MR, data = dat.english2016.2, mod = "ManipType", es_type = "lnCVR", alpha = 0.8) +
+	labs(x = "log Coefficient of Variation (lnCVR)", y = "", size = expression(paste(italic(N), " (# of effects)")) ) +
+  	guides(fill = "none", colour = "none") +  theme(legend.position= c(0.1, 0.98), legend.justification = c(0,1)) +
+  	theme(legend.direction="horizontal")
 
 dev.off()
 
+orchard_plot(senior_MR, data = dat.english2016.2, mod = "ManipType", es_type = "lnCVR", alpha = 0.8) +
+labs(x = expression(paste(italic(r), " (correlation)")), y = "", size = expression(paste(italic(N), " (# of effects)")) ) +
+  guides(fill = "none", colour = "none") +  theme(legend.position= c(0, 1), legend.justification = c(0,1)) +
+  theme(legend.direction="horizontal")
 # ################### Example: lnRR effect size
 
 dat.eklof2012<-read.csv("./data/Eklof-2012-Experimental climate.csv")

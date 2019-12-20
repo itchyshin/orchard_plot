@@ -234,10 +234,10 @@ Only one (`r papers_PI`; Fig.3) of the included 102 meta-analytic papers present
 
 #### Figure 1
 ```{r visualise PI use, include = TRUE, eval = TRUE}
-myVaggr2 <- plotVenn(list(PI = papers_PI, CI=papers_CI, SE=papers_SDorSE, all=all), nCycles = 6000) #, outFile = "myVaggr.svg"
+myVaggr2 <- plotVenn(list(all = all, PI = papers_PI, CI=papers_CI, SE=papers_SDorSE), nCycles = 6000) #, outFile = "myVaggr.svg"
 myVaggr2 <- plotVenn(nVennObj = myVaggr2) #re-run simulation
 #showSVG(nVennObj = myVaggr2, opacity = 0.1, borderWidth = 3)
-showSVG(nVennObj = myVaggr2, opacity = 0.1, labelRegions = F, fontScale = 3) # Avoid overlaps by hiding region labels
+showSVG(nVennObj = myVaggr2, opacity = 0.1, labelRegions = F, fontScale = 3, setColors = c('white', 'black', 'darkcyan', 'aquamarine', 'red'), borderWidth = 3) # hiding region labels, big fonts, thick borders and custom colors
 ```
 
 *Legend description:*   
@@ -293,10 +293,10 @@ Here we looked at the main graphical plot styles: dot/box/bar. As expected, “d
 
 #### Figure 2
 ```{r visualise style use, eval = TRUE}
-myVaggr3a <- plotVenn(list(dot=papers_dot, bar=papers_bar, box=papers_box, all=all), nCycles = 6000) #, outFile = "myVaggr.svg"
+myVaggr3a <- plotVenn(list(all = all, dot=papers_dot, bar=papers_bar, box=papers_box), nCycles = 6000) #, outFile = "myVaggr.svg"
 myVaggr3a <- plotVenn(nVennObj = myVaggr3a) #re-run simulation
 #showSVG(nVennObj = myVaggr3a, opacity = 0.1, borderWidth = 3)
-showSVG(nVennObj = myVaggr3a, opacity = 0.1, labelRegions = F, fontScale = 3) # Avoid overlaps by hiding region labels
+showSVG(nVennObj = myVaggr3a, opacity = 0.1, labelRegions = F, fontScale = 3, setColors = c('white', 'darkred', 'gold', 'darkblue'), borderWidth = 3) # hiding region labels, big fonts, thick borders and custom colors
 ```
 
 *Legend description:*   
@@ -330,10 +330,10 @@ Here we looked at whether dot shapes are scaled to represent their properties (s
 
 #### Figure 3  
 ```{r visualise dot scaling use, eval = TRUE}
-myVaggr3b <- plotVenn(list(scaling=papers_scaling, all=all), nCycles = 6000) #, outFile = "myVaggr.svg"
+myVaggr3b <- plotVenn(list(all = all, scaling=papers_scaling), nCycles = 6000) #, outFile = "myVaggr.svg"
 myVaggr3b <- plotVenn(nVennObj = myVaggr3b) #re-run simulation
 #showSVG(nVennObj = myVaggr3b, opacity = 0.1, borderWidth = 3)
-showSVG(nVennObj = myVaggr3b, opacity = 0.1, labelRegions = F, fontScale = 3) # Avoid overlaps by hiding region labels
+showSVG(nVennObj = myVaggr3b, opacity = 0.1, labelRegions = F, fontScale = 3, setColors = c('white', 'teal'), borderWidth = 3) # hiding region labels, big fonts, thick borders and custom colors
 ```
 
 *Legend description:*   
@@ -398,7 +398,7 @@ papers_other <- (union(papers_other_pure$other1, papers_other_mix$other2)) #77 p
 As expected, not many studies used of “classical” forest plots (aggregated at study level) - `r length(papers_study)` papers (`r round(length(papers_study)/length(all)*100, 2)` %). There were more studies with taxon-level data aggregation forest plots - `r length(papers_taxon)` papers (`r round(length(papers_taxon)/length(all)*100, 2)` %). And, also as expected, "other aggregated" forest plots dominated - `r length(papers_other)` papers (`r round(length(papers_other)/length(all)*100, 2)` %). There were very few that showed individual effect sizes in forest plots - `r length(papers_individual)` papers (`r round(length(papers_individual)/length(all)*100, 2)` %).   
 
 
-We found "classical forest plot" in (need double-checking with full text):     
+We found potentail "classical forest plot" in (relevant figure file; need double-checking with full text):     
  1. ft037 (ft037_figS4-3.png)   
  2. ft065 (ft065_fig1.png, ft065_fig2.png, ft065_fig3.png)   
  3. ft078 (ft078_figS1.png)   
@@ -422,17 +422,17 @@ And a few other interesting plots (looking like an orchard plot):
 #### Figure 4   
 
 ```{r visualise aggregation levels, eval = TRUE}
-myVaggr4 <- plotVenn(list(taxon_aggr = papers_taxon, study_aggr=papers_study, individual_aggr=papers_individual, all_papers=all), nCycles = 6000) #, outFile = "myVaggr.svg"
+myVaggr4 <- plotVenn(list(all_papers=all, taxon_aggr = papers_taxon, study_aggr=papers_study, individual_aggr=papers_individual), nCycles = 6000) #, outFile = "myVaggr.svg"
 myVaggr4 <- plotVenn(nVennObj = myVaggr4) #re-run simulation
 #showSVG(nVennObj = myVaggr4, opacity = 0.1, borderWidth = 3)
-showSVG(nVennObj = myVaggr4, opacity = 0.1, labelRegions = F, fontScale = 3) # Avoid overlaps by hiding region labels
+showSVG(nVennObj = myVaggr4, opacity = 0.1, labelRegions = F, fontScale = 3, setColors = c('white', 'teal', 'orange', 'green', 'black'), borderWidth = 3) # hiding region labels, big fonts, thick borders and custom colors
 
-#with hand-picked "real forest" papaer added:
+#with hand-picked "real forest" paper added (in balck):
 real_forest <- c("ft037", "ft065", "ft078", "ft082", "ft084", "ft098", "ft109", "ft112", "ft131", "ft148", "ft151", "ft167", "ft173", "ft175", "ft177", "ft181")
 
-myVaggr4 <- plotVenn(list(all=all, tax = papers_taxon, stu=papers_study, ind=papers_individual, real=real_forest), nCycles = 6000) #, outFile = "myVaggr.svg"
+myVaggr4 <- plotVenn(list(all = all, tax = papers_taxon, stu=papers_study, ind=papers_individual, real=real_forest), nCycles = 6000) #, outFile = "myVaggr.svg"
 myVaggr4 <- plotVenn(nVennObj = myVaggr4) #re-run simulation
-showSVG(nVennObj = myVaggr4, opacity = 0.1, labelRegions = F, fontScale = 3, setColors = c('yellow', 'teal', 'red', 'green', 'black'), borderWidth = 3) # hiding region labels, big fonts, thick borders and custom colors
+showSVG(nVennObj = myVaggr4, opacity = 0.1, labelRegions = F, fontScale = 3, setColors = c('white', 'teal', 'orange', 'green', 'black'), borderWidth = 3) # hiding region labels, big fonts, thick borders and custom colors
 ```
 
 *Legend description:*   
@@ -450,7 +450,7 @@ We used the following "original/classical" forest plot definition:
 *Graphical representation of all individual effect sizes used in a meta-analysis (i.e. a meta-analystic/meta-regression models), as well as their overall mean, presented in a single panel, using a dot + interval plot style.*    
 
 **Answer 5.**  
-Final list of papers presenting "original/classical" forest plots (relevant figure file):     
+Final list of papers presenting "original/classical" forest plots (with relevant figure file ID):     
  1. ft065 (ft065_fig1.png, ft065_fig2.png, ft065_fig3.png)   
  2. ft078 (ft078_figS1.png)   
  3. ft082 (ft082_figS4.png)    
@@ -464,7 +464,7 @@ Final list of papers presenting "original/classical" forest plots (relevant figu
  12. ft177 (ft177_fig2.png)   
 
  
-```{r included papers with classical forest plot, eval = TRUE} 
+```{r refined included papers with classical forest plot, eval = TRUE} 
 dat5 <- dat %>% filter(paperID %in% c("ft065", "ft078", "ft082", "ft098", "ft112", "ft131", "ft148", "ft151", "ft167", "ft173", "ft175", "ft177")) %>% select(paperID, fileID, scaling) %>% group_by(paperID) %>% summarise(figures = paste(fileID, collapse=", ", scaling))
 
 # making a scrollable table
@@ -474,9 +474,94 @@ kable(dat5, "html") %>%
   
 ```
 
- Excluded papers with forest-like plots (relevant figure file), with reasons for exclusion:
-  1. ft037 (ft037_figS4-3.png) - no overall mean effect sieze shown in teh same plot panel    
-  2. ft084 (ft084_figS1.png) - no overall mean effect sieze shown in teh same plot panel      
-  3. ft109 (ft109_figS9.png, ft109_figS12.png, ft109_figS13.png, ft109_figS14.png) - no overall mean effect sieze shown in teh same plot panel      
-  4. ft181 (ft181_fig2.png) - no overall mean effect sieze shown in teh same plot panel      
+The remaining assessed papers were excluded due to all relevant figures not showing the overall mean effect size  in same plot panel.      
+
   
+## Additional refinements   
+
+### 6. What is the frequency of forest-like plots with species as aggregation levels?    
+
+To answer this question we manually re-evaluated the subset of `r length(papers_taxon)` papers which had presented some sort of taxonomic groups for aggregating of effect sizes. We then created a list of papers conatining at least one plot with specis-level aggregation of effect sizes.     
+
+IDs of papers re-evaluated papers: `r sort(papers_taxon)`     
+
+**Answer 6.**  
+Final list of papers presenting "species" forest-like plots (with relevant figure file ID):     
+ 1. ft024 (ft024_fig1.png, ft024_fig5.png)   
+ 2. ft028 (ft140_figS1.png)    
+ 3. ft060 (ft060_fig2.png (a))   
+ 4. ft068 (ft068_fig2.png)     
+ 5. ft117 (ft117_fig2.png, ft117_figS1.png, ft117_figS2.png, ft117_figS3.png)   
+ 6. ft140 (ft140_fig3.png (a))   
+ 7. ft187 (ft187_fig1.png (a), ft187_figS1.png, ft187_figS2.png, ft187_figS3.png)   
+
+```{r included papers with classical forest plot, eval = TRUE} 
+dat6 <- dat %>% filter(paperID %in% c("ft024", "ft028", "ft060", "ft068", "ft117", "ft140", "ft187")) %>% select(paperID, fileID, scaling) %>% group_by(paperID) %>% summarise(figures = paste(fileID, collapse=", ", scaling))
+
+# making a scrollable table
+kable(dat6, "html") %>%
+  kable_styling("striped", position = "left") %>%
+  scroll_box(width = "100%", height = "500px")
+  
+```
+ 
+The remaining assessed papers were excluded due to all relevant figures aggregating effect sizes at higher taxonomic levels than species. Notable special cases: ft084 - figures present mixture of species and higher taxonomic levels; ft131 - figures present aggregation is at both species and study level, i.e. no single estimate per species.   
+
+
+```{r visualise real and species and other aggr plots, eval = TRUE}
+
+all <- unique(dat$paperID) #IDs of all papers
+
+myVaggr6 <- plotVenn(list(all_papers = all, classical = dat5[1], species = dat6[1]), nCycles = 6000) #, outFile = "myVaggr.svg"
+myVaggr6 <- plotVenn(nVennObj = myVaggr6) #re-run simulation
+showSVG(nVennObj = myVaggr6, opacity = 0.1, labelRegions = F, fontScale = 3, setColors = c('white', 'forestgreen', 'deepskyblue'), borderWidth = 3) # hiding region labels, big fonts, thick borders and custom colors
+
+```
+
+
+
+### 7. What is the frequency of forest-like plots with individual effect sizes overlaid as dots over aggregated effect estimates? Are these individual dots scaled to the effect size (e.g., using sample size, precision)?       
+
+To answer this question we manually re-evaluated the subset of `r length(papers_individual)` papers which had presented some sort of individual effect size in forest plots (other that presenting effect sizes by study).  We then created a list of papers conatining at least one plot with individual effect sizes presented as dots overlaid over estimates of aggregated effect sizes.    
+
+IDs of papers re-evaluated papers: `r sort(papers_individual)`    
+
+**Answer 7.**  
+Final list of papers presenting "overlaid" forest-like plots (with relevant figure file ID):     
+ 1. ft039 (ft096_fig3.png (odd, with box plots)) - individual effect size dots not scaled    
+ 1. ft096 (ft096_fig1.png, ft096_fig2.png, ft096_figS2.png, ft096_figS3.png, ft096_figS4.png, ft096_figS5.png) - individual effect size dots scaled    
+ 2. ft181 (ft181_fig2.png, ft181_fig3.png, ft181_fig4.png) - individual effect size dots not scaled      
+ 
+The remaining assessed papers were excluded due to all relevant figures not overlaying individual effect size dots onto aggregated effect sizes.   
+  
+
+ #### Preparing for STAGE2 survey
+ 
+Coding forest-like plots with "aggregated effect sizes" to assess how often overall mean is presented alongside and how aggregeated effect sizes are calculated (for details see data collection protocol for STAGE2).   
+
+List of papers and figures to be assessed:   
+
+```{r create list of plots to be assessed in STAGE2, eval = TRUE} 
+
+#length(all) #all 84 paper IDs
+#length(dat$fileID) #all file IDs = 296
+classical_IDs <- c("ft065_fig1", "ft065_fig2.png", "ft065_fig3.png", "ft078_figS1", "ft082_figS4", "ft098_fig2", "ft112_fig2", "112_fig3", "112_figS3","112_figS4", "112_figS5", "ft131_fig1",  "ft148_figS2", "148_figS4", "148_figS7", "148_figS10", "148_figS18", "148_figS19", "ft151_fig1", "ft167_fig2", "167_figSB", "ft173_fig2", "ft175_figS4", "175_figS5", "175_figS6", "175_figS7", "ft177_fig2")  
+ 
+files_individual_pure <- c("ft109_figS10", "ft109_figS12", "ft109_figS13", "ft109_figS14", "ft109_figS9",  "ft120_fig4",   "ft121_fig1",   "ft148_figS10")
+
+#exclude "classical" forest plots and "individual" forest plots
+toasses <- setdiff(dat$fileID, classical_IDs) 
+toasses <- setdiff(toasses, files_individual_pure) 
+
+dat7 <- dat %>% filter(fileID %in% toasses) %>% select(paperID, fileID) %>% group_by(paperID) %>% summarise(figures = paste(fileID, collapse=", "))
+dat7 <- dat7 %>% filter(paperID != "ft065") #exclude ft065 - no aggregated forest plots there
+
+dat7
+# making a scrollable table
+kable(dat7, "html") %>%
+  kable_styling("striped", position = "left") %>%
+  scroll_box(width = "100%", height = "500px")
+
+```
+
+

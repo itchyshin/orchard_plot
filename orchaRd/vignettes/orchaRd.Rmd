@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
 2. [Citing orchaRd](#citing)
 3. [Installation](#Installation) 
 4. [Example of how it works](#P4)
+5. [References](#P5)
 
 
 # Introduction <a name="Introduction"></a>
@@ -38,14 +39,52 @@ Nakagawa, S. et al. 2020. The Orchard Plot: Domesticating the Forest Plot for Us
 
 To install `orchaRd` use the following code in R:
 
-```
+```{r echo = TRUE, eval = TRUE}
 install.packages("devtools")
+install.packages("tidyverse")
+install.packages("metafor")
 devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE, build_vignettes = TRUE)
+
 library(orchaRd)
+library(tidyverse)
+library(metafor)
 ```
 
-Installation will make the primary functions accessible to users along with their help files. 
+Installation will make the primary functions accessible to users along with their help files. You will also need the tidyverse package
 
-# Example of how it works <a name="P4"></a>
+# Examples of how it works <a name="P4"></a>
 
-In this vignette we'll walk you through a number of case studies and show you how you can create beautiful looking orchard plots. The first case study
+In this vignette we'll walk you through a number of case studies and show you how you can create beautiful looking orchard plots. We overview three different case studies that make use of different effect sizes and moderators. The datasets associated with each case study come as part of the `orchaRd` package.
+
+### Example 1: Dietary Restriction and Lifespan
+English and Uller (2016) performed a systematic review and meta-analysis on the effects of early life dietary restriction (a reduction in a major component of the diet without malnutrition; e.g. caloric restriction) on average at death, using the standardised mean difference (often called d). They found that across the whole dataset, there was little evidence for an effect of dietary restriction on mean age at death. Figure 1A visualises their main findings. The overall estimate from a random-effects meta-analysis of 77 effect sizes is centered on zero, with a 95% CI that spans the line of no-effect. The prediction intervals clearly demonstrate the high level of heterogeneity, with effects size less than -0.5 and greater than 0.5 predicted to be observed. In figure 1B we visualise the results of a random effects meta-regression, showing the results are consistent for restrictions of dietary quantity (total calories), and dietary ‘quality’ (typically protein restriction). 
+
+```{r echo = TRUE, eval = TRUE}
+ data(english)
+
+# We need to calculate the effect sizes, in this case d
+english<-metafor::escalc(measure="SMD", n1i=NStartControl, sd1i=SD_C, m1i=MeanC, n2i=NStartExpt, sd2i=SD_E, m2i=MeanE, data=english)
+
+english_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~ManipType-1, random=list(~1|EffectID), data=english)
+summary(english_MR)
+```
+
+We can see from the above that we have fit a model without an intercept here and thus the mean estimates in each of the levels of the moderator "Manipulation Type" are estimated. Now that we have fit out meta-regression model we can get the confidence intervals and prediction intervals with a few function in the `orchaRd` package as follows
+
+```{r echo = TRUE, eval = TRUE}
+ model_results <- orchaRd::mod_results(english_MR, mods="ManipType")
+ print(model_results)
+```
+
+Here we have the meta-analytic mean for each manipulation type level. If we want to create an orchard plot we can do so quite simply as:
+
+```{r echo = TRUE, eval = TRUE}
+orchaRd::orchard_plot(english_MR, mods="ManipType")
+```
+
+Above, we simply add in the metafor model and it will create a default orchard plot
+
+
+In a subsequent publication, Senior et al. (2017) analysed this dataset for effects of dietary-restriction on among-individual variation in the age at death using the log coefficient of variation ratio. Figure 1C demonstrates that, while restrictions on dietary quality and quantity do not affect the average age at death, among-individual variation may be altered by quality restrictions. The effect is negative suggesting that the coefficient of variation in the control group is lower than that in the treatment group, and the 95% CI does not span zero. Again though, the effect is heterogeneous; a substantial number of positive effects are still predicted. 
+
+# References <a name="P4"></a>

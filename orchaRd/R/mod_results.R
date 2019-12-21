@@ -103,7 +103,7 @@ get_data <- function(model, mod){
   for(i in 1:ncol(X)){
       moderator <- ifelse(X[,i] == 1, names[i], moderator)
   }
-
+    moderator <- firstup(moderator)
     yi <- model$yi
     vi <- model$vi
   type <- attr(model$yi, "measure")

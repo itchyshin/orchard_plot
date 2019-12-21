@@ -8,7 +8,7 @@
 #'   ...
 #' }
 #' @source \url{}
-#' @name dat.eklof2012
+#' @name eklof
 #' @docType data
 NULL
 
@@ -21,7 +21,7 @@ NULL
 #'   ...
 #' }
 #' @source \url{}
-#' @name dat.english2016.2
+#' @name english
 #' @docType data
 NULL
 
@@ -34,6 +34,6 @@ NULL
 #'   ...
 #' }
 #' @source \url{}
-#' @name dat.lim2014.1
+#' @name lim
 #' @docType data
 NULL

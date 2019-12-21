@@ -1,6 +1,6 @@
 ---
 title: "orchaRd"
-author: "Shinichi Nakagawa,et al. Daniel Noble"
+author: "Shinichi Nakagawa, Malgorzata Lagisz, Rose E. O’Dea, Joanna Rutkowska, Daniel W.A. Noble, and Alistair M. Senior"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -48,4 +48,4 @@ Installation will make the primary functions accessible to users along with thei
 
 # Example of how it works <a name="P4"></a>
 
-In this vignette we'll walk you through a number of 
+In this vignette we'll walk you through a number of case studies and show you how you can create beautiful looking orchard plots. The first case study

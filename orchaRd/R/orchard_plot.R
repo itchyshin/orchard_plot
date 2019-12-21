@@ -86,7 +86,7 @@ orchard_plot <- function(object, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"), a
 	  	ggplot2::annotate('text', x = 0.93, y = (seq(1, dim(object$mod_table)[1], 1)+0.3), label= paste("italic(k)==", object$mod_table$K), parse = TRUE, hjust = "left", size = 3.5) +
 	  	ggplot2::theme_bw() +
 	  	ggplot2::guides(fill = "none", colour = "none") + 
-	  	ggplot2::labs(x = label, y = "", size = "Inverse Sampling Variance") + 
+	  	ggplot2::labs(x = label, y = "", size = "Inverse Sampling Variance")
 	  	#ggplot2::theme(legend.position= c(0.1, 0.98), legend.justification = c(0,1)) +
   		#ggplot2::theme(legend.direction="horizontal")
 

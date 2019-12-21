@@ -5,7 +5,7 @@
 \title{orchard_plot}
 \usage{
 orchard_plot(object, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"),
-  alpha = 0.8, N = NULL)
+  alpha = 0.8, N = "none")
 }
 \arguments{
 \item{object}{object of class 'rma.mv', 'rma' or 'orchard '}

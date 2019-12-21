@@ -44,7 +44,7 @@ Zr_to_r <- function(df){
 #' }
 #' @export
 
-orchard_plot <- function(object, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"), alpha = 0.8, N = NULL) {
+orchard_plot <- function(object, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"), alpha = 0.8, N = "none") {
 
 	if(any(class(object) %in% c("rma.mv", "rma"))){
 		object <- mod_results(object, mod)
@@ -52,6 +52,10 @@ orchard_plot <- function(object, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"), a
 
 	      data <- object$data
 	data$scale <- (1/sqrt(data[,"vi"]))
+
+	if(N != "none" & is.numeric(N)){
+		data$N <- N
+	}
 
 	if(es_type == "Zr"){
 
@@ -71,8 +75,12 @@ orchard_plot <- function(object, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"), a
 	# Make the orchard plot
 	  plot <- ggplot2::ggplot(data = object$mod_table, aes(x = estimate, y = name)) +
 	
-	  	ggbeeswarm::geom_quasirandom(data = data, aes(x = yi, y = moderator, size = scale, colour = moderator), groupOnX = FALSE, alpha=alpha) + 
-	  	#ggplot2::scale_x_continuous(limits=lim) + 
+		if(N == "none"){
+	  	ggbeeswarm::geom_quasirandom(data = data, aes(x = yi, y = moderator, size = scale, colour = moderator), groupOnX = FALSE, alpha=alpha)
+	  } else{
+	  	ggbeeswarm::geom_quasirandom(data = data, aes(x = yi, y = moderator, size = N, colour = moderator), groupOnX = FALSE, alpha=alpha)
+	  } + 
+
 	  	# 95 %prediction interval (PI)
 	  	ggplot2::geom_errorbarh(aes(xmin = object$mod_table$lowerPR, xmax = object$mod_table$upperPR),  height = 0, show.legend = FALSE, size = 0.5, alpha = 0.6) +
 	  	# 95 %CI
@@ -83,14 +91,14 @@ orchard_plot <- function(object, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"), a
 	  	# setting colours
 	  	ggplot2::annotate('text', x = 0.93, y = (seq(1, dim(object$mod_table)[1], 1)+0.3), label= paste("italic(k)==", object$mod_table$K), parse = TRUE, hjust = "left", size = 3.5) +
 	  	ggplot2::theme_bw() +
+	  	ggplot2::guides(fill = "none", colour = "none") + 
 	  	
-	  	if(N == NULL){
-	  		ggplot2::labs(x = label, y = "", size = "Inverse of Sampling Variance")
+	  	if(N == "none"){
+	  		ggplot2::labs(x = label, y = "", size = "Inverse Sampling Variance")
 	  	}else{
-	  		ggplot2::labs(x = label, y = "", size = expression(paste(italic(N), "(# of effects)")) )
+	  		ggplot2::labs(x = label, y = "", size = expression(paste(italic(N), "(Sample Size)")) )
 	  	} +
-
-  		ggplot2::guides(fill = "none", colour = "none") +  theme(legend.position= c(0.1, 0.98), legend.justification = c(0,1)) +
+	theme(legend.position= c(0.1, 0.98), legend.justification = c(0,1)) +
   		ggplot2::theme(legend.direction="horizontal")
 
 	  return(plot)

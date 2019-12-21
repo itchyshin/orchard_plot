@@ -93,8 +93,9 @@ get_data <- function(model, mod){
 
     yi <- model$yi
     vi <- model$vi
+  type <- attr(model$yi, "measure")
 
-data <- data.frame(yi, vi, moderator)
+data <- data.frame(yi, vi, moderator, type)
 return(data)
 
 }

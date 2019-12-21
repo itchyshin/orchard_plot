@@ -7,7 +7,6 @@
 #'   \item{carat}{weight of the diamond, in carats}
 #'   ...
 #' }
-#' @source \url{}
 #' @name eklof
 #' @docType data
 NULL
@@ -20,7 +19,6 @@ NULL
 #'   \item{carat}{weight of the diamond, in carats}
 #'   ...
 #' }
-#' @source \url{}
 #' @name english
 #' @docType data
 NULL
@@ -33,7 +31,6 @@ NULL
 #'   \item{carat}{weight of the diamond, in carats}
 #'   ...
 #' }
-#' @source \url{}
 #' @name lim
 #' @docType data
 NULL

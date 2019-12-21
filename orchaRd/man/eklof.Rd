@@ -10,9 +10,6 @@
   \item{carat}{weight of the diamond, in carats}
   ...
 }}
-\source{
-\url{}
-}
 \description{
 Dataset from Eklof 2012 meta-analysis.
 }

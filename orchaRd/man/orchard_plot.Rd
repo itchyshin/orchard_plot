@@ -4,17 +4,17 @@
 \alias{orchard_plot}
 \title{orchard_plot}
 \usage{
-orchard_plot(object, data, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"),
-  alpha = 0.8)
+orchard_plot(object, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"),
+  alpha = 0.8, N = NULL)
 }
 \arguments{
 \item{object}{object of class 'rma.mv', 'rma' or 'orchard '}
 
-\item{data}{the data used to fit the rma.mv or rma model}
-
 \item{mod}{the name of a moderator}
 
 \item{es_type}{the type of effect size used in the model, z-transformed Persons correlation coefficient (Zr) or standardised mean difference (i.e., Hedges/Cohen's d, g) (d)}
+
+\item{N}{The vector of sample size}
 }
 \value{
 Orchard plot

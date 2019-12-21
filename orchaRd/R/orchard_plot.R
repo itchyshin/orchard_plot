@@ -14,7 +14,7 @@ Zr_to_r <- function(df){
 #' @description Using a metafor model object of class rma or rma.mv or a results table of class orchard, it creates a an orchard plot from mean effect size estimates for all levels of a given categorical moderator, their corresponding confidence intervals and prediction intervals
 #' @param object object of class 'rma.mv', 'rma' or 'orchard '
 #' @param mod the name of a moderator 
-#' @param data the data used to fit the rma.mv or rma model
+#' @param N  The vector of sample size
 #' @param es_type the type of effect size used in the model, z-transformed Persons correlation coefficient (Zr) or standardised mean difference (i.e., Hedges/Cohen's d, g) (d)
 #' @return Orchard plot
 #' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
@@ -44,58 +44,59 @@ Zr_to_r <- function(df){
 #' }
 #' @export
 
-
-orchard_plot <- function(object, data, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"), alpha = 0.8) {
-
-	data_comlte <- data[stats::complete.cases(data[,mod]),]
+orchard_plot <- function(object, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"), alpha = 0.8, N = NULL) {
 
 	if(any(class(object) %in% c("rma.mv", "rma"))){
 		object <- mod_results(object, mod)
 	}
 
+	      data <- object$data
+	data$scale <- (1/sqrt(data[,"vi"]))
+
 	if(es_type == "Zr"){
 
-		cols <- sapply(object, is.numeric)
-		object[,cols] <- Zr_to_r(object[,cols])
-		data_comlte$yi <- Zr_to_r(data_comlte$yi)
+		cols <- sapply(object$mod_table, is.numeric)
+		object$mod_table[,cols] <- Zr_to_r(object$mod_table[,cols])
+		data$yi <- Zr_to_r(data$yi)
 		label <- "Correlation (r)"
-		lim = c(-1.2,1.2)
-		data_comlte$scale <- data_comlte[,"N"]
+		#lim = c(-1.2,1.2)
 
 	}else{
 		label <- es_type
-		lim = c(min(data_comlte$yi)-(min(data_comlte$yi)*0.1), max(data_comlte$yi)+(max(data_comlte$yi)*0.1))
-		data_comlte$scale <- (1/sqrt(data_comlte[,"vi"]))
-
+		#lim = c(min(data$yi)-(min(data$yi)*0.1), max(data$yi)+(max(data$yi)*0.5))
 	}
 
-	 object$K <- as.vector(by(data_comlte, data_comlte[,mod], function(x) length(x[,"yi"])))
+	 object$mod_table$K <- as.vector(by(data, data[,"moderator"], function(x) length(x[,"yi"])))
 
 	# Make the orchard plot
-	  plot <- ggplot2::ggplot(data = object, aes(x = estimate, y = name)) +
-		
-		#ggplot2::scale_x_continuous(limits=lim) +
-	  	
-	  	ggbeeswarm::geom_quasirandom(data = data_comlte, aes(x = yi, y = data_comlte[,mod], size = data_comlte[,"scale"], colour = data_comlte[,mod]), groupOnX = FALSE, alpha=alpha) + 
-	  	
+	  plot <- ggplot2::ggplot(data = object$mod_table, aes(x = estimate, y = name)) +
+	
+	  	ggbeeswarm::geom_quasirandom(data = data, aes(x = yi, y = moderator, size = scale, colour = moderator), groupOnX = FALSE, alpha=alpha) + 
+	  	#ggplot2::scale_x_continuous(limits=lim) + 
 	  	# 95 %prediction interval (PI)
-	  	ggplot2::geom_errorbarh(aes(xmin = object$lowerPR, xmax = object$upperPR),  height = 0, show.legend = FALSE, size = 0.5, alpha = 0.6) +
+	  	ggplot2::geom_errorbarh(aes(xmin = object$mod_table$lowerPR, xmax = object$mod_table$upperPR),  height = 0, show.legend = FALSE, size = 0.5, alpha = 0.6) +
 	  	# 95 %CI
-	  	ggplot2::geom_errorbarh(aes(xmin = object$lowerCL, xmax = object$upperCL),  height = 0, show.legend = FALSE, size = 1.2) +
+	  	ggplot2::geom_errorbarh(aes(xmin = object$mod_table$lowerCL, xmax = object$mod_table$upperCL),  height = 0, show.legend = FALSE, size = 1.2) +
 	  	ggplot2::geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = alpha) +
 	  	# creating dots and different size (bee-swarm and bubbles)
-	  	ggplot2::geom_point(aes(fill = object$name), size = 3, shape = 21) + #
+	  	ggplot2::geom_point(aes(fill = object$mod_table$name), size = 3, shape = 21) + #
 	  	# setting colours
-	  	ggplot2::annotate('text', x = 0.93, y = (seq(1, dim(object)[1], 1)+0.3), label= paste("italic(k)==", object$K), parse = TRUE, hjust = "left", size = 3.5) +
-	  	ggplot2::labs(x = label, y = "", tag = "") +
-	  	ggplot2::guides(fill = "none", colour = "none") +
+	  	ggplot2::annotate('text', x = 0.93, y = (seq(1, dim(object$mod_table)[1], 1)+0.3), label= paste("italic(k)==", object$mod_table$K), parse = TRUE, hjust = "left", size = 3.5) +
 	  	ggplot2::theme_bw() +
-	  	ggplot2::theme(legend.position="none") +
-	  	ggplot2::theme(axis.text.y = element_text(size = 10, colour ="black",hjust = 0.5, angle = 45))
+	  	
+	  	if(N == NULL){
+	  		ggplot2::labs(x = label, y = "", size = "Inverse of Sampling Variance")
+	  	}else{
+	  		ggplot2::labs(x = label, y = "", size = expression(paste(italic(N), "(# of effects)")) )
+	  	} +
+
+  		ggplot2::guides(fill = "none", colour = "none") +  theme(legend.position= c(0.1, 0.98), legend.justification = c(0,1)) +
+  		ggplot2::theme(legend.direction="horizontal")
 
 	  return(plot)
 
 }
+
 
 #orchard_plot(eklof_MR, data = dat.eklof2012, mod = "Grazer.type", es_type = "lnRR", alpha = 0.8)
 

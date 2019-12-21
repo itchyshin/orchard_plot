@@ -1,6 +1,3 @@
-
-# Functions taken from Shins phylogeny MS
-
 #' @title get_est
 #' @description Function gets estimates from rma objects (metafor)
 #' @param model rma.mv object 
@@ -20,7 +17,6 @@ get_est <- function (model, mod) {
   return(table)
 }
 
-#get_est(lim_MR, "Phylum")
 
 #' @title get_pred
 #' @description Function to get prediction intervals (crediblity intervals) from rma objects (metafor)
@@ -52,12 +48,8 @@ get_pred <- function (model, mod) {
   
   table <- tibble::tibble(name = name, lowerPR = lowerPR, upperPR = upperPR)
   return(table)
-
-
 }
 
-
-#get_pred(lim_MR, "Phylum")
 
 #Here are links for how to do confidence regions for rma.mv regression lines
 #https://www.rdocumentation.org/packages/metafor/versions/1.9-9/topics/predict.rma
@@ -80,6 +72,33 @@ cont_gen <- function (name) {
 }
 
 
+#' @title get_data
+#' @description Collects and builds the data used to fit the rma.mv or rma model in metafor
+#' @param model rma.mv object
+#' @param mod the moderator variable
+#' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+#' @authors Daniel Noble - daniel.noble@anu.edu.au
+#' @return Returns a data frame
+#' @export
+#' 
+get_data <- function(model, mod){
+     X <- as.data.frame(model$X)
+ names <- vapply(stringr::str_split(colnames(X), {{mod}}), function(x) paste(unique(x), collapse = ""), character(1L))
+
+  moderator <- matrix(ncol = 1, nrow = dim(X)[1])
+
+  for(i in 1:ncol(X)){
+      moderator <- ifelse(X[,i] == 1, names[i], moderator)
+  }
+
+    yi <- model$yi
+    vi <- model$vi
+
+data <- data.frame(yi, vi, moderator)
+return(data)
+
+}
+
 #' @title mod_results
 #' @description Using a metafor model object of class rma or rma.mv it creates a table of model results containing the mean effect size estimates for all levels of a given categorical moderator, their corresponding confidence intervals and prediction intervals
 #' @param model rma.mv object 
@@ -100,10 +119,14 @@ cont_gen <- function (name) {
 #' results <- mod_results(eklof_MR, mod = "Grazer.type")
 #' }
 #' @export
-#' 
+
+#model = senior_MR
+ #mod = "ManipType"
 mod_results <- function(model, mod) { 
 
 	if(all(class(model) %in% c("rma.mv", "rma")) == FALSE) {stop("Sorry, you need to fit a metafor model of class rma.mv or rma")}
+
+  data <- get_data(model, mod)
 
 	# Get confidence intervals
 	CI <- get_est(model, mod)
@@ -111,13 +134,27 @@ mod_results <- function(model, mod) {
 	# Get prediction intervals
 	PI <- get_pred(model, mod)
 
-	model_results <- cbind(CI, PI[,-1])
+	model_results <- list(mod_table = cbind(CI, PI[,-1]), data = data)
 
-	class(model_results) <- c("data.frame", "orchard")
+	class(model_results) <- "orchard"
 
 	return(model_results)
 
 }
+
+
+#' @title print.orchard
+#' @description Print method for class 'orchard'
+#' @param object x an R object of class orchard
+#' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+#' @authors Daniel Noble - daniel.noble@anu.edu.au
+#' @return Returns a data frame
+#' @export
+#' 
+print.orchard <- function(object, ...){
+    return(object$mod_table)
+}
+
 
 
 

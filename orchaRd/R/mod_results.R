@@ -7,7 +7,8 @@
 #' @export
 
 get_est <- function (model, mod) {
-      name <- as.factor(stringr::str_replace(row.names(model$beta), {{mod}}, ""))
+      name <- firstup(as.character(stringr::str_replace(row.names(model$beta), {{mod}}, "")))
+
   estimate <- as.numeric(model$beta)
    lowerCL <- model$ci.lb
    upperCL <- model$ci.ub 
@@ -28,7 +29,7 @@ get_est <- function (model, mod) {
 
 get_pred <- function (model, mod) {
 
-  name <- as.factor(stringr::str_replace(row.names(model$beta), {{mod}}, ""))
+  name <- firstup(as.character(stringr::str_replace(row.names(model$beta), {{mod}}, "")))
   len <- length(name)
   
   if(len != 1){
@@ -71,6 +72,18 @@ cont_gen <- function (name) {
   return(names)
 }
 
+#' @title firstup
+#' @description Uppercase moderator names
+#' @param x a character string
+#' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+#' @authors Daniel Noble - daniel.noble@anu.edu.au
+#' @return Returns a character string with all combinations of the moderator level names with upper case first letters
+#' @export
+#' 
+      firstup <- function(x) {
+        substr(x, 1, 1) <- toupper(substr(x, 1, 1))
+        x
+      }
 
 #' @title get_data
 #' @description Collects and builds the data used to fit the rma.mv or rma model in metafor

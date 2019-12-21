@@ -3,6 +3,7 @@
 S3method(print,orchard)
 export(Zr_to_r)
 export(cont_gen)
+export(firstup)
 export(get_data)
 export(get_est)
 export(get_pred)

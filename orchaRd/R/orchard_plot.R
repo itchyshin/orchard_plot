@@ -74,13 +74,7 @@ orchard_plot <- function(object, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"), a
 
 	# Make the orchard plot
 	  plot <- ggplot2::ggplot(data = object$mod_table, aes(x = estimate, y = name)) +
-	
-		if(N == "none"){
-	  	ggbeeswarm::geom_quasirandom(data = data, aes(x = yi, y = moderator, size = scale, colour = moderator), groupOnX = FALSE, alpha=alpha)
-	  } else{
-	  	ggbeeswarm::geom_quasirandom(data = data, aes(x = yi, y = moderator, size = N, colour = moderator), groupOnX = FALSE, alpha=alpha)
-	  } + 
-
+	  	ggbeeswarm::geom_quasirandom(data = data, aes(x = yi, y = moderator, size = scale, colour = moderator), groupOnX = FALSE, alpha=alpha) + 
 	  	# 95 %prediction interval (PI)
 	  	ggplot2::geom_errorbarh(aes(xmin = object$mod_table$lowerPR, xmax = object$mod_table$upperPR),  height = 0, show.legend = FALSE, size = 0.5, alpha = 0.6) +
 	  	# 95 %CI
@@ -92,14 +86,9 @@ orchard_plot <- function(object, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"), a
 	  	ggplot2::annotate('text', x = 0.93, y = (seq(1, dim(object$mod_table)[1], 1)+0.3), label= paste("italic(k)==", object$mod_table$K), parse = TRUE, hjust = "left", size = 3.5) +
 	  	ggplot2::theme_bw() +
 	  	ggplot2::guides(fill = "none", colour = "none") + 
-	  	
-	  	if(N == "none"){
-	  		ggplot2::labs(x = label, y = "", size = "Inverse Sampling Variance")
-	  	}else{
-	  		ggplot2::labs(x = label, y = "", size = expression(paste(italic(N), "(Sample Size)")) )
-	  	} +
-	theme(legend.position= c(0.1, 0.98), legend.justification = c(0,1)) +
-  		ggplot2::theme(legend.direction="horizontal")
+	  	ggplot2::labs(x = label, y = "", size = "Inverse Sampling Variance") + 
+	  	#ggplot2::theme(legend.position= c(0.1, 0.98), legend.justification = c(0,1)) +
+  		#ggplot2::theme(legend.direction="horizontal")
 
 	  return(plot)
 

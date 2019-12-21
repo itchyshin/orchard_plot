@@ -40,10 +40,12 @@ To install `orchaRd` use the following code in R:
 
 ```
 install.packages("devtools")
-devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE)
+devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE, build_vignettes = TRUE)
 library(orchaRd)
 ```
 
 Installation will make the primary functions accessible to users along with their help files. 
 
 # Example of how it works <a name="P4"></a>
+
+In this vignette we'll walk you through a number of 

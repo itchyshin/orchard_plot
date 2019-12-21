@@ -27,3 +27,4 @@ Imports: stats,
 Suggests: testthat,
     knitr,
     rmarkdown
+VignetteBuilder: knitr

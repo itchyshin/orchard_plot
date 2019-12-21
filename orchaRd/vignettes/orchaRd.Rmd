@@ -1,0 +1,49 @@
+---
+title: "orchaRd"
+author: "Shinichi Nakagawa,et al. Daniel Noble"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{orchaRd}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Table of contents
+1. [Introduction](#Introduction)
+2. [Citing orchaRd](#citing)
+3. [Installation](#Installation) 
+4. [Example of how it works](#P4)
+
+
+# Introduction <a name="Introduction"></a>
+
+`orchaRd` allows users to create pretty orchard plots that contain both confidence and prediction intervals around mean effect size estimates, plots the effect size distribution over top such estimates and weights effect sizes by their precision (1/sampling variance) or sample size. `orchaRd` takes a `metafor` object of class `rma.mv` or `rma` and plots the results for the meta-analytic or meta-regression model. Currently, only meta-regression models with a single moderator variable are allowed. `orchaRd` uses `ggplot` for plotting, and as such, layers can be added directly to make plots customizable to the users needs.
+
+# Citing orchaRd <a name="citing"></a>
+
+To cite `orchaRd` in publications one can use the following reference:
+
+```
+Nakagawa, S. et al. 2020. The Orchard Plot: Domesticating the Forest Plot for Use in Ecology and Evolution. Research Synthesis Methods, in press.
+```
+# Installation <a name="Installation"></a>
+
+To install `orchaRd` use the following code in R:
+
+```
+install.packages("devtools")
+devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd")
+library(orchaRd)
+```
+
+Installation will make the primary functions accessible to users along with their help files. 
+
+# Example of how it works <a name="P4"></a>

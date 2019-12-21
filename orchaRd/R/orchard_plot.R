@@ -97,8 +97,8 @@ orchard_plot <- function(object, data, mod, es_type = c("d", "Zr", "lnRR", "lnCV
 
 }
 
-orchard_plot(eklof_MR, data = dat.eklof2012, mod = "Grazer.type", es_type = "lnRR", alpha = 0.8)
+#orchard_plot(eklof_MR, data = dat.eklof2012, mod = "Grazer.type", es_type = "lnRR", alpha = 0.8)
 
 
- colour_ls <- c("#000000", "#E69F00", "#56B4E9", "#009E73",  "#F0E422",  "#0072B2",  "#D55E00", "#CC79A7", "#00008B", "#8B0A50", "#54FF9F", "#999999")
-	 cols <- sample(colour_ls, unique(data_comlte[,mod]))
+ #colour_ls <- c("#000000", "#E69F00", "#56B4E9", "#009E73",  "#F0E422",  "#0072B2",  "#D55E00", "#CC79A7", "#00008B", "#8B0A50", "#54FF9F", "#999999")
+	 #cols <- sample(colour_ls, unique(data_comlte[,mod]))

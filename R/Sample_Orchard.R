@@ -2,14 +2,14 @@
 # Clean up
 rm(list=ls())
 
-install_github("itchyshin/orchard_plot", subdir = "orchaRd")
+devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd")
 # Load packages
 pacman::p_load(metafor, ggplot2, stringr, tidyverse, plyr, ggbeeswarm, patchwork)
 
 
 ################### Example: Zr effect size
 
-load("orchaRd/data/dat.lim2014.1.rda")
+load("./data/lim.rda")
 head(dat.lim2014.1)
 
 # The dataset comes from Lim et al. 2014. Evolution
@@ -31,7 +31,7 @@ lim_results <- mod_results(lim_MR, "Phylum")
 # Create a pdf of the orchard pplot
 pdf("Zr.pdf", height=7, width=7)
 
-  orchard_plot(lim_MR, data = dat.lim2014.1, mod = "Phylum", es_type = "Zr", alpha = 0.2)
+  orchard_plot(lim_MR, data = dat.lim2014.1, mod = "Phylum", es_type = "Zr", alpha = 0.8)
   
 dev.off()  
    
@@ -45,7 +45,7 @@ dev.off()
 
 # ################### Example: d and lnCVR effect sizes
 
-load("orchaRd/data/dat.english2016.2.rda")
+load("./data/english.rda")
 head(dat.english2016.2)
 
 # The dataset comes from English and Uller 2016. Biology Letters, and re-analysed in Senior et al. 2017. Biology Letters for lnCVR
@@ -56,58 +56,56 @@ head(dat.english2016.2)
 # Lets start with d
 
 # We need to calculate the effect sizes
-dat.english2016.2<-escalc(measure="SMD", n1i=NStartControl, sd1i=SD_C, m1i=MeanC, n2i=NStartExpt, sd2i=SD_E, m2i=MeanE, data=dat.english2016.2)
+english<-metafor::escalc(measure="SMD", n1i=NStartControl, sd1i=SD_C, m1i=MeanC, n2i=NStartExpt, sd2i=SD_E, m2i=MeanE, data=english)
 
 # Need to add N in for the scaling of each effect size
-dat.english2016.2$N <- rowSums(dat.english2016.2[,c("NStartControl","NStartExpt")])
+english$N <- rowSums(english[,c("NStartControl","NStartExpt")])
 
 # Lets fit a meta-regression - I am modelling non-independence here (article).
-english_MR<-rma.mv(yi=yi, V=vi, mods=~ManipType-1, random=list(~1|EffectID), data=dat.english2016.2)
+english_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~ManipType-1, random=list(~1|EffectID), data=english)
 summary(english_MR)
 
 # creating a table of results
 english_results <- mod_results(english_MR, "ManipType")
+print(english_results)
+
 # Open a pdf
 pdf("d.pdf", height=4, width=7)
   
-  orchard_plot(english_MR, data = dat.english2016.2, mod = "ManipType", es_type = "lnRR", alpha = 0.7)
+  orchard_plot(english_MR, mod = "ManipType", es_type = "Hedge's d", alpha = 0.7)
 
 dev.off()  
 
 # Alternatively with results
-  orchard_plot(english_results, data = dat.english2016.2, mod = "ManipType", es_type = "lnRR", alpha = 0.2)
+  orchard_plot(english_results, mod = "ManipType", es_type = "lnRR", alpha = 0.2)
 
 # Now lets compare to lnCVR as in Senior et al. 2017
 
 # We need to calculate the effect sizes
-dat.english2016.2<-escalc(measure="CVR", n1i=NStartControl, sd1i=SD_C, m1i=MeanC, n2i=NStartExpt, sd2i=SD_E, m2i=MeanE, data=dat.english2016.2)
+english<-metafor::escalc(measure="CVR", n1i=NStartControl, sd1i=SD_C, m1i=MeanC, n2i=NStartExpt, sd2i=SD_E, m2i=MeanE, data=english)
 
 
 # Lets fit a meta-regression - I am modelling non-independence here (article).
-senior_MR<-rma.mv(yi=yi, V=vi, mods=~ManipType-1, random=list(~1|EffectID), data=dat.english2016.2)
+senior_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~ManipType-1, random=list(~1|EffectID), data=english)
 summary(senior_MR)
 
 # creating a table of results
 senior_results <- mod_results(senior_MR, "ManipType")
+print(senior_results)
 
 # Open a pdf
 pdf("lnCVR.pdf", height=4, width=7)
   
-  #Here is an example of how you can "add" and customize the default plots. 
- 	orchard_plot(senior_MR, data = dat.english2016.2, mod = "ManipType", es_type = "lnCVR", alpha = 0.8) +
-	labs(x = "log Coefficient of Variation (lnCVR)", y = "", size = expression(paste(italic(N), " (# of effects)")) ) +
-  	guides(fill = "none", colour = "none") +  theme(legend.position= c(0.1, 0.98), legend.justification = c(0,1)) +
-  	theme(legend.direction="horizontal")
+  #p1 <- orchard_plot(english_results, data = english, mod = "ManipType", es_type = "lnRR", alpha = 0.2)
+  orchard_plot(senior_MR, mod = "ManipType", es_type = "log Coefficient of Variation (ln CVR)", alpha = 0.8)
+
+  #p1+p2
 
 dev.off()
 
-orchard_plot(senior_MR, data = dat.english2016.2, mod = "ManipType", es_type = "lnCVR", alpha = 0.8) +
-labs(x = expression(paste(italic(r), " (correlation)")), y = "", size = expression(paste(italic(N), " (# of effects)")) ) +
-  guides(fill = "none", colour = "none") +  theme(legend.position= c(0, 1), legend.justification = c(0,1)) +
-  theme(legend.direction="horizontal")
 # ################### Example: lnRR effect size
 
-dat.eklof2012<-read.csv("./data/Eklof-2012-Experimental climate.csv")
+load("./data/eklof.rda")
 head(dat.eklof2012)
 
 # The lnRR example comes from Eklof et al 2012. Ecology Letters

@@ -15,7 +15,7 @@ Zr_to_r <- function(df){
 #' @param object object of class 'rma.mv', 'rma' or 'orchard '
 #' @param mod the name of a moderator 
 #' @param N  The vector of sample size
-#' @param es_type the type of effect size used in the model, z-transformed Persons correlation coefficient (Zr) or standardised mean difference (i.e., Hedges/Cohen's d, g) (d)
+#' @param xlab The effect size measure label.
 #' @return Orchard plot
 #' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
 #' @authors Daniel Noble - daniel.noble@anu.edu.au
@@ -44,30 +44,30 @@ Zr_to_r <- function(df){
 #' }
 #' @export
 
-orchard_plot <- function(object, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"), alpha = 0.8, N = "none") {
+orchard_plot <- function(object, mod, xlab, alpha = 0.8, N = "none") {
 
 	if(any(class(object) %in% c("rma.mv", "rma"))){
 		object <- mod_results(object, mod)
 	}
-
+	   es_type <- unique(data$type)
 	      data <- object$data
 	data$scale <- (1/sqrt(data[,"vi"]))
+	      legend <- "Inverse Sampling Variance"
 
 	if(N != "none" & is.numeric(N)){
-		data$N <- N
+		data$scale <- N
+		      legend <- "Sample Size (N)"
 	}
 
-	if(es_type == "Zr"){
+	if(es_type == "ZCOR"){
 
 		cols <- sapply(object$mod_table, is.numeric)
 		object$mod_table[,cols] <- Zr_to_r(object$mod_table[,cols])
 		data$yi <- Zr_to_r(data$yi)
-		label <- "Correlation (r)"
-		#lim = c(-1.2,1.2)
+		  label <- xlab
 
 	}else{
-		label <- es_type
-		#lim = c(min(data$yi)-(min(data$yi)*0.1), max(data$yi)+(max(data$yi)*0.5))
+		label <- xlab
 	}
 
 	 object$mod_table$K <- as.vector(by(data, data[,"moderator"], function(x) length(x[,"yi"])))
@@ -83,20 +83,10 @@ orchard_plot <- function(object, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"), a
 	  	# creating dots and different size (bee-swarm and bubbles)
 	  	ggplot2::geom_point(aes(fill = object$mod_table$name), size = 3, shape = 21) + #
 	  	# setting colours
-	  	ggplot2::annotate('text', x = 0.93, y = (seq(1, dim(object$mod_table)[1], 1)+0.3), label= paste("italic(k)==", object$mod_table$K), parse = TRUE, hjust = "left", size = 3.5) +
+	  	ggplot2::annotate('text', x = (max(data$yi) + (max(data$yi)*0.10)), y = (seq(1, dim(object$mod_table)[1], 1)+0.3), label= paste("italic(k)==", object$mod_table$K), parse = TRUE, hjust = "left", size = 3.5) +
 	  	ggplot2::theme_bw() +
 	  	ggplot2::guides(fill = "none", colour = "none") + 
-	  	ggplot2::labs(x = label, y = "", size = "Inverse Sampling Variance")
-	  	#ggplot2::theme(legend.position= c(0.1, 0.98), legend.justification = c(0,1)) +
-  		#ggplot2::theme(legend.direction="horizontal")
+	  	ggplot2::labs(x = label, y = "", size = legend)
 
 	  return(plot)
-
 }
-
-
-#orchard_plot(eklof_MR, data = dat.eklof2012, mod = "Grazer.type", es_type = "lnRR", alpha = 0.8)
-
-
- #colour_ls <- c("#000000", "#E69F00", "#56B4E9", "#009E73",  "#F0E422",  "#0072B2",  "#D55E00", "#CC79A7", "#00008B", "#8B0A50", "#54FF9F", "#999999")
-	 #cols <- sample(colour_ls, unique(data_comlte[,mod]))

@@ -85,7 +85,7 @@ print(model_results)
 Here we have the meta-analytic mean for each manipulation type level. If we want to create an orchard plot we can do so quite simply as:
 
 ```{r echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 4, fig.cap = "Orchard plot of diet qualities impact on standardised mean difference"}
-orchaRd::orchard_plot(english_MR, mod="ManipType", es_type = "Hedges' d")
+orchaRd::orchard_plot(english_MR, mod="ManipType", xlab = "Hedges' d")
 ```
 
 Above, we simply add in the metafor model and it will create a default orchard plot. Alternatively, we could also add in the table of results and modify alpha to make the data a little less pronounced:
@@ -109,7 +109,7 @@ summary(senior_MR)
 senior_results <- mod_results(senior_MR, "ManipType")
 print(senior_results)
 
-orchard_plot(senior_MR, mod = "ManipType", es_type = "log Coefficient of Variation (ln CVR)", alpha = 0.8)
+orchard_plot(senior_MR, mod = "ManipType", xlab = "log Coefficient of Variation (ln CVR)", alpha = 0.8)
 
 ```
 
@@ -137,14 +137,14 @@ eklof$N <- rowSums(eklof[,c("N_control", "N_treatment")])
 # fit a MLMR - accouting for some non-independence
 eklof_MR<-rma.mv(yi=yi, V=vi, mods=~ Grazer.type-1, random=list(~1|ExptID, ~1|Datapoint), data=eklof)
 
-orchard_plot(eklof_MR, mod = "Grazer.type", es_type = "log Response Ratio (lnRR)")
+orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log Response Ratio (lnRR)")
 
 ```
 Our orchard plot shows the results of a re-analysis of their data. The effects are negative for both Gastropods and Amphipods suggesting that mean abundance/biomass in the control group is lower than in the treatment groups, although the effect is largest, and is statistically significant, for Amphipods. In both cases the prediction intervals reveal the extent of heterogeneity, with positive effects predicted to be observed.
 
 But, the figure is cut off a bit. A useful thing about `orchard` is that it takes advantage of element wise addition so users can adjust the look of their figures quite easily. So, we can modify the axes if we would like:
 ```{r echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 4, fig.cap = "Orchard plot of the effects of predation on benthic invertebrate communities compared using the log response ratio where we add an element and change the scale of the x-axis", warnings = FALSE}
-orchard_plot(eklof_MR, mod = "Grazer.type", es_type = "log Response Ratio (lnRR)") + 
+orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log Response Ratio (lnRR)") + 
 scale_x_continuous(expand = c(0.2,0.2))
 ```
 
@@ -169,7 +169,7 @@ summary(lim_MR)
 Now that we have the model fit we can plot our orchard and do some small changes to make it pretty. Also, because we are using Zr, we can use "Zr" and it will do the conversions for us:
 
 ```{r echo = TRUE, eval = TRUE, fig.width = 6.597222, fig.height = 9, fig.cap = "Orchard plot of the the strength of correlation between maternal and offspring size within-species"}
-	orchard_plot(lim_MR, mod = "Phylum", es_type = "Zr", alpha = 0.60) + 
+	orchard_plot(lim_MR, mod = "Phylum", xlab = "Zr", alpha = 0.60) + 
   	guides(fill = "none", colour = "none") +  
   	theme(legend.position= c(0.05, 0.99), legend.justification = c(0,1), legend.key.size = unit(1, "mm")) +
   	theme(legend.direction="horizontal") + 

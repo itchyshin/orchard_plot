@@ -4,15 +4,14 @@
 \alias{orchard_plot}
 \title{orchard_plot}
 \usage{
-orchard_plot(object, mod, es_type = c("d", "Zr", "lnRR", "lnCVR"),
-  alpha = 0.8, N = "none")
+orchard_plot(object, mod = "Int", xlab, alpha = 0.8, N = "none")
 }
 \arguments{
 \item{object}{object of class 'rma.mv', 'rma' or 'orchard '}
 
-\item{mod}{the name of a moderator}
+\item{mod}{the name of a moderator . Otherwise, "Int" for intercept only model}
 
-\item{es_type}{the type of effect size used in the model, z-transformed Persons correlation coefficient (Zr) or standardised mean difference (i.e., Hedges/Cohen's d, g) (d)}
+\item{xlab}{The effect size measure label.}
 
 \item{N}{The vector of sample size}
 }

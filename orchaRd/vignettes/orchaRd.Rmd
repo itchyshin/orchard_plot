@@ -63,6 +63,10 @@ data(english)
 # We need to calculate the effect sizes, in this case d
 english<-metafor::escalc(measure="SMD", n1i=NStartControl, sd1i=SD_C, m1i=MeanC, n2i=NStartExpt, sd2i=SD_E, m2i=MeanE, data=english)
 
+
+english_MR_int<-metafor::rma.mv(yi=yi, V=vi, random=list(~1|EffectID), data=english)
+summary(english_MR_int)
+
 english_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~ManipType-1, random=list(~1|EffectID), data=english)
 summary(english_MR)
 ```
@@ -70,8 +74,12 @@ summary(english_MR)
 We can see from the above that we have fit a model without an intercept here and thus the mean estimates in each of the levels of the moderator "Manipulation Type" are estimated. Now that we have fit out meta-regression model we can get the confidence intervals and prediction intervals with a few function in the `orchaRd` package as follows
 
 ```{r echo = TRUE, eval = TRUE}
- model_results <- orchaRd::mod_results(english_MR, mod="ManipType")
- print(model_results)
+model_results <- orchaRd::mod_results(english_MR, mod="ManipType")
+print(model_results)
+
+model_results <- orchaRd::mod_results(english_MR_int, mod="Int")
+print(model_results)
+ 
 ```
 
 Here we have the meta-analytic mean for each manipulation type level. If we want to create an orchard plot we can do so quite simply as:
@@ -83,7 +91,7 @@ orchaRd::orchard_plot(english_MR, mod="ManipType", es_type = "Hedges' d")
 Above, we simply add in the metafor model and it will create a default orchard plot. Alternatively, we could also add in the table of results and modify alpha to make the data a little less pronounced:
 
 ```{r echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 4, fig.cap = "Orchard plot of diet qualities impact on standardised mean difference but instead of using the metafor model, using the model results table and changing the transparency of the data"}
-orchaRd::orchard_plot(model_results, mod="ManipType", es_type = "Hedges' d", alpha = 0.2)
+orchaRd::orchard_plot(model_results, mod="Int", xlab = "Hedges' d", alpha = 0.2)
 ```
 
 Our orchard plot above shows that overall estimate from a random-effects meta-analysis of 77 effect sizes is centered on zero, with a 95% CI that spans the line of no-effect. The prediction intervals clearly demonstrate the high level of heterogeneity, with effects size less than -0.5 and greater than 0.5 predicted to be observed. 

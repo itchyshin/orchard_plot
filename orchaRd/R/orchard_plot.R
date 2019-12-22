@@ -13,7 +13,7 @@ Zr_to_r <- function(df){
 #' @title orchard_plot
 #' @description Using a metafor model object of class rma or rma.mv or a results table of class orchard, it creates a an orchard plot from mean effect size estimates for all levels of a given categorical moderator, their corresponding confidence intervals and prediction intervals
 #' @param object object of class 'rma.mv', 'rma' or 'orchard '
-#' @param mod the name of a moderator 
+#' @param mod the name of a moderator . Otherwise, "Int" for intercept only model
 #' @param N  The vector of sample size
 #' @param xlab The effect size measure label.
 #' @return Orchard plot
@@ -44,18 +44,22 @@ Zr_to_r <- function(df){
 #' }
 #' @export
 
-orchard_plot <- function(object, mod, xlab, alpha = 0.8, N = "none") {
+orchard_plot <- function(object, mod = "Int", xlab, alpha = 0.8, N = "none") {
 
 	if(any(class(object) %in% c("rma.mv", "rma"))){
-		object <- mod_results(object, mod)
+		if(mod != "Int"){
+			object <- mod_results(object, mod)
+		} else{
+			object <- mod_results(object, mod = "Int")
+		}
 	}
-	   es_type <- unique(data$type)
-	      data <- object$data
-	data$scale <- (1/sqrt(data[,"vi"]))
+	     es_type <- as.character(unique(object$data$type))
+	        data <- object$data
+	  data$scale <- (1/sqrt(data[,"vi"]))
 	      legend <- "Inverse Sampling Variance"
 
 	if(N != "none" & is.numeric(N)){
-		data$scale <- N
+		  data$scale <- N
 		      legend <- "Sample Size (N)"
 	}
 

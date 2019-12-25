@@ -18,7 +18,7 @@ Zr_to_r <- function(df){
 #' @param N  The vector of sample size which an effect size is based on. If defult, we use precision (the inverse of sampling standard error)
 #' @param alpha The level of transparency for pieces of frust (effec size)
 #' @param angle The angle of y labels. The defult is 90 degreee
-#' @param colorblind If TRUE, it uses 8 colour blind friendly colors (7 colours plus grey)
+#' @param cb If TRUE, it uses 8 colour blind friendly colors (7 colours plus grey)
 #' @return Orchard plot
 #' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
 #' @authors Daniel Noble - daniel.noble@anu.edu.au
@@ -47,7 +47,7 @@ Zr_to_r <- function(df){
 #' }
 #' @export
 
-orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.8, angle = 90, colorblind = TRUE) {
+orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.8, angle = 90, cb = TRUE) {
 
 	if(any(class(object) %in% c("rma.mv", "rma"))){
 		if(mod != "Int"){
@@ -100,7 +100,7 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.8, ang
 	  	ggplot2::labs(x = label, y = "", size = legend) +
 	    ggplot2::theme(axis.text.y = element_text(size = 10, colour ="black", hjust = 0.5, angle = 90))
 	  
-	  if(K = TRUE){
+	  if(cb == TRUE){
 	    data$scale <- N
 	    plot <- plot + 
 	      scale_fill_manual(values=cbpl) +

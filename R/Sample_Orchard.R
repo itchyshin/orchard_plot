@@ -9,8 +9,8 @@ pacman::p_load(metafor, ggplot2, stringr, tidyverse, plyr, ggbeeswarm, patchwork
 
 ################### Example: Zr effect size
 
-load(here("data", "lim.rda"))
-head(dat.lim2014.1)
+load(here("orchaRd", "data", "lim.rda"))
+head(lim)
 
 # The dataset comes from Lim et al. 2014. Evolution
 # The effect size (column yi) is the correlation (Zr) between maternal size and offspring/propagule size, N is the number of observations (could vary from mothers to offspring depending on the paper)
@@ -19,7 +19,7 @@ head(dat.lim2014.1)
 # Lim et al found the correlation is positive and significant and relatively consistent across different types of species (they used phylogenetic meta-analysis/regression)
 
 # We need to calculate the sampling varaince
-dat.lim2014.1$vi<-1/(dat.lim2014.1$N - 3)
+dat.lim2014.1$vi<-1/(lim1$N - 3)
 
 # Lets sfit a meta-regression - I will do Article non-independence. The phylogenetic model found ohylogenetic effects - instead we could fit Phylum as a fixed effect and explore them with an Orchard Plot
 lim_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~Phylum-1, random=list(~1|Article, ~1|Datapoint), data=dat.lim2014.1)

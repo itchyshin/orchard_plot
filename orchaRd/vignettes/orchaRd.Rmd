@@ -111,7 +111,9 @@ summary(senior_MR)
 senior_results <- mod_results(senior_MR, "ManipType")
 print(senior_results)
 
-orchard_plot(senior_MR, mod = "ManipType", xlab = "log(CV ratio) (lnCVR)")
+orchard_plot(senior_MR, mod = "ManipType", xlab = "log(CV ratio) (lnCVR)")  +
+  scale_fill_manual(values=  c("#F0E442", "#0072B2")) +
+  scale_colour_manual(values= c("#F0E442", "#0072B2"))
 
 ```
 
@@ -139,7 +141,9 @@ eklof$N <- rowSums(eklof[,c("N_control", "N_treatment")])
 # fit a MLMR - accouting for some non-independence
 eklof_MR<-rma.mv(yi=yi, V=vi, mods=~ Grazer.type-1, random=list(~1|ExptID, ~1|Datapoint), data=eklof)
 
-orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)")
+orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)") +
+  scale_fill_manual(values=  c("#D55E00", "#CC79A7")) +
+  scale_colour_manual(values= c("#D55E00", "#CC79A7"))
 
 ```
 Our orchard plot shows the results of a re-analysis of their data. The effects are negative for both Gastropods and Amphipods suggesting that mean abundance/biomass in the control group is lower than in the treatment groups, although the effect is largest, and is statistically significant, for Amphipods. In both cases the prediction intervals reveal the extent of heterogeneity, with positive effects predicted to be observed.

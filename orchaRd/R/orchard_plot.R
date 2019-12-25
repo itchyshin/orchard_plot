@@ -48,7 +48,7 @@ Zr_to_r <- function(df){
 #' }
 #' @export
 
-orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, angle = 90, cb = TRUE, es_type = c("else", "Zr")) {
+orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, angle = 90, cb = TRUE, es_type = "else") {
 
 	if(any(class(object) %in% c("rma.mv", "rma"))){
 		if(mod != "Int"){
@@ -80,7 +80,7 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, ang
 	 object$mod_table$K <- as.vector(by(data, data[,"moderator"], function(x) length(x[,"yi"])))
 	 
 	# colour blind friendly colours with grey
-	 cbpl <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
+	 cbpl <- c("#E69F00","#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7",  "#56B4E9", "#999999")
 
 	# Make the orchard plot
 	  plot <- ggplot2::ggplot(data = object$mod_table, aes(x = estimate, y = name)) +

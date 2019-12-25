@@ -4,12 +4,12 @@ rm(list=ls())
 
 devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd")
 # Load packages
-pacman::p_load(metafor, ggplot2, stringr, tidyverse, plyr, ggbeeswarm, patchwork)
+pacman::p_load(metafor, ggplot2, stringr, tidyverse, plyr, ggbeeswarm, patchwork, here)
 
 
 ################### Example: Zr effect size
 
-load("./data/lim.rda")
+load(here("data", "lim.rda"))
 head(dat.lim2014.1)
 
 # The dataset comes from Lim et al. 2014. Evolution

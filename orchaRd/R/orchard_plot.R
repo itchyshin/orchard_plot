@@ -61,7 +61,7 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.8, ang
 	  data$scale <- (1/sqrt(data[,"vi"]))
 	      legend <- "Precision"
 
-	if(K != "none" & is.numeric(N)){
+	if(N != "none" & is.numeric(N)){
 		  data$scale <- N
 		      legend <- "Sample Size (N)"
 	}

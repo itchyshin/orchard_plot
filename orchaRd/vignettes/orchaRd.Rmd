@@ -85,13 +85,15 @@ print(model_results)
 Here we have the meta-analytic mean for each manipulation type level. If we want to create an orchard plot we can do so quite simply as:
 
 ```{r echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 4, fig.cap = "Orchard plot of diet qualities impact on standardised mean difference"}
-orchard_plot(english_MR, mod="ManipType", xlab = "Standardised mean difference", alpha = 0.5)
+orchard_plot(english_MR, mod="ManipType", xlab = "Standardised mean difference")
 ```
 
-Above, we simply add in the metafor model and it will create a default orchard plot. Alternatively, we could also add in the table of results and modify alpha to make the data a little less pronounced:
+Above, we simply add in the metafor model and it will create a default orchard plot. Alternatively, we could also add in the table of results and also we take advantage of element wise addition so unsers can adjust the look of their figures quite easily. In this instance, we change colours of the overall estimate and effect sizes:
 
-```{r echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 3, fig.cap = "Orchard plot of diet qualities impact on standardised mean difference but instead of using the metafor model, using the model results table and changing the transparency of the data"}
-orchard_plot(model_results, mod="Int", xlab = "Standardised mean difference", alpha =0.5)
+```{r echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 3, fig.cap = "Orchard plot of diet qualities impact on standardised mean difference but instead of using the metafor model, using the model results table and grey colour"}
+orchard_plot(model_results, mod="Int", xlab = "Standardised mean difference") +
+  scale_fill_manual(values="grey") +
+  scale_colour_manual(values="grey")
 ```
 
 Our orchard plot above shows that overall estimate from a random-effects meta-analysis of 77 effect sizes is centered on zero, with a 95% CI that spans the line of no-effect. The prediction intervals clearly demonstrate the high level of heterogeneity, with effects size less than -0.5 and greater than 0.5 predicted to be observed. 
@@ -109,7 +111,7 @@ summary(senior_MR)
 senior_results <- mod_results(senior_MR, "ManipType")
 print(senior_results)
 
-orchard_plot(senior_MR, mod = "ManipType", xlab = "log(CV ratio) (lnCVR)", alpha = 0.8)
+orchard_plot(senior_MR, mod = "ManipType", xlab = "log(CV ratio) (lnCVR)")
 
 ```
 
@@ -141,13 +143,6 @@ orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)")
 
 ```
 Our orchard plot shows the results of a re-analysis of their data. The effects are negative for both Gastropods and Amphipods suggesting that mean abundance/biomass in the control group is lower than in the treatment groups, although the effect is largest, and is statistically significant, for Amphipods. In both cases the prediction intervals reveal the extent of heterogeneity, with positive effects predicted to be observed.
-
-But, the figure is cut off a bit. A useful thing about `orchard` is that it takes advantage of element wise addition so users can adjust the look of their figures quite easily. So, we can modify the axes if we would like:
-```{r echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 4, fig.cap = "Orchard plot of the effects of predation on benthic invertebrate communities compared using the log response ratio where we add an element and change the scale of the x-axis", warnings = FALSE}
-orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)") + 
-scale_x_continuous(expand = c(0.2,0.2))
-```
-
 
 #### Example 3: Maternal-Offspring Morphological Correlations
 

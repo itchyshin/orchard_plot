@@ -48,13 +48,13 @@ Zr_to_r <- function(df){
 #' }
 #' @export
 
-orchard_plot <- function(model, mod = "Int", xlab, N = "none", alpha = 0.5, angle = 90, cb = TRUE, es_type = c("else", "Zr")) {
+orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, angle = 90, cb = TRUE, es_type = c("else", "Zr")) {
 
-	if(any(class(model) %in% c("rma.mv", "rma"))){
+	if(any(class(object) %in% c("rma.mv", "rma"))){
 		if(mod != "Int"){
-			object <- mod_results(model, mod)
+			object <- mod_results(object, mod)
 		} else{
-			object <- mod_results(model, mod = "Int")
+			object <- mod_results(object, mod = "Int")
 		}
 	}
 	        data <- object$data

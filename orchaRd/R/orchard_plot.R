@@ -98,7 +98,7 @@ orchard_plot <- function(model, mod = "Int", xlab, N = "none", alpha = 0.5, angl
 	  	ggplot2::theme_bw() +
 	    ggplot2::guides(fill = "none", colour = "none") + 
 	    ggplot2::theme(legend.position= c(1, 0), legend.justification = c(1, 0)) +
-	    ggplot2::theme(legend.title = element_text(size = 6)) +
+	    ggplot2::theme(legend.title = element_text(size = 9)) +
 	    ggplot2::theme(legend.direction="horizontal") +
 	    ggplot2::theme(legend.background = element_blank()) +
 	  	ggplot2::labs(x = label, y = "", size = legend) +

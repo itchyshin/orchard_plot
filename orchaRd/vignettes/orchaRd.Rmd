@@ -1,6 +1,6 @@
 ---
 title: "orchaRd: An R package for plotting prediction intervals and orchard plots"
-author: "S. Nakagawa, M. Lagisz, R. E. O’Dea, J. Rutkowska, D.W.A. Noble, and A. M. Senior"
+author: "S. Nakagawa, M. Lagisz, R. E. O’Dea, J. Rutkowska, Y. Yang, D.W.A. Noble, and A. M. Senior"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >

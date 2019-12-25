@@ -13,9 +13,12 @@ Zr_to_r <- function(df){
 #' @title orchard_plot
 #' @description Using a metafor model object of class rma or rma.mv or a results table of class orchard, it creates a an orchard plot from mean effect size estimates for all levels of a given categorical moderator, their corresponding confidence intervals and prediction intervals
 #' @param object object of class 'rma.mv', 'rma' or 'orchard '
-#' @param mod the name of a moderator . Otherwise, "Int" for intercept only model
-#' @param N  The vector of sample size
+#' @param mod the name of a moderator . Otherwise, "Int" for intercept only model.
 #' @param xlab The effect size measure label.
+#' @param N  The vector of sample size which an effect size is based on. If defult, we use precision (the inverse of sampling standard error)
+#' @param alpha The level of transparency for pieces of frust (effec size)
+#' @param angle The angle of y labels. The defult is 90 degreee
+#' @param colorblind If TRUE, it uses 8 colour blind friendly colors (7 colours plus grey)
 #' @return Orchard plot
 #' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
 #' @authors Daniel Noble - daniel.noble@anu.edu.au
@@ -44,7 +47,7 @@ Zr_to_r <- function(df){
 #' }
 #' @export
 
-orchard_plot <- function(object, mod = "Int", xlab, alpha = 0.8, N = "none") {
+orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.8, angle = 90, colorblind = TRUE) {
 
 	if(any(class(object) %in% c("rma.mv", "rma"))){
 		if(mod != "Int"){
@@ -56,9 +59,9 @@ orchard_plot <- function(object, mod = "Int", xlab, alpha = 0.8, N = "none") {
 	     es_type <- as.character(unique(object$data$type))
 	        data <- object$data
 	  data$scale <- (1/sqrt(data[,"vi"]))
-	      legend <- "Inverse Sampling Variance"
+	      legend <- "Precision"
 
-	if(N != "none" & is.numeric(N)){
+	if(K != "none" & is.numeric(N)){
 		  data$scale <- N
 		      legend <- "Sample Size (N)"
 	}
@@ -75,22 +78,34 @@ orchard_plot <- function(object, mod = "Int", xlab, alpha = 0.8, N = "none") {
 	}
 
 	 object$mod_table$K <- as.vector(by(data, data[,"moderator"], function(x) length(x[,"yi"])))
+	 
+	# colour blind friendly colours with grey
+	 cbpl <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999")
 
 	# Make the orchard plot
 	  plot <- ggplot2::ggplot(data = object$mod_table, aes(x = estimate, y = name)) +
+	    # pieces of fruit (bee-swarm and bubbles)
 	  	ggbeeswarm::geom_quasirandom(data = data, aes(x = yi, y = moderator, size = scale, colour = moderator), groupOnX = FALSE, alpha=alpha) + 
-	  	# 95 %prediction interval (PI)
+	  	# 95 %prediction interval (PI): twigs
 	  	ggplot2::geom_errorbarh(aes(xmin = object$mod_table$lowerPR, xmax = object$mod_table$upperPR),  height = 0, show.legend = FALSE, size = 0.5, alpha = 0.6) +
-	  	# 95 %CI
+	  	# 95 %CI: branches
 	  	ggplot2::geom_errorbarh(aes(xmin = object$mod_table$lowerCL, xmax = object$mod_table$upperCL),  height = 0, show.legend = FALSE, size = 1.2) +
 	  	ggplot2::geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = alpha) +
-	  	# creating dots and different size (bee-swarm and bubbles)
-	  	ggplot2::geom_point(aes(fill = object$mod_table$name), size = 3, shape = 21) + #
+	  	# creating dots for truncks
+	  	ggplot2::geom_point(aes(fill = object$mod_table$name), size = 3, shape = 21) + 
 	  	# setting colours
 	  	ggplot2::annotate('text', x = (max(data$yi) + (max(data$yi)*0.10)), y = (seq(1, dim(object$mod_table)[1], 1)+0.3), label= paste("italic(k)==", object$mod_table$K), parse = TRUE, hjust = "left", size = 3.5) +
 	  	ggplot2::theme_bw() +
 	  	ggplot2::guides(fill = "none", colour = "none") + 
-	  	ggplot2::labs(x = label, y = "", size = legend)
+	  	ggplot2::labs(x = label, y = "", size = legend) +
+	    ggplot2::theme(axis.text.y = element_text(size = 10, colour ="black", hjust = 0.5, angle = 90))
+	  
+	  if(K = TRUE){
+	    data$scale <- N
+	    plot <- plot + 
+	      scale_fill_manual(values=cbpl) +
+	      scale_colour_manual(values=cbpl)
+	  }
 
 	  return(plot)
 }

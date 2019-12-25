@@ -19,7 +19,7 @@ head(dat.lim2014.1)
 # Lim et al found the correlation is positive and significant and relatively consistent across different types of species (they used phylogenetic meta-analysis/regression)
 
 # We need to calculate the sampling varaince
-dat.lim2014.1$vi<-(1/sqrt(dat.lim2014.1$N - 3))^2
+dat.lim2014.1$vi<-1/(dat.lim2014.1$N - 3)
 
 # Lets sfit a meta-regression - I will do Article non-independence. The phylogenetic model found ohylogenetic effects - instead we could fit Phylum as a fixed effect and explore them with an Orchard Plot
 lim_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~Phylum-1, random=list(~1|Article, ~1|Datapoint), data=dat.lim2014.1)
@@ -72,7 +72,7 @@ print(english_results)
 # Open a pdf
 pdf("d.pdf", height=4, width=7)
   
-  orchard_plot(english_MR, mod = "ManipType", es_type = "Hedge's d", alpha = 0.7)
+  orchard_plot(english_MR, mod = "ManipType", es_type = "Standardized mean difference", alpha = 0.7)
 
 dev.off()  
 
@@ -97,7 +97,7 @@ print(senior_results)
 pdf("lnCVR.pdf", height=4, width=7)
   
   #p1 <- orchard_plot(english_results, data = english, mod = "ManipType", es_type = "lnRR", alpha = 0.2)
-  orchard_plot(senior_MR, mod = "ManipType", es_type = "log Coefficient of Variation (ln CVR)", alpha = 0.8)
+  orchard_plot(senior_MR, mod = "ManipType", es_type = "Response ratio (lnRR)", alpha = 0.8)
 
   #p1+p2
 
@@ -130,7 +130,7 @@ eklof_results <- mod_results(eklof_MR, "Grazer.type")
 # Open a pdf
 pdf("lnRR.pdf", height=4, width=7)
 
-  orchard_plot(eklof_results, data = dat.eklof2012, mod = "Grazer.type", es_type = "lnRR")
+  orchard_plot(eklof_results, data = dat.eklof2012, mod = "Grazer.type", es_type = "Response ratio (lnRR)")
   
 dev.off()
 

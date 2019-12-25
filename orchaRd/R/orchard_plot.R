@@ -99,7 +99,7 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.8, ang
 	  	ggplot2::guides(fill = "none", colour = "none") + 
 	  	ggplot2::labs(x = label, y = "", size = legend) +
 	    ggplot2::theme(axis.text.y = element_text(size = 10, colour ="black", hjust = 0.5, angle = 90))
-	  
+	  # putting colours in
 	  if(cb == TRUE){
 	    data$scale <- N
 	    plot <- plot + 

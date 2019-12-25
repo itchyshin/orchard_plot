@@ -12,13 +12,14 @@ Zr_to_r <- function(df){
 
 #' @title orchard_plot
 #' @description Using a metafor model object of class rma or rma.mv or a results table of class orchard, it creates a an orchard plot from mean effect size estimates for all levels of a given categorical moderator, their corresponding confidence intervals and prediction intervals
-#' @param object object of class 'rma.mv', 'rma' or 'orchard '
+#' @param model model object of class 'rma.mv', 'rma' or 'orchard '
 #' @param mod the name of a moderator . Otherwise, "Int" for intercept only model.
 #' @param xlab The effect size measure label.
 #' @param N  The vector of sample size which an effect size is based on. If defult, we use precision (the inverse of sampling standard error)
 #' @param alpha The level of transparency for pieces of frust (effec size)
 #' @param angle The angle of y labels. The defult is 90 degreee
 #' @param cb If TRUE, it uses 8 colour blind friendly colors (7 colours plus grey)
+#' @param es_type If set to "Zr", Zr will be converted to correlation
 #' @return Orchard plot
 #' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
 #' @authors Daniel Noble - daniel.noble@anu.edu.au
@@ -47,16 +48,15 @@ Zr_to_r <- function(df){
 #' }
 #' @export
 
-orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.8, angle = 90, cb = TRUE) {
+orchard_plot <- function(model, mod = "Int", xlab, N = "none", alpha = 0.5, angle = 90, cb = TRUE, es_type = c("else", "Zr")) {
 
-	if(any(class(object) %in% c("rma.mv", "rma"))){
+	if(any(class(model) %in% c("rma.mv", "rma"))){
 		if(mod != "Int"){
-			object <- mod_results(object, mod)
+			object <- mod_results(model, mod)
 		} else{
-			object <- mod_results(object, mod = "Int")
+			object <- mod_results(model, mod = "Int")
 		}
 	}
-	     es_type <- as.character(unique(object$data$type))
 	        data <- object$data
 	  data$scale <- (1/sqrt(data[,"vi"]))
 	      legend <- "Precision"
@@ -66,7 +66,7 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.8, ang
 		      legend <- "Sample Size (N)"
 	}
 
-	if(es_type == "ZCOR"){
+	if(es_type == "Zr"){
 
 		cols <- sapply(object$mod_table, is.numeric)
 		object$mod_table[,cols] <- Zr_to_r(object$mod_table[,cols])
@@ -94,11 +94,17 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.8, ang
 	  	# creating dots for truncks
 	  	ggplot2::geom_point(aes(fill = object$mod_table$name), size = 3, shape = 21) + 
 	  	# setting colours
-	  	ggplot2::annotate('text', x = (max(data$yi) + (max(data$yi)*0.10)), y = (seq(1, dim(object$mod_table)[1], 1)+0.3), label= paste("italic(k)==", object$mod_table$K), parse = TRUE, hjust = "left", size = 3.5) +
+	  	ggplot2::annotate('text', x = (max(data$yi) + (max(data$yi)*0.10)), y = (seq(1, dim(object$mod_table)[1], 1)+0.3), label= paste("italic(k)==", object$mod_table$K), parse = TRUE, hjust = "right", size = 3.5) +
 	  	ggplot2::theme_bw() +
-	  	ggplot2::guides(fill = "none", colour = "none") + 
+	    ggplot2::guides(fill = "none", colour = "none") + 
+	    ggplot2::theme(legend.position= c(1, 0), legend.justification = c(1, 0)) +
+	    ggplot2::theme(legend.title = element_text(size = 6)) +
+	    ggplot2::theme(legend.direction="horizontal") +
+	    ggplot2::theme(legend.background = element_blank()) +
 	  	ggplot2::labs(x = label, y = "", size = legend) +
-	    ggplot2::theme(axis.text.y = element_text(size = 10, colour ="black", hjust = 0.5, angle = 90))
+	    ggplot2::theme(axis.text.y = element_text(size = 10, colour ="black", 
+	                                              hjust = 0.5, 
+	                                              angle = angle))
 	  # putting colours in
 	  if(cb == TRUE){
 	    data$scale <- N

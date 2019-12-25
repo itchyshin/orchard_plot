@@ -29,8 +29,8 @@ knitr::opts_chunk$set(
 
 To cite `orchaRd` in publications one can use the following reference:
 
-Nakagawa, S. et al. 2020. The Orchard Plot: Domesticating the Forest Plot 
-for Use in Ecology and Evolution. Research Synthesis Methods, in press.
+Nakagawa, S. et al. 2020. The Orchard Plot: Cutlivatinng the Forest Plot 
+for Use in Ecology,  Evolution and Beyond. Research Synthesis Methods, in review
 
 # Installation
 
@@ -85,20 +85,20 @@ print(model_results)
 Here we have the meta-analytic mean for each manipulation type level. If we want to create an orchard plot we can do so quite simply as:
 
 ```{r echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 4, fig.cap = "Orchard plot of diet qualities impact on standardised mean difference"}
-orchaRd::orchard_plot(english_MR, mod="ManipType", xlab = "Hedges' d")
+orchard_plot(english_MR, mod="ManipType", xlab = "Standardised mean difference", alpha = 0.5)
 ```
 
 Above, we simply add in the metafor model and it will create a default orchard plot. Alternatively, we could also add in the table of results and modify alpha to make the data a little less pronounced:
 
-```{r echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 4, fig.cap = "Orchard plot of diet qualities impact on standardised mean difference but instead of using the metafor model, using the model results table and changing the transparency of the data"}
-orchaRd::orchard_plot(model_results, mod="Int", xlab = "Hedges' d", alpha = 0.2)
+```{r echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 3, fig.cap = "Orchard plot of diet qualities impact on standardised mean difference but instead of using the metafor model, using the model results table and changing the transparency of the data"}
+orchard_plot(model_results, mod="Int", xlab = "Standardised mean difference", alpha =0.5)
 ```
 
 Our orchard plot above shows that overall estimate from a random-effects meta-analysis of 77 effect sizes is centered on zero, with a 95% CI that spans the line of no-effect. The prediction intervals clearly demonstrate the high level of heterogeneity, with effects size less than -0.5 and greater than 0.5 predicted to be observed. 
 
 In a subsequent publication, Senior et al. (2017) analysed this dataset for effects of dietary-restriction on among-individual variation in the age at death using the log coefficient of variation ratio. 
 
-```{r fig.width = 10, fig.height = 4, fig.cap = "Orchard plot of diet qualities impact on log coefficient of variation"}
+```{r fig.width = 6, fig.height = 4, fig.cap = "Orchard plot of diet qualities impact on log coefficient of variation"}
 english<-metafor::escalc(measure="CVR", n1i=NStartControl, sd1i=SD_C, m1i=MeanC, n2i=NStartExpt, sd2i=SD_E, m2i=MeanE, data=english)
 
 # Lets fit a meta-regression - I am modelling non-independence here (article).
@@ -109,7 +109,7 @@ summary(senior_MR)
 senior_results <- mod_results(senior_MR, "ManipType")
 print(senior_results)
 
-orchard_plot(senior_MR, mod = "ManipType", xlab = "log Coefficient of Variation (ln CVR)", alpha = 0.8)
+orchard_plot(senior_MR, mod = "ManipType", xlab = "log(CV ratio) (lnCVR)", alpha = 0.8)
 
 ```
 
@@ -137,14 +137,14 @@ eklof$N <- rowSums(eklof[,c("N_control", "N_treatment")])
 # fit a MLMR - accouting for some non-independence
 eklof_MR<-rma.mv(yi=yi, V=vi, mods=~ Grazer.type-1, random=list(~1|ExptID, ~1|Datapoint), data=eklof)
 
-orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log Response Ratio (lnRR)")
+orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)")
 
 ```
 Our orchard plot shows the results of a re-analysis of their data. The effects are negative for both Gastropods and Amphipods suggesting that mean abundance/biomass in the control group is lower than in the treatment groups, although the effect is largest, and is statistically significant, for Amphipods. In both cases the prediction intervals reveal the extent of heterogeneity, with positive effects predicted to be observed.
 
 But, the figure is cut off a bit. A useful thing about `orchard` is that it takes advantage of element wise addition so users can adjust the look of their figures quite easily. So, we can modify the axes if we would like:
 ```{r echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 4, fig.cap = "Orchard plot of the effects of predation on benthic invertebrate communities compared using the log response ratio where we add an element and change the scale of the x-axis", warnings = FALSE}
-orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log Response Ratio (lnRR)") + 
+orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)") + 
 scale_x_continuous(expand = c(0.2,0.2))
 ```
 
@@ -168,13 +168,10 @@ summary(lim_MR)
 
 Now that we have the model fit we can plot our orchard and do some small changes to make it pretty. Also, because we are using Zr, we can use "Zr" and it will do the conversions for us:
 
-```{r echo = TRUE, eval = TRUE, fig.width = 6.597222, fig.height = 9, fig.cap = "Orchard plot of the the strength of correlation between maternal and offspring size within-species"}
-	orchard_plot(lim_MR, mod = "Phylum", xlab = "Zr", alpha = 0.60) + 
-  	guides(fill = "none", colour = "none") +  
-  	theme(legend.position= c(0.05, 0.99), legend.justification = c(0,1), legend.key.size = unit(1, "mm")) +
-  	theme(legend.direction="horizontal") + 
-  	scale_x_continuous(expand = c(0.2,0.2))
+```{r echo = TRUE, eval = TRUE, fig.width = 5, fig.height = 8, fig.cap = "Orchard plot of the the strength of correlation between maternal and offspring size within-species"}
+	orchard_plot(lim_MR, mod = "Phylum", xlab = "Correlaiton coefficent", alpha = 0.5, es_type = "Zr")
 ```
+
 
 First, it is clear that the analysis is dominated by data from Chordates and Arthropods, with the other Phyla being much more poorly represented. Second, there is a difference between the strength of a typical correlation within these two well represented groups (the correlation is stronger in Chordates), which arguably would explain the phylogenetic signals detected by Lim et al. (2014). Lastly, although there are differences within the typical correlation between Chordates and Arthropods, there remains a large overlap in predicted range of individual effect sizes; individual species within Phyla are still highly variable.
 

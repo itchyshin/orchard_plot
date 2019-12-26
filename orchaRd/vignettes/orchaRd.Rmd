@@ -168,7 +168,7 @@ summary(lim_MR)
 Now that we have the model fit we can plot our orchard and do some small changes to make it pretty. Also, because we are using Zr, we can use "Zr" and it will do the conversions for us:
 
 ```{r echo = TRUE, eval = TRUE, fig.width = 5, fig.height = 8, fig.cap = "Orchard plot of the the strength of correlation between maternal and offspring size within-species"}
-	orchard_plot(lim_MR, mod = "Phylum", xlab = "Correlaiton coefficent", alpha = 0.5, es_type = "Zr")
+	orchard_plot(lim_MR, mod = "Phylum", xlab = "Correlation coefficent", alpha = 0.5, es_type = "Zr")
 ```
 
 

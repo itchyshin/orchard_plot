@@ -15,11 +15,11 @@ Zr_to_r <- function(df){
 #' @param model model object of class 'rma.mv', 'rma' or 'orchard '
 #' @param mod the name of a moderator . Otherwise, "Int" for intercept only model.
 #' @param xlab The effect size measure label.
-#' @param N  The vector of sample size which an effect size is based on. If defult, we use precision (the inverse of sampling standard error)
-#' @param alpha The level of transparency for pieces of frust (effec size)
-#' @param angle The angle of y labels. The defult is 90 degreee
+#' @param N  The vector of sample size which an effect size is based on. If default, we use precision (the inverse of sampling standard error)
+#' @param alpha The level of transparency for pieces of fruit (effect size)
+#' @param angle The angle of y labels. The default is 90 degrees
 #' @param cb If TRUE, it uses 8 colour blind friendly colors (7 colours plus grey)
-#' @param es_type If set to "Zr", Zr will be converted to correlation
+#' @param transfm If set to "tanh", a tanh transformation will be applied to effect sizes, converting Zr will to a correlation or pulling in extreme values for other effect sizes (lnRR, lnCVR, SMD). If "none" is chosen then it will default to 
 #' @return Orchard plot
 #' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
 #' @authors Daniel Noble - daniel.noble@anu.edu.au
@@ -48,7 +48,7 @@ Zr_to_r <- function(df){
 #' }
 #' @export
 
-orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, angle = 90, cb = TRUE, es_type = "else") {
+orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, angle = 90, cb = TRUE, transfm = c("none", "tanh")) {
 
 	if(any(class(object) %in% c("rma.mv", "rma"))){
 		if(mod != "Int"){
@@ -59,20 +59,18 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, ang
 	}
 	        data <- object$data
 	  data$scale <- (1/sqrt(data[,"vi"]))
-	      legend <- "Precision"
+	      legend <- "Precision (1/SE)"
 
-	if(N != "none" & is.numeric(N)){
+	if(N != "none"){
 		  data$scale <- N
 		      legend <- "Sample Size (N)"
 	}
 
-	if(es_type == "Zr"){
-
-		cols <- sapply(object$mod_table, is.numeric)
+	if(transfm == "tanh"){
+		                   cols <- sapply(object$mod_table, is.numeric)
 		object$mod_table[,cols] <- Zr_to_r(object$mod_table[,cols])
-		data$yi <- Zr_to_r(data$yi)
-		  label <- xlab
-
+		                data$yi <- Zr_to_r(data$yi)
+		                  label <- xlab
 	}else{
 		label <- xlab
 	}
@@ -80,7 +78,7 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, ang
 	 object$mod_table$K <- as.vector(by(data, data[,"moderator"], function(x) length(x[,"yi"])))
 	 
 	# colour blind friendly colours with grey
-	 cbpl <- c("#E69F00","#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7",  "#56B4E9", "#999999")
+	 cbpl <- c("#E69F00","#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#56B4E9", "#999999")
 
 	# Make the orchard plot
 	  plot <- ggplot2::ggplot(data = object$mod_table, aes(x = estimate, y = name)) +
@@ -107,7 +105,6 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, ang
 	                                              angle = angle))
 	  # putting colours in
 	  if(cb == TRUE){
-	    data$scale <- N
 	    plot <- plot + 
 	      scale_fill_manual(values=cbpl) +
 	      scale_colour_manual(values=cbpl)

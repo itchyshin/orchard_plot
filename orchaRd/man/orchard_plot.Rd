@@ -4,16 +4,25 @@
 \alias{orchard_plot}
 \title{orchard_plot}
 \usage{
-orchard_plot(object, mod = "Int", xlab, alpha = 0.8, N = "none")
+orchard_plot(object, mod = "Int", xlab, N = "none", alpha = 0.5,
+  angle = 90, cb = TRUE, transfm = c("none", "tanh"))
 }
 \arguments{
-\item{object}{object of class 'rma.mv', 'rma' or 'orchard '}
-
-\item{mod}{the name of a moderator . Otherwise, "Int" for intercept only model}
+\item{mod}{the name of a moderator . Otherwise, "Int" for intercept only model.}
 
 \item{xlab}{The effect size measure label.}
 
-\item{N}{The vector of sample size}
+\item{N}{The vector of sample size which an effect size is based on. If default, we use precision (the inverse of sampling standard error)}
+
+\item{alpha}{The level of transparency for pieces of fruit (effect size)}
+
+\item{angle}{The angle of y labels. The default is 90 degrees}
+
+\item{cb}{If TRUE, it uses 8 colour blind friendly colors (7 colours plus grey)}
+
+\item{transfm}{If set to "tanh", a tanh transformation will be applied to effect sizes, converting Zr will to a correlation or pulling in extreme values for other effect sizes (lnRR, lnCVR, SMD). If "none" is chosen then it will default to}
+
+\item{model}{model object of class 'rma.mv', 'rma' or 'orchard '}
 }
 \value{
 Orchard plot

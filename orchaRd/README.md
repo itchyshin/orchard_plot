@@ -16,7 +16,7 @@ install.packages("devtools")
 install.packages("tidyverse")
 install.packages("metafor")
 install.packages("patchwork")
-devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE)
+devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE, build_vignettes = TRUE)
 
 library(orchaRd)
 library(patchwork)

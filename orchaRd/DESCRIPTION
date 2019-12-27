@@ -25,7 +25,8 @@ Imports: tidyverse,
     stringr,
     ggplot2,
     ggbeeswarm
-Suggests: testthat,
+Suggests: R.rsp, 
+  testthat,
     knitr,
     rmarkdown
-VignetteBuilder: knitr
+VignetteBuilder: R.rsp

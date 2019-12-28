@@ -1,5 +1,5 @@
 ---
-title: "orchaRd: An R package for plotting prediction intervals and orchard plots"
+title: "orchaRd: An R package for drawing an orchard plot from a meta-regression with a categorical moderator"
 author: "S. Nakagawa, M. Lagisz, R. E. O’Dea, J. Rutkowska, Y. Yang, D.W.A. Noble, and A. M. Senior"
 date: "`r Sys.Date()`"
 geometry: margin=1.5cm
@@ -19,14 +19,14 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-`orchaRd` allows users to create pretty orchard plots that contain both confidence and prediction intervals around mean effect size estimates, plots the effect size distribution over top such estimates and weights effect sizes by their precision (1/sampling error) or sample size. `orchaRd` takes a `metafor` object of class `rma.mv` or `rma` (Viechtbauer, 2010) and plots the results for the meta-analytic or meta-regression model. Currently, only meta-regression models with a single moderator variable are allowed or intercept only meta-analytic models. `orchaRd` uses `ggplot` (Wickham, 2009) for plotting, and as such, layers can be added directly to make plots customizable to the users needs.
+`orchaRd` allows users to create pretty orchard plots that contain both confidence intervals (CIs) and prediction intervals (PIs) around point estimates for different categories, plots the effect size distribution over top such estimates and weights effect sizes by their precision (1/standard error, SE) or sample size. `orchaRd` takes a `metafor` object of class `rma.mv` or `rma` (Viechtbauer, 2010) and plots the results for the meta-analytic or meta-regression model. Currently, only meta-regression models with a single moderator variable are allowed or intercept only meta-analytic models. `orchaRd` uses `ggplot2` (Wickham, 2009) for plotting, and as such, layers can be added directly to make plots customizable to the users needs.
 
 # Citing orchaRd
 
 To cite `orchaRd` in publications one can use the following reference:
 
-Nakagawa, S. et al. 2020. The Orchard Plot: Cutlivatinng the Forest Plot 
-for Use in Ecology,  Evolution and Beyond. Research Synthesis Methods, in review
+Nakagawa, S. et al. 2020. The Orchard Plot: Cutlivatinng Forest Plots 
+for Use in Ecology, Evolution and Beyond. *Research Synthesis Methods*, in review
 
 # Installation
 
@@ -52,85 +52,93 @@ Installation will make the primary functions accessible to users along with thei
 In this vignette we'll walk the reader through a number of case studies and show you how you can create beautiful looking orchard plots. We overview three different case studies that make use of different effect sizes and moderators. The datasets associated with each case study come as part of the `orchaRd` package.
 
 #### Example 1: Dietary Restriction and Lifespan
-English and Uller (2016) performed a systematic review and meta-analysis on the effects of early life dietary restriction (a reduction in a major component of the diet without malnutrition; e.g. caloric restriction) on average at death, using the standardised mean difference (often called d). They found that across the whole dataset, there was little evidence for an effect of dietary restriction on mean age at death. Here we'll use the dataset to first calculate the effect size measures and then fit an intercept only, meta-analytic model.
+
+English and Uller (2016) performed a systematic review and meta-analysis on the effects of early life dietary restriction (a reduction in a major component of the diet without malnutrition; e.g. caloric restriction) on average at death, using the standardised mean difference (often called *d*). They found that across the whole dataset, there was little evidence for an effect of dietary restriction on mean age at death. Here we'll use the dataset to first calculate the effect size measures and then fit an intercept only, meta-analytic model.
 
 ```{r echo = TRUE, eval = TRUE}
 
 data(english)
 
 # We need to calculate the effect sizes, in this case d
-english<-metafor::escalc(measure="SMD", n1i=NStartControl, sd1i=SD_C, m1i=MeanC, n2i=NStartExpt, sd2i=SD_E, m2i=MeanE, data=english)
+english <- escalc(measure = "SMD", n1i = NStartControl, sd1i = SD_C, m1i = MeanC, n2i = NStartExpt, sd2i = SD_E, m2i = MeanE, 
+                  var.names=c("SMD","vSMD"),
+                  data = english)
 
-
-english_MR_int<-metafor::rma.mv(yi=yi, V=vi, random=list(~1|EffectID), data=english)
+english_MR_int <- rma.mv(yi = SMD, V = vSMD, random = list( ~ 1 | StudyNo, ~ 1 | EffectID), data = english)
 summary(english_MR_int)
 
 ```
 
-We can see from the above that we have fit a meta-analytic model without an intercept and thus the mean estimates is the overall effect size on the effects of caloric restriction on mean death across all studies examined. Now that we have fit our meta-analytic model we can get the confidence intervals and prediction intervals with a few functions in the `orchaRd` package. If one is interested in getting the table of results we can use the `mod_results` function. This will allow users to make nice tables of the results if needed. We can do that as follows:
+We have fit a meta-analytic model and thus the only estimate we see is the overall effect size on the effects of caloric restriction on mean death across all studies examined. Now that we have fit our meta-analytic model we can get the confidence intervals and prediction intervals with a few functions in the `orchaRd` package. If one is interested in getting the table of results we can use the `mod_results` function. This will allow users to make nice tables of the results if needed. We can do that as follows:
 
 ```{r echo = TRUE, eval = TRUE}
 
-model_results <- orchaRd::mod_results(english_MR_int, mod="Int")
-print(model_results)
+res1 <- mod_results(english_MR_int, mod="Int")
+print(res1)
  
 ```
 
 If we instead want to create an orchard plot and visualise the results we can do so quite simply as:
 
 ```{r Figure1, echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 4, fig.cap = "\\label{fig:Figure1}Orchard plot of the impact caloric restriction using standardised mean difference"}
-orchard_plot(english_MR_int, mod="Int", xlab = "Standardised mean difference", 
-  transfm = "none") +
-
-scale_fill_manual(values="grey") +
-
-scale_colour_manual(values="grey")
+orchard_plot(english_MR_int,
+  mod = "Int", xlab = "Standardised mean difference",
+  transfm = "none"
+) 
 ```
 
-In \ref{fig:Figure1} we simply add in the metafor model and it will create a default orchard plot. Alternatively, we could also add in the table of results.
+In \ref{fig:Figure1}, we simply add in the metafor model and it will create a default orchard plot. Alternatively, we could also add in the table of results, and try to change the colour of the 'trunk' (estimate) and 'fruit' (effect sizes) from the defult (orange) to grey by just adding `ggplot` functions.
 
 ```{r Figure2, echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 4, fig.cap = "\\label{fig:Figure2}Orchard plot of the impact caloric restriction using standardised mean difference but instead of using the metafor model, using the model results table", messages = FALSE, warnings = FALSE}
-orchard_plot(model_results, mod="Int", xlab = "Standardised mean difference", transfm = "none")+ 
-scale_fill_manual(values="grey") +
-  
-scale_colour_manual(values="grey")
+orchard_plot(res1, xlab = "Standardised mean difference", transfm = "none") +
+  scale_fill_manual(values = "grey") +
+  scale_colour_manual(values = "grey")
 ```
 
-Fugure \ref{fig:Figure2} and Figure \ref{fig:Figure1} above show that overall estimate from a random-effects meta-analysis of 77 effect sizes is centered on zero, with a 95% CI that spans the line of no-effect. The prediction intervals clearly demonstrate the high level of heterogeneity, with effects size less than -0.5 and greater than 0.5 predicted to be observed. 
+Figures \ref{fig:Figure1} & \ref{fig:Figure2} above show that overall estimate from a random-effects meta-analysis of 77 effect sizes is centered on zero, with a 95% CI that spans the line of no-effect. The prediction intervals clearly demonstrate the high level of heterogeneity, with effects size less than -0.5 and greater than 0.5 predicted to be observed. 
 
 In a subsequent publication, Senior et al. (2017) analysed this dataset for effects of dietary-restriction on among-individual variation in the age at death using the log coefficient of variation ratio. A major prediction in both English & Uller (2016) and Senior et al. (2017) was that the type pf manipulation, whether the study manipulated quality of food versus the quantity of food would be important. As such, we can fit a meta-regression model to test whether the moderator "Manipulation Type" impacts our results on the mean and variance
 
 ```{r Figure3, fig.width = 6, fig.height = 8, fig.cap = "\\label{fig:Figure3}Orchard plot of diet qualities impact on SMD (top) and log coefficient of variation (bottom)"}
 # First we need to calculate the lnCVR
-english$lnCVR<-metafor::escalc(measure="CVR", n1i=NStartControl, sd1i=SD_C, m1i=MeanC, n2i=NStartExpt, sd2i=SD_E, m2i=MeanE, data=english)
+english <- escalc(measure = "CVR", n1i = NStartControl, sd1i = SD_C, m1i = MeanC, 
+                        n2i = NStartExpt, sd2i = SD_E, m2i = MeanE,
+                        var.names=c("lnCVR","vlnCVR"),
+                        data = english)
 
 
 # Now we can fit the meta-regression models
-english_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~ManipType-1, random=list(~1|EffectID), data=english)
+english_MR <- rma.mv(yi = SMD, V = vSMD, mods = ~ ManipType - 1, 
+                     random = list(~ 1 | StudyNo, ~ 1 | EffectID), data = english)
 summary(english_MR)
 
 # Again, we can create a table of results
-model_results <- orchaRd::mod_results(english_MR, mod="ManipType")
-print(model_results)
+res2 <- mod_results(english_MR, mod = "ManipType")
+print(res2)
 
 # Lets fit a meta-regression - I am modelling non-independence here (article).
-senior_MR<-metafor::rma.mv(yi=lnCVR, V=vi, mods=~ManipType-1, random=list(~1|EffectID), 
-  data=english)
+senior_MR <- rma.mv(
+  yi = lnCVR, V = vlnCVR, mods = ~ ManipType - 1, random = list(~ 1 | StudyNo, ~ 1 | EffectID),
+  data = english
+)
 summary(senior_MR)
 
 # creating a table of results
-senior_results <- mod_results(senior_MR, "ManipType")
-print(senior_results)
+res3 <- mod_results(senior_MR, "ManipType")
+print(res3)
 
 
 # We can now plot SMD and lnCVR beside each other and compar ethe results
-p1 <- orchard_plot(english_MR, mod = "ManipType", xlab = "Standardised mean difference", transfm = "none")
+p1 <- orchard_plot(english_MR, 
+                   mod = "ManipType", xlab = "Standardised mean difference", 
+                   transfm = "none")
 
-p2 <- orchard_plot(senior_MR, mod = "ManipType", xlab = "log(CV ratio) (lnCVR)", 
-  transfm = "none")
+p2 <- orchard_plot(senior_MR,
+  mod = "ManipType", xlab = "log(CV ratio) (lnCVR)",
+  transfm = "none"
+)
 
-p1/p2
-
+p1 / p2
 ```
 
 Our orchard plot for the log coefficient of variation demonstrates that, while restrictions on dietary quality and quantity do not affect the average age at death (top of Figure \ref{fig:Figure3}), among-individual variation may be altered by quality restrictions (bottom of Figure \ref{fig:Figure3}). The effect is negative suggesting that the coefficient of variation in the control group is lower than that in the treatment group, and the 95% CI does not span zero. Again though, the effect is heterogeneous; a substantial number of positive effects are still predicted. 

@@ -168,13 +168,3 @@ mod_results <- function(model, mod) {
 print.orchard <- function(object, ...){
     return(object$mod_table)
 }
-
-
-
-
-
-
-
-
-
-

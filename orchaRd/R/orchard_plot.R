@@ -13,7 +13,7 @@ Zr_to_r <- function(df){
 #' @title orchard_plot
 #' @description Using a metafor model object of class rma or rma.mv or a results table of class orchard, it creates a an orchard plot from mean effect size estimates for all levels of a given categorical moderator, their corresponding confidence intervals and prediction intervals
 #' @param model model object of class 'rma.mv', 'rma' or 'orchard '
-#' @param mod the name of a moderator . Otherwise, "Int" for intercept only model.
+#' @param mod the name of a moderator. Otherwise, "Int" for intercept only model.
 #' @param xlab The effect size measure label.
 #' @param N  The vector of sample size which an effect size is based on. If default, we use precision (the inverse of sampling standard error)
 #' @param alpha The level of transparency for pieces of fruit (effect size)

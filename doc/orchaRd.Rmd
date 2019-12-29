@@ -171,7 +171,6 @@ summary(english_MR)
 res_english_MA_int <- mod_results(english_MA_int, mod = "Int")
     res_english_MR <- mod_results(english_MR, mod = "ManipType")
 
-
 # Now, we can use the submerge function to merge together the mod_results so they can be plotted all together in the orchard plot
 res_MA_MR_merged <- submerge(res_english_MA_int, res_english_MR)
 print(res_MA_MR_merged)

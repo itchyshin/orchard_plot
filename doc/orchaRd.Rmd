@@ -1,5 +1,5 @@
 ---
-title: "orchaRd: An R package for drawing an orchard plot from a meta-regression with a categorical moderator"
+title: "orchaRd: An R package for drawing orchard plots from meta-analyses and meta-regressions with categorical moderators"
 author: "S. Nakagawa, M. Lagisz, R. E. O’Dea, J. Rutkowska, Y. Yang, D.W.A. Noble, and A. M. Senior"
 date: "`r Sys.Date()`"
 geometry: margin=1.5cm

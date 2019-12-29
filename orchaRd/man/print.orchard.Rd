@@ -15,3 +15,8 @@ Returns a data frame
 \description{
 Print method for class 'orchard'
 }
+\author{
+Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+
+Daniel Noble - daniel.noble@anu.edu.au
+}

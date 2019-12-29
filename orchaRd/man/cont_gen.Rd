@@ -15,3 +15,8 @@ Returns a character string with all combinations of the moderator level names
 \description{
 Creates all combinations of moderator level names
 }
+\author{
+Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+
+Daniel Noble - daniel.noble@anu.edu.au
+}

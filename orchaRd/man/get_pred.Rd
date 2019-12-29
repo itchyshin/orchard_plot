@@ -14,3 +14,8 @@ get_pred(model, mod)
 \description{
 Function to get prediction intervals (crediblity intervals) from rma objects (metafor)
 }
+\author{
+Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+
+Daniel Noble - daniel.noble@anu.edu.au
+}

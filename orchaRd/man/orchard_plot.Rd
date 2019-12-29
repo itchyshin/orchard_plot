@@ -8,7 +8,7 @@ orchard_plot(object, mod = "Int", xlab, N = "none", alpha = 0.5,
   angle = 90, cb = TRUE, transfm = c("none", "tanh"))
 }
 \arguments{
-\item{mod}{the name of a moderator . Otherwise, "Int" for intercept only model.}
+\item{mod}{the name of a moderator. Otherwise, "Int" for intercept only model.}
 
 \item{xlab}{The effect size measure label.}
 
@@ -53,4 +53,9 @@ lim_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~Phylum-1, random=list(~1|Article,
 ~1|Datapoint), data=lim)
 orchard_plot(lim_MR, data = lim, mod = "Phylum", es_type = "Zr")
 }
+}
+\author{
+Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+
+Daniel Noble - daniel.noble@anu.edu.au
 }

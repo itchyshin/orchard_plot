@@ -14,3 +14,8 @@ get_est(model, mod)
 \description{
 Function gets estimates from rma objects (metafor)
 }
+\author{
+Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+
+Daniel Noble - daniel.noble@anu.edu.au
+}

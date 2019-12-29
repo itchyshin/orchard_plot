@@ -2,8 +2,8 @@
 #' @description Converts Zr back to r (Pearson's correlation coefficient)
 #' @param df data frame of results of class 'orchard'
 #' @return A data frame containing all the model results including mean effect size estimate, confidence and prediction intervals with estimates converted back to r
-#' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
-#' @authors Daniel Noble - daniel.noble@anu.edu.au 
+#' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+#' @author Daniel Noble - daniel.noble@anu.edu.au 
 #' @export
 
 Zr_to_r <- function(df){
@@ -21,8 +21,8 @@ Zr_to_r <- function(df){
 #' @param cb If TRUE, it uses 8 colour blind friendly colors (7 colours plus grey)
 #' @param transfm If set to "tanh", a tanh transformation will be applied to effect sizes, converting Zr will to a correlation or pulling in extreme values for other effect sizes (lnRR, lnCVR, SMD). If "none" is chosen then it will default to 
 #' @return Orchard plot
-#' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
-#' @authors Daniel Noble - daniel.noble@anu.edu.au
+#' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+#' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @examples
 #' \dontrun{
 #' data(eklof) 

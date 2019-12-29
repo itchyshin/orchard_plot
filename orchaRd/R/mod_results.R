@@ -2,8 +2,8 @@
 #' @description Function gets estimates from rma objects (metafor)
 #' @param model rma.mv object 
 #' @param mod the name of a moderator 
-#' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
-#' @authors Daniel Noble - daniel.noble@anu.edu.au
+#' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+#' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @export
 
 get_est <- function (model, mod) {
@@ -23,8 +23,8 @@ get_est <- function (model, mod) {
 #' @description Function to get prediction intervals (crediblity intervals) from rma objects (metafor)
 #' @param model rma.mv object 
 #' @param mod the name of a moderator 
-#' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
-#' @authors Daniel Noble - daniel.noble@anu.edu.au
+#' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+#' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @export
 
 get_pred <- function (model, mod) {
@@ -60,8 +60,8 @@ get_pred <- function (model, mod) {
 #' @title cont_gen
 #' @description Creates all combinations of moderator level names
 #' @param name a vector of character strings
-#' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
-#' @authors Daniel Noble - daniel.noble@anu.edu.au
+#' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+#' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @return Returns a character string with all combinations of the moderator level names
 #' @export
 #' 
@@ -75,8 +75,8 @@ cont_gen <- function (name) {
 #' @title firstup
 #' @description Uppercase moderator names
 #' @param x a character string
-#' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
-#' @authors Daniel Noble - daniel.noble@anu.edu.au
+#' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+#' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @return Returns a character string with all combinations of the moderator level names with upper case first letters
 #' @export
 #' 
@@ -89,8 +89,8 @@ cont_gen <- function (name) {
 #' @description Collects and builds the data used to fit the rma.mv or rma model in metafor
 #' @param model rma.mv object
 #' @param mod the moderator variable
-#' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
-#' @authors Daniel Noble - daniel.noble@anu.edu.au
+#' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+#' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @return Returns a data frame
 #' @export
 #' 
@@ -118,8 +118,8 @@ return(data)
 #' @param model rma.mv object 
 #' @param mod the name of a moderator 
 #' @return A data frame containing all the model results including mean effect size estimate, confidence and prediction intervals
-#' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
-#' @authors Daniel Noble - daniel.noble@anu.edu.au
+#' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+#' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @examples
 #' \dontrun{data(eklof) 
 #' eklof<-metafor::escalc(measure="ROM", n1i=N_control, sd1i=SD_control,
@@ -160,8 +160,8 @@ mod_results <- function(model, mod) {
 #' @title print.orchard
 #' @description Print method for class 'orchard'
 #' @param object x an R object of class orchard
-#' @authors Shinichi Nakagawa - s.nakagawa@unsw.edu.au
-#' @authors Daniel Noble - daniel.noble@anu.edu.au
+#' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+#' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @return Returns a data frame
 #' @export
 #' 

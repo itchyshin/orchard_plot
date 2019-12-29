@@ -17,3 +17,8 @@ Returns a data frame
 \description{
 Collects and builds the data used to fit the rma.mv or rma model in metafor
 }
+\author{
+Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+
+Daniel Noble - daniel.noble@anu.edu.au
+}

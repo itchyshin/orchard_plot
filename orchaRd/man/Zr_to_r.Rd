@@ -15,3 +15,8 @@ A data frame containing all the model results including mean effect size estimat
 \description{
 Converts Zr back to r (Pearson's correlation coefficient)
 }
+\author{
+Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+
+Daniel Noble - daniel.noble@anu.edu.au
+}

@@ -30,3 +30,8 @@ eklof_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~ Grazer.type-1, random=list(~1|Expt
 results <- mod_results(eklof_MR, mod = "Grazer.type")
 }
 }
+\author{
+Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+
+Daniel Noble - daniel.noble@anu.edu.au
+}

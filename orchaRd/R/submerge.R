@@ -1,6 +1,3 @@
-
-# TODO - when moderator names the same it does not work well
-
 #' @title submerge
 #' @description Merge two model results tables (orchard objects).
 #' @param object1  object of class orchard

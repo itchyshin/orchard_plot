@@ -2,6 +2,7 @@
 #' @description Merge two model results tables (orchard objects).
 #' @param object1  object of class orchard
 #' @param object2  object of class orchard
+#' @param ... Other arguments passed to submerge
 #' @param mix If TRUE, it will add the number to the moderator name
 #' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
 #' @author Daniel Noble - daniel.noble@anu.edu.au

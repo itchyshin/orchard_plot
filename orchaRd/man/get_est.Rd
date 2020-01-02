@@ -9,7 +9,7 @@ get_est(model, mod)
 \arguments{
 \item{model}{rma.mv object}
 
-\item{mod}{the name of a moderator}
+\item{mod}{the name of a moderator. If meta-analysis (i.e. no moderator, se mod = "Int")}
 }
 \description{
 Function gets estimates from rma objects (metafor)

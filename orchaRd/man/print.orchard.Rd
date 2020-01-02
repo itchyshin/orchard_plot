@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{object}{x an R object of class orchard}
+
+\item{...}{Other arguments passed to print}
 }
 \value{
 Returns a data frame

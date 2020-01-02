@@ -8,6 +8,8 @@ orchard_plot(object, mod = "Int", xlab, N = "none", alpha = 0.5,
   angle = 90, cb = TRUE, transfm = c("none", "tanh"))
 }
 \arguments{
+\item{object}{model object of class 'rma.mv', 'rma' or 'orchard' table of model results}
+
 \item{mod}{the name of a moderator. Otherwise, "Int" for intercept only model.}
 
 \item{xlab}{The effect size measure label.}
@@ -21,8 +23,6 @@ orchard_plot(object, mod = "Int", xlab, N = "none", alpha = 0.5,
 \item{cb}{If TRUE, it uses 8 colour blind friendly colors (7 colours plus grey)}
 
 \item{transfm}{If set to "tanh", a tanh transformation will be applied to effect sizes, converting Zr will to a correlation or pulling in extreme values for other effect sizes (lnRR, lnCVR, SMD). If "none" is chosen then it will default to}
-
-\item{model}{model object of class 'rma.mv', 'rma' or 'orchard '}
 }
 \value{
 Orchard plot

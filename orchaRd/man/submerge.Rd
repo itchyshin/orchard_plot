@@ -11,6 +11,8 @@ submerge(object1, object2, ..., mix = FALSE)
 
 \item{object2}{object of class orchard}
 
+\item{...}{Other arguments passed to submerge}
+
 \item{mix}{If TRUE, it will add the number to the moderator name}
 }
 \value{

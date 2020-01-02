@@ -160,6 +160,7 @@ mod_results <- function(model, mod) {
 #' @title print.orchard
 #' @description Print method for class 'orchard'
 #' @param object x an R object of class orchard
+#' @param ... Other arguments passed to print
 #' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
 #' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @return Returns a data frame

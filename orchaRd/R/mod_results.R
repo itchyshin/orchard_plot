@@ -1,7 +1,7 @@
 #' @title get_est
 #' @description Function gets estimates from rma objects (metafor)
 #' @param model rma.mv object 
-#' @param mod the name of a moderator 
+#' @param mod the name of a moderator. If meta-analysis (i.e. no moderator, se mod = "Int")
 #' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
 #' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @export

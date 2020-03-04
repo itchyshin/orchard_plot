@@ -24,3 +24,10 @@ library(patchwork)
 library(tidyverse)
 library(metafor)
 ```
+# Vignette
+
+To see the vignette for `orchaRd`, run the code:
+
+```
+vignette("orchaRd")
+```

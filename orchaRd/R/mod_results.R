@@ -3,7 +3,7 @@
 #' @param model rma.mv object 
 #' @param mod the name of a moderator. If meta-analysis (i.e. no moderator, se mod = "Int")
 #' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
-#' @author Daniel Noble - daniel.noble@anu.edu.au
+#' @author Daniel Noble - daniel.noble@anu.edu.au 
 #' @export
 
 get_est <- function (model, mod) {

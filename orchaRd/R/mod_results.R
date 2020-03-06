@@ -13,7 +13,7 @@ get_est <- function (model, mod) {
    lowerCL <- model$ci.lb
    upperCL <- model$ci.ub 
   
-  table <- tibble::tibble(name = name = factor(name, labels = name), estimate = estimate, lowerCL = lowerCL, upperCL = upperCL)
+  table <- tibble::tibble(name = factor(name, labels = name), estimate = estimate, lowerCL = lowerCL, upperCL = upperCL)
 
   return(table)
 }

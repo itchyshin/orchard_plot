@@ -13,7 +13,7 @@ get_est <- function (model, mod) {
    lowerCL <- model$ci.lb
    upperCL <- model$ci.ub 
   
-  table <- tibble::tibble(name = factor(name, labels = name), estimate = estimate, lowerCL = lowerCL, upperCL = upperCL)
+  table <- tibble::tibble(name = name, estimate = estimate, lowerCL = lowerCL, upperCL = upperCL)
 
   return(table)
 }
@@ -47,7 +47,7 @@ get_pred <- function (model, mod) {
   lowerPR <- pred$cr.lb
   upperPR <- pred$cr.ub 
   
-  table <- tibble::tibble(name = factor(name, labels = name), lowerPR = lowerPR, upperPR = upperPR)
+  table <- tibble::tibble(name = name, lowerPR = lowerPR, upperPR = upperPR)
   return(table)
 }
 

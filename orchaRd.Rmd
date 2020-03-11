@@ -96,13 +96,13 @@ scale_fill_manual(values="grey") +
 scale_colour_manual(values="grey")
 ```
 
-Fugure \ref{fig:Figure2} and Figure \ref{fig:Figure1} above show that overall estimate from a random-effects meta-analysis of 77 effect sizes is centered on zero, with a 95% CI that spans the line of no-effect. The prediction intervals clearly demonstrate the high level of heterogeneity, with effects size less than -0.5 and greater than 0.5 predicted to be observed. 
+Figure \ref{fig:Figure2} and Figure \ref{fig:Figure1} above show that overall estimate from a random-effects meta-analysis of 77 effect sizes is centered on zero, with a 95% CI that spans the line of no-effect. The prediction intervals clearly demonstrate the high level of heterogeneity, with effects size less than -0.5 and greater than 0.5 predicted to be observed. 
 
-In a subsequent publication, Senior et al. (2017) analysed this dataset for effects of dietary-restriction on among-individual variation in the age at death using the log coefficient of variation ratio. A major prediction in both English & Uller (2016) and Senior et al. (2017) was that the type pf manipulation, whether the study manipulated quality of food versus the quantity of food would be important. As such, we can fit a meta-regression model to test whether the moderator "Manipulation Type" impacts our results on the mean and variance
+In a subsequent publication, Senior et al. (2017) analysed this dataset for effects of dietary-restriction on among-individual variation in the age at death using the log coefficient of variation ratio. A major prediction in both English & Uller (2016) and Senior et al. (2017) was that the type of manipulation, whether the study manipulated quality of food versus the quantity of food would be important. As such, we can fit a meta-regression model to test whether the moderator "Manipulation Type" impacts our results on the mean and variance
 
 ```{r Figure3, fig.width = 6, fig.height = 8, fig.cap = "\\label{fig:Figure3}Orchard plot of diet qualities impact on SMD (top) and log coefficient of variation (bottom)"}
 # First we need to calculate the lnCVR
-english$lnCVR<-metafor::escalc(measure="CVR", n1i=NStartControl, sd1i=SD_C, m1i=MeanC, n2i=NStartExpt, sd2i=SD_E, m2i=MeanE, data=english)
+english<-metafor::escalc(measure="CVR", n1i=NStartControl, sd1i=SD_C, m1i=MeanC, n2i=NStartExpt, sd2i=SD_E, m2i=MeanE, data=english, append = TRUE, var.names=c("lnCVR.yi","lnCVR.vi"))
 
 
 # Now we can fit the meta-regression models
@@ -114,7 +114,7 @@ model_results <- orchaRd::mod_results(english_MR, mod="ManipType")
 print(model_results)
 
 # Lets fit a meta-regression - I am modelling non-independence here (article).
-senior_MR<-metafor::rma.mv(yi=lnCVR, V=vi, mods=~ManipType-1, random=list(~1|EffectID), 
+senior_MR<-metafor::rma.mv(yi=lnCVR.yi, V=lnCVR.vi, mods=~ManipType-1, random=list(~1|EffectID), 
   data=english)
 summary(senior_MR)
 
@@ -193,7 +193,7 @@ Overall, our orchard plot shows the results of a re-analysis of their data. The 
 
 #### Example 3: Maternal-Offspring Morphological Correlations
 
-Finally, we also look at the case discussed by Lim et al. (2014), who meta-analysed the strength of correlation between maternal and offspring size within-species, across a very wide range of taxa. The found, that typically, there is a moderate positive correlation between maternal size and offspring size within species (i.e. larger mothers have larger offspring). However, they also found evidence for relatively strong phylogenetic effects suggesting the strength of the association is dependent on evolutionary lineage.
+Finally, we also look at the case discussed by Lim et al. (2014), who meta-analysed the strength of correlation between maternal and offspring size within-species, across a very wide range of taxa. They found, that typically, there is a moderate positive correlation between maternal size and offspring size within species (i.e. larger mothers have larger offspring). However, they also found evidence for relatively strong phylogenetic effects suggesting that the strength of the association is dependent on evolutionary lineage.
 
 Here we have used an orchard plot to represent the results obtained when meta-analysing the data from Lim et al. (2014) by taxonomic Phylum. 
 
@@ -203,21 +203,58 @@ Here we have used an orchard plot to represent the results obtained when meta-an
 # Add in the sampling variance
 	lim$vi<-(1/sqrt(lim$N - 3))^2
 
+# Here we will fit an intercept only meta-analytic model to ascertain the overall correlation between maternal and offspring size.
+  lim_MR_int<-metafor::rma.mv(yi=yi, V=vi, random=list(~1|Article, ~1|Datapoint), data=lim)
+  summary(lim_MR_int)
+
+# Lets estimate heterogenity for the model using I2 - SHIN, PLEASE CHECK THIS IS CORRECT
+      # calculate weights and total sampling variance
+          wi <- 1/ lim$vi
+          Vw <- sum((wi) * (length(wi) - 1))  / (((sum(wi)^2) - sum((wi)^2)))
+  
+      # Extract the between study and residual variance estimates from the model
+      sigma2 <- matrix(lim_MR_int$sigma2, nrow = 1, ncol = length(lim_MR_int$sigma2))
+
+      # calculate between study I2
+        I2_study <- round(sigma2[1,1] / (sum(sigma2) + Vw), digits = 2)
+
 # Lets fit a meta-regression - I will do Article non-independence. The phylogenetic model found phylogenetic effects, however, instead we could fit Phylum as a fixed effect and explore them with an Orchard Plot
-lim_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~Phylum-1, random=list(~1|Article, ~1|Datapoint), data=lim)
-summary(lim_MR)
+  lim_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~Phylum-1, random=list(~1|Article, ~1|Datapoint), data=lim)
+  summary(lim_MR)
+
+  # From the above models, we can also calculate the R2, the proportion of variance explained by Phylum, which will be useful down the line.  - SHIN, PLEASE CHECK THIS IS CORRECT, I assume we don't  include sampling variance???? Also, I did one, but then found a post by Wolfgang suggesting an "alternative", but they give different answers so worth you checking this..(https://stackoverflow.com/questions/22356450/getting-r-squared-from-a-mixed-effects-multilevel-model-in-metafor)
+  
+  R2 <- round(var(predict(lim_MR)$pred) / (sum(lim_MR$sigma2)+var(predict(lim_MR)$pred)), digits = 3) # Alternative approach
+
+  R2_2 <- (sum(lim_MR_int$sigma2) - sum(lim_MR$sigma2)) / sum(lim_MR_int$sigma2) # Value seems awfully small, check.
+
+  
+
 ```
 
 Noe we can plot a default orchard plot, scaling each effect size by N. Also, because we are using Zr, we can use transfm = "tanh" and it will do the conversions for us:
 
 ```{r Figure6, echo = TRUE, eval = TRUE, messages = FALSE, warnings = FALSE, fig.width = 6, fig.height = 8, fig.cap = "\\label{fig:Figure6}Orchard plot of the the strength of correlation between maternal and offspring size within-species"}
+  
+  #Plot the intercept only model
+  orchard_plot(lim_MR_int, mod = "Phylum", xlab = "Correlation coefficient", 
+    alpha = 0.5, transfm = "tanh", angle = 45, N = lim$N, cb = FALSE)
+
+  #Plot the meta-regression model
 	orchard_plot(lim_MR, mod = "Phylum", xlab = "Correlation coefficient", 
     alpha = 0.5, transfm = "tanh", angle = 45, N = lim$N, cb = FALSE)
 ```
 
-Now that we have Figure \ref{fig:Figure6} we can do some small changes to make it pretty. Currently, the cb argument is "FALSE", we can change this to "TRUE" to use colour blind friendly colours. Additionally, because we are using `ggplot` we can add element to the figure to make it look pretty. 
+Now that we have Figure \ref{fig:Figure6} we can do some small changes to make it pretty and add some more details, such as between study heterogenity and R2 for phylum. Currently, the cb argument is "FALSE", we can change this to "TRUE" to use colour blind friendly colours. Additionally, because we are using `ggplot` we can add element to the figure to make it look pretty. 
 
 ```{r Figure7, echo = TRUE, eval = TRUE, messages = FALSE, warnings = FALSE, fig.width = 6, fig.height = 8, fig.cap = "\\label{fig:Figure7}Orchard plot of the the strength of correlation between maternal and offspring size within-species"}
+  # Lets add the I2 on the figure above the legend to convey how much between study heterogenity we have
+p1 <- orchard_plot(lim_MR_int, mod = "Phylum", xlab = "Correlation coefficient", 
+    alpha = 0.5, transfm = "tanh", angle = 45, N = lim$N, cb = FALSE) + 
+  
+  annotate(geom="text", x=1, y=0.50, label=paste0("I^{2}[study] == ", I2_study),
+              color="black", parse = TRUE, size = 6)
+
 	orchard_plot(lim_MR, mod = "Phylum", xlab = "Correlation coefficient (r)", alpha = 0.5, transfm = "tanh", angle = 45, N = lim$N, cb = TRUE) +
 
     theme(legend.position= c(0.05, 0.99), 
@@ -232,10 +269,13 @@ Now that we have Figure \ref{fig:Figure6} we can do some small changes to make i
       
       legend.text = element_text(size = 10)) + 
 
-  	scale_x_continuous(expand = c(0.1,0.1))
+  	scale_x_continuous(expand = c(0.1,0.1)) +
+
+    annotate(geom="text", x=0.5, y=7.4, label=paste0("R^{2} == ", R2),
+              color="black", parse = TRUE, size = 6)
 ```
 
-As in Figure \ref{fig:Figure7}, New elements can be added to the `orchard_plot` to modify it as one sees fit. It will overwrite existing elements. From our orchard plots above, it is clear that the analysis is dominated by data from Chordates and Arthropods, with the other Phyla being much more poorly represented. Second, there is a difference between the strength of a typical correlation within these two well represented groups (the correlation is stronger in Chordates), which arguably would explain the phylogenetic signals detected by Lim et al. (2014). Lastly, although there are differences within the typical correlation between Chordates and Arthropods, there remains a large overlap in predicted range of individual effect sizes; individual species within Phyla are still highly variable.
+As in Figure \ref{fig:Figure7}, new elements can be added to the `orchard_plot` to modify it as one sees fit. It will overwrite existing elements. From our orchard plots above, it is clear that the analysis is dominated by data from Chordates and Arthropods, with the other Phyla being much more poorly represented. Second, there is a difference between the strength of a typical correlation within these two well represented groups (the correlation is stronger in Chordates), which arguably would explain the phylogenetic signals detected by Lim et al. (2014). Lastly, although there are differences within the typical correlation between Chordates and Arthropods, there remains a large overlap in predicted range of individual effect sizes; individual species within Phyla are still highly variable.
 
 \newpage
 # References 

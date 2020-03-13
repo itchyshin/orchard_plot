@@ -1,3 +1,8 @@
+# key webpage
+# https://sakaluk.wordpress.com/2016/02/16/7-make-it-pretty-plots-for-meta-analysis/
+
+
+
 # test
 
 install.packages("devtools")
@@ -27,6 +32,10 @@ print(res2)
 
 senior_MR <- rma.mv(yi = lnCVR, V = vlnCVR, mods = ~ManipType - 1, random = list(~1 | StudyNo, ~1 | EffectID), data = english)
 summary(senior_MR)
+
+res3 <- mod_results(senior_MR, "ManipType") 
+print(res3)
+
 
 #########
 install.packages("metaviz")

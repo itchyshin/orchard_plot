@@ -23,31 +23,56 @@ caterpillars <- function(object, mod = "Int", xlab,  angle = 90, transfm = c("no
       object <- mod_results(object, mod = "Int")
     }
   }
-  
+
+###### test    
   # data frame for the effect size level data set
   # we need ID for y axis (should sort them out according to yi group_by moderator)
-  data <- object$data
+  data <- res2$data
   data$lower <- data$yi - stats::qnorm(0.975)*sqrt(data$vi)
   data$upper <- data$yi + stats::qnorm(0.975)*sqrt(data$vi)
+  data$moderator <- factor(data$moderator, labels = mod_table$name)
   
+  # data frame for the meta-analytic results
+  mod_table <- res2$mod_table
+  mod_table$ID <- 1:dim(mod_table)[1]  
+  mod_table$K <- as.vector(by(data, data[,"moderator"], function(x) length(x[,"yi"])))
+  
+  # use dplyr here - need to change....
+  data <- data %>% group_by(moderator) %>% arrange(moderator, yi) %>%  
+    ungroup() %>% 
+    mutate(ID = unlist(lapply(mod_table$K, function(x) 1:x))) %>% 
+    data.frame()
   
   if(transfm == "tanh"){
-    cols <- sapply(object$mod_table, is.numeric)
-    object$mod_table[,cols] <- Zr_to_r(object$mod_table[,cols])
+    cols <- sapply(mod_table, is.numeric)
+    mod_table[,cols] <- Zr_to_r(mod_table[,cols])
     data$yi <- Zr_to_r(data$yi)
+    data$lower <- Zr_to_r(data$lower)
+    data$upper <- Zr_to_r(data$upper)
     label <- xlab
   }else{
     label <- xlab
   }
   
-  # data frame for the meta-analytic results
-  table<-mod_table
-  table$K <- as.vector(by(data, data[,"moderator"], function(x) length(x[,"yi"])))
-  
   # preparing for diamons for summary - we need to prep y axis 
-  
-  # colour blind friendly colours with grey
-  cbpl <- c("#E69F00","#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#56B4E9", "#999999")
+  # copying from internal_viz_classicforest() from R package 
+  summary <- data.frame("x.diamond" = c(mod_table$estimate  - stats::qnorm(0.975) * mod_table$summary_se,
+                                        
+                                        mod_table$estimate ,
+                                        
+                                        mod_table$estimate  + stats::qnorm(0.975) * mod_table$summary_se,
+                                        
+                                        mod_table$estimate ),
+                        
+                        "y.diamond" = c(mod_table$ID,
+                                        
+                                        mod_table$ID + 0.3,
+                                        
+                                        mod_table$ID,
+                                        
+                                        mod_table$ID - 0.3),
+                        
+                        "diamond_group" = rep(1:k, times = 4)
   
   # Make the orchard plot
   plot <- ggplot2::ggplot(data = object$mod_table, aes(x = estimate, y = name)) +

@@ -58,3 +58,28 @@ p = ggplot(data=RR_data,
         strip.text.y = element_text(hjust=0,vjust = 1,angle=180,face="bold"))+
   coord_flip()
 p
+
+
+############
+
+#Make a plot called 'p', and map citation data to y-axis, effect sizes to x-axis
+#specify the min and max of the CIs, and give different shapes based on levels of tester
+p <- ggplot(dat, aes(y=cite, x=yi, xmin=lowerci, xmax=upperci, shape = tester))+
+  #Add data points and color them black
+  geom_point(color = 'black')+
+  #Add 'special' points for the summary estimates, by making them diamond shaped
+  geom_point(data=subset(dat, tester=='Summary'), color='black', shape=18, size=4)+
+  #add the CI error bars
+  geom_errorbarh(height=.1)+
+  #Specify the limits of the x-axis and relabel it to something more meaningful
+  scale_x_continuous(limits=c(-2,2), name='Standardized Mean Difference (d)')+
+  #Give y-axis a meaningful label
+  ylab('Reference')+
+  #Add a vertical dashed line indicating an effect size of zero, for reference
+  geom_vline(xintercept=0, color='black', linetype='dashed')+
+  #Create sub-plots (i.e., facets) based on levels of setting
+  #And allow them to have their own unique axes (so authors don't redundantly repeat)
+  facet_grid(setting~., scales= 'free', space='free') #+
+  #Apply my APA theme
+  #apatheme
+p

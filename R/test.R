@@ -83,3 +83,14 @@ p <- ggplot(dat, aes(y=cite, x=yi, xmin=lowerci, xmax=upperci, shape = tester))+
   #Apply my APA theme
   #apatheme
 p
+###########
+library(metafor)
+data(lim)
+# Add in the sampling variance
+lim$vi <- 1/(lim$N - 3)
+# Let's fit a meta-regression. The phylogenetic model found phylogenetic effects, # however, instead we could fit Phylum as a fixed effect and explore them with an # Orchard Plot
+lim_MR <- rma.mv(yi = yi, V = vi, mods = ~Phylum - 1, random = list(~1 | Article, ~1 | Datapoint), data = lim) 
+summary(lim_MR)
+
+res4 <- mod_results(lim_MR, "Phylum") 
+print(res4)

@@ -170,7 +170,7 @@ sum_data <- data.frame("x.diamond" = c(mod_table$lowerCL,
                        "moderator" = rep(mod_table$name, times = 4)
 )
 
-# Make the orchard plot
+# Make - 
 plot <- ggplot2::ggplot(data = data, aes(x = yi, y = ID)) +
   # pieces of fruit (bee-swarm and bubbles)
   
@@ -183,8 +183,8 @@ plot <- ggplot2::ggplot(data = data, aes(x = yi, y = ID)) +
   # creating dots for truncks
   ggplot2::geom_point(colour = "#FFD700", size = 1) +
   
-  #ggplot2::facet_grid(moderator~., scales = "free_y", space = "free") +
-  ggplot2::facet_wrap(~moderator, scales = "free_y", nrow = GN,  strip.position = "left") +
+  ggplot2::facet_grid(moderator~., scales = "free_y", space = "free") +
+  #ggplot2::facet_wrap(~moderator, scales = "free_y", nrow = GN,  strip.position = "left") +
   ggplot2::theme_bw() +
   ggplot2::theme(strip.text.y = element_text(angle = 0, size = 8),# margin = margin(t=15, r=15, b=15, l=15)), 
                  strip.background = element_rect(colour = NULL,
@@ -197,6 +197,8 @@ plot <- ggplot2::ggplot(data = data, aes(x = yi, y = ID)) +
 plot <- plot + 
   ggplot2::geom_segment(data = mod_table, aes(x = lowerPR, y = Y, xend = upperPR, yend = Y, group = moderator)) +
   ggplot2::geom_polygon(data = sum_data, aes(x = x.diamond, y = y.diamond, group = moderator), fill = "red") 
+
+plot
 
 
 (g <- ggplotGrob(plot))  

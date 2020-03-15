@@ -94,3 +94,308 @@ summary(lim_MR)
 
 res4 <- mod_results(lim_MR, "Phylum") 
 print(res4)
+
+#######
+
+##
+
+
+####### forest plot
+#'Internal helper function of viz_forest to create a classic forest plot
+
+#'
+
+#'Creates a classic forest plot. Called by viz_forest for type = "classic"
+
+#'@keywords internal
+
+internal_viz_classicforest <- function(plotdata, madata,
+                                       
+                                       type = "standard",
+                                       
+                                       study_labels = NULL, summary_label = NULL,
+                                       
+                                       study_table = NULL, summary_table = NULL, annotate_CI = FALSE,
+                                       
+                                       confidence_level = 0.95, col = "Blues", summary_col = "Blues", tick_col = "firebrick",
+                                       
+                                       text_size = 3, xlab = "Effect", x_limit = NULL,
+                                       
+                                       x_trans_function = NULL, x_breaks = NULL) {
+  
+  n <- nrow(plotdata)
+  
+  k <- length(levels(plotdata$group))
+  
+  
+  
+  # weight of each study used to scale the height of each raindrop
+  
+  if(type %in% c("standard", "study_only")) {
+    
+    weight <- 1/(plotdata$se^2 + madata$summary_tau2[as.numeric(plotdata$group)])
+    
+  } else {
+    
+    weight <- 1/plotdata$se^2
+    
+  }
+  
+  plotdata$rel_weight <- weight/sum(weight)
+  
+  
+  
+  if(type %in% c("cumulative", "sensitivity")) {
+    
+    tick_size <- max(plotdata$rel_weight/(6*max(plotdata$rel_weight)))
+    
+    tickdata <- data.frame(x = c(plotdata$x, plotdata$x), ID = c(plotdata$ID, plotdata$ID),
+                           
+                           y = c(plotdata$ID + tick_size,
+                                 
+                                 plotdata$ID - tick_size))
+    
+  }
+  
+  
+  
+  
+  
+  # set limits and breaks for the y axis and construct summary diamond (for type standard and sensitivity)
+  
+  if(type %in% c("standard", "sensitivity", "cumulative")) {
+    
+    y_limit <- c(min(plotdata$ID) - 3, max(plotdata$ID) + 1.5)
+    
+    y_tick_names <- c(as.vector(study_labels), as.vector(summary_label))[order(c(plotdata$ID, madata$ID), decreasing = T)]
+    
+    y_breaks <- sort(c(plotdata$ID, madata$ID), decreasing = T)
+    
+    summarydata <- data.frame("x.diamond" = c(madata$summary_es - stats::qnorm(1 - (1 - confidence_level) / 2, 0, 1) * madata$summary_se,
+                                              
+                                              madata$summary_es,
+                                              
+                                              madata$summary_es + stats::qnorm(1 - (1 - confidence_level) / 2, 0, 1) * madata$summary_se,
+                                              
+                                              madata$summary_es),
+                              
+                              "y.diamond" = c(madata$ID,
+                                              
+                                              madata$ID + 0.3,
+                                              
+                                              madata$ID,
+                                              
+                                              madata$ID - 0.3),
+                              
+                              "diamond_group" = rep(1:k, times = 4)
+                              
+    )
+    
+  } else {
+    
+    y_limit <- c(min(plotdata$ID) - 1, max(plotdata$ID) + 1.5)
+    
+    y_tick_names <- plotdata$labels[order(plotdata$ID, decreasing = T)]
+    
+    y_breaks <- sort(plotdata$ID, decreasing = T)
+    
+  }
+  
+  
+  
+  # set limits for the x axis if none are supplied
+  
+  if(is.null(x_limit)) {
+    
+    x_limit <- c(range(c(plotdata$x_min, plotdata$x_max))[1] - diff(range(c(plotdata$x_min, plotdata$x_max)))*0.05,
+                 
+                 range(c(plotdata$x_min, plotdata$x_max))[2] + diff(range(c(plotdata$x_min, plotdata$x_max)))*0.05)
+    
+  }
+  
+  
+  
+  # Set Color palette for shading
+  
+  if(type != "summary_only") {
+    
+    if(all(col %in% c("Blues", "Greys", "Oranges", "Greens", "Reds", "Purples"))) {
+      
+      col <- unlist(lapply(col, function(x) RColorBrewer::brewer.pal(n = 9, name = x)[9]))
+      
+    }
+    
+  }
+  
+  if(type != "study_only") {
+    
+    if(all(summary_col %in% c("Blues", "Greys", "Oranges", "Greens", "Reds", "Purples"))) {
+      
+      summary_col <- unlist(lapply(summary_col, function(x) RColorBrewer::brewer.pal(n = 9, name = x)[9]))
+      
+    }
+    
+    if(type == "summary_only") {
+      
+      col <- summary_col
+      
+    } else {
+      
+      if(length(summary_col) > 1) summary_col <- rep(summary_col, times = 4)
+      
+    }
+    
+  }
+  
+  
+  
+  
+  
+  # Set plot margins. If table is aligned on the left, no y axus breaks and ticks are plotted
+  
+  l <- 5.5
+  
+  r <- 11
+  
+  if(annotate_CI == TRUE) {
+    
+    r <- 1
+    
+  }
+  
+  if(!is.null(study_table) || !is.null(summary_table)) {
+    
+    l <- 1
+    
+    y_tick_names <- NULL
+    
+    y_breaks <- NULL
+    
+  }
+  
+  # workaround for "Undefined global functions or variables" Note in R CMD check while using ggplot2.
+  
+  x.diamond <- NULL
+  
+  y.diamond <- NULL
+  
+  diamond_group <- NULL
+  
+  ID <- NULL
+  
+  x <- NULL
+  
+  y <- NULL
+  
+  x_min <- NULL
+  
+  x_max <- NULL
+  
+  
+  
+  # create classic forest plot
+  
+  p <-
+    
+    ggplot(data = plotdata, aes(y = ID, x = x)) +
+    
+    geom_vline(xintercept = 0, linetype = 2) +
+    
+    geom_errorbarh(data = plotdata, col = "black", aes(xmin = x_min, xmax = x_max, y = ID, height = 0))
+  
+  
+  
+  if(type %in% c("cumulative", "sensitivity")) {
+    
+    p <- p + geom_line(data = tickdata, aes(x = x, y = y, group = ID), col = col, size = 1)
+    
+  } else {
+    
+    p <- p + geom_point(aes(size = weight), shape = 22, col = "black", fill = col)
+    
+  }
+  
+  
+  
+  if(type %in% c("standard", "sensitivity", "cumulative")) {
+    
+    p <- p + geom_polygon(data = summarydata, aes(x = x.diamond, y = y.diamond, group = diamond_group), color= "black", fill = summary_col, size = 0.1)
+    
+  }
+  
+  p <- p +
+    
+    scale_y_continuous(name = "",
+                       
+                       breaks = y_breaks,
+                       
+                       labels = y_tick_names) +
+    
+    coord_cartesian(xlim = x_limit, ylim = y_limit, expand = F)
+  
+  if(!is.null(x_trans_function)) {
+    
+    if(is.null(x_breaks)) {
+      
+      p <- p +
+        
+        scale_x_continuous(name = xlab,
+                           
+                           labels = function(x) {round(x_trans_function(x), 3)})
+      
+    } else {
+      
+      p <- p +
+        
+        scale_x_continuous(name = xlab,
+                           
+                           labels = function(x) {round(x_trans_function(x), 3)},
+                           
+                           breaks = x_breaks)
+      
+    }
+    
+  } else {
+    
+    if(is.null(x_breaks)) {
+      
+      p <- p +
+        
+        scale_x_continuous(name = xlab)
+      
+    } else {
+      
+      p <- p +
+        
+        scale_x_continuous(breaks = x_breaks,
+                           
+                           name = xlab)
+      
+    }
+    
+  }
+  
+  p <- p +
+    
+    scale_size_area(max_size = 3) +
+    
+    theme_bw() +
+    
+    theme(text = element_text(size = 1/0.352777778*text_size),
+          
+          legend.position = "none",
+          
+          panel.grid.major.y = element_blank(),
+          
+          panel.grid.minor.y = element_blank(),
+          
+          panel.grid.major.x = element_line("grey"),
+          
+          panel.grid.minor.x = element_line("grey"),
+          
+          plot.margin = margin(t = 5.5, r = r, b = 5.5, l = l, unit = "pt"))
+  
+  p
+}
+#######
+

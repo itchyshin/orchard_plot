@@ -222,7 +222,7 @@ Here we have used an orchard plot to represent the results obtained when meta-an
   lim_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~Phylum-1, random=list(~1|Article, ~1|Datapoint), data=lim)
   summary(lim_MR)
 
-  # From the above models, we can also calculate the R2, the proportion of variance explained by Phylum, which will be useful down the line.  - SHIN, PLEASE CHECK THIS IS CORRECT, I assume we don't  include sampling variance???? Also, I did one, but then found a post by Wolfgang suggesting an "alternative", but they give different answers so worth you checking this..(https://stackoverflow.com/questions/22356450/getting-r-squared-from-a-mixed-effects-multilevel-model-in-metafor)
+  # From the above models, we can also calculate the R2, the proportion of variance explained by Phylum, which will be useful down the line.  - SHIN, PLEASE CHECK THIS IS CORRECT, Best way to deal with sampling variance???? Also, I did one, but then found a post by Wolfgang suggesting an "alternative", but they give different answers so worth you checking this..(https://stackoverflow.com/questions/22356450/getting-r-squared-from-a-mixed-effects-multilevel-model-in-metafor)
   
   R2 <- round(var(predict(lim_MR)$pred) / (sum(lim_MR$sigma2)+var(predict(lim_MR)$pred)), digits = 3) # Alternative approach
 
@@ -247,12 +247,12 @@ Noe we can plot a default orchard plot, scaling each effect size by N. Also, bec
 
 Now that we have Figure \ref{fig:Figure6} we can do some small changes to make it pretty and add some more details, such as between study heterogenity and R2 for phylum. Currently, the cb argument is "FALSE", we can change this to "TRUE" to use colour blind friendly colours. Additionally, because we are using `ggplot` we can add element to the figure to make it look pretty. 
 
-```{r Figure7, echo = TRUE, eval = TRUE, messages = FALSE, warnings = FALSE, fig.width = 6, fig.height = 8, fig.cap = "\\label{fig:Figure7}Orchard plot of the the strength of correlation between maternal and offspring size within-species"}
+```{r Figure7, echo = TRUE, eval = TRUE, messages = FALSE, warnings = FALSE, fig.width = 6.5, fig.height = 8, fig.cap = "\\label{fig:Figure7}Orchard plot of the the strength of correlation between maternal and offspring size within-species"}
   # Lets add the I2 on the figure above the legend to convey how much between study heterogenity we have
-p1 <- orchard_plot(lim_MR_int, mod = "Phylum", xlab = "Correlation coefficient", 
+orchard_plot(lim_MR_int, mod = "Phylum", xlab = "Correlation coefficient", 
     alpha = 0.5, transfm = "tanh", angle = 45, N = lim$N, cb = FALSE) + 
   
-  annotate(geom="text", x=1, y=0.50, label=paste0("I^{2}[study] == ", I2_study),
+  annotate(geom="text", x=0.7, y=0.50, label=paste0("I^{2}[study] == ", I2_study),
               color="black", parse = TRUE, size = 6)
 
 	orchard_plot(lim_MR, mod = "Phylum", xlab = "Correlation coefficient (r)", alpha = 0.5, transfm = "tanh", angle = 45, N = lim$N, cb = TRUE) +
@@ -271,7 +271,7 @@ p1 <- orchard_plot(lim_MR_int, mod = "Phylum", xlab = "Correlation coefficient",
 
   	scale_x_continuous(expand = c(0.1,0.1)) +
 
-    annotate(geom="text", x=0.5, y=7.4, label=paste0("R^{2} == ", R2),
+    annotate(geom="text", x=0.7, y=7.4, label=paste0("R^{2} == ", R2),
               color="black", parse = TRUE, size = 6)
 ```
 

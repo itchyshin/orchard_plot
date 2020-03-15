@@ -5,8 +5,6 @@
 #' @param object model object of class 'rma.mv', 'rma' or 'orchard' table of model results
 #' @param mod the name of a moderator. Otherwise, "Int" for intercept only model.
 #' @param xlab The effect size measure label.
-#' @param N  The vector of sample size which an effect size is based on. If default, we use precision (the inverse of sampling standard error)
-#' @param alpha The level of transparency for pieces of fruit (effect size)
 #' @param angle The angle of y labels. The default is 90 degrees
 #' @param cb If TRUE, it uses 8 colour blind friendly colors (7 colours plus grey)
 #' @param transfm If set to "tanh", a tanh transformation will be applied to effect sizes, converting Zr will to a correlation or pulling in extreme values for other effect sizes (lnRR, lnCVR, SMD). If "none" is chosen then it will default to 
@@ -16,7 +14,7 @@
 #' @examples
 #' @export
 
-caterpillars <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, angle = 90, cb = TRUE, transfm = c("none", "tanh")) {
+caterpillars <- function(object, mod = "Int", xlab,  angle = 90, transfm = c("none", "tanh")) {
   
   if(any(class(object) %in% c("rma.mv", "rma"))){
     if(mod != "Int"){
@@ -25,52 +23,91 @@ caterpillars <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, ang
       object <- mod_results(object, mod = "Int")
     }
   }
-  data <- object$data
-  data$scale <- (1/sqrt(data[,"vi"]))
-  legend <- "Precision (1/SE)"
+
+###### test    
+  # data frame for the effect size level data set
+  # we need ID for y axis (should sort them out according to yi group_by moderator)
+  data <- res3$data
+  data$lower <- data$yi - stats::qnorm(0.975)*sqrt(data$vi)
+  data$upper <- data$yi + stats::qnorm(0.975)*sqrt(data$vi)
+  data$moderator <- factor(data$moderator, labels = mod_table$name)
   
-  if(N != "none"){
-    data$scale <- N
-    legend <- "Sample Size (N)"
-  }
+  
+  # data frame for the meta-analytic results
+  mod_table <- res3$mod_table
+  mod_table$Y <- -2
+  mod_table$K <- as.vector(by(data, data[,"moderator"], function(x) length(x[,"yi"])))
+  mod_table$moderator <- mod_table$name
+  # the number of groups in a moderator
+  GN <- dim(mod_table)[1]
+  groups <- 
+  
+  # use dplyr here - need to change....
+  data <- data %>% group_by(moderator) %>% arrange(moderator, desc(yi)) %>%  
+    ungroup() %>% 
+    mutate(ID = unlist(lapply(mod_table$K, function(x) 1:x))) %>% 
+    data.frame()
   
   if(transfm == "tanh"){
-    cols <- sapply(object$mod_table, is.numeric)
-    object$mod_table[,cols] <- Zr_to_r(object$mod_table[,cols])
+    cols <- sapply(mod_table, is.numeric)
+    mod_table[,cols] <- Zr_to_r(mod_table[,cols])
     data$yi <- Zr_to_r(data$yi)
+    data$lower <- Zr_to_r(data$lower)
+    data$upper <- Zr_to_r(data$upper)
     label <- xlab
   }else{
     label <- xlab
   }
   
-  object$mod_table$K <- as.vector(by(data, data[,"moderator"], function(x) length(x[,"yi"])))
-  
-  # colour blind friendly colours with grey
-  cbpl <- c("#E69F00","#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#56B4E9", "#999999")
+  # preparing for diamons for summary - we need to prep y axis 
+  # copying from internal_viz_classicforest() from R package 
+  sum_data <- data.frame("x.diamond" = c(mod_table$lowerCL,
+                                        mod_table$estimate ,
+                                        mod_table$upperCL,
+                                        mod_table$estimate ),
+                         "y.diamond" = c(mod_table$Y,
+                                         mod_table$Y + 1.2,
+                                         mod_table$Y,
+                                         mod_table$Y - 1.2),
+                         "moderator" = rep(mod_table$name, times = 4)
+                        )
   
   # Make the orchard plot
-  plot <- ggplot2::ggplot(data = object$mod_table, aes(x = estimate, y = name)) +
+  plot <- ggplot2::ggplot(data = data, aes(x = yi, y = ID)) +
     # pieces of fruit (bee-swarm and bubbles)
-    ggbeeswarm::geom_quasirandom(data = data, aes(x = yi, y = moderator, size = scale, colour = moderator), groupOnX = FALSE, alpha=alpha) + 
-    # 95 %prediction interval (PI): twigs
-    ggplot2::geom_errorbarh(aes(xmin = object$mod_table$lowerPR, xmax = object$mod_table$upperPR),  height = 0, show.legend = FALSE, size = 0.5, alpha = 0.6) +
+    
+    # 95 % CI
+    ggplot2::geom_errorbarh(aes(xmin = lower, xmax = upper), colour = "#00CD00", height = 0, show.legend = FALSE, size = 0.5, alpha = 0.6) +
     # 95 %CI: branches
-    ggplot2::geom_errorbarh(aes(xmin = object$mod_table$lowerCL, xmax = object$mod_table$upperCL),  height = 0, show.legend = FALSE, size = 1.2) +
-    ggplot2::geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = alpha) +
+
+    ggplot2::geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = 0.5) +
+    # diamond
     # creating dots for truncks
-    ggplot2::geom_point(aes(fill = object$mod_table$name), size = 3, shape = 21) + 
-    # setting colours
-    ggplot2::annotate('text', x = (max(data$yi) + (max(data$yi)*0.10)), y = (seq(1, dim(object$mod_table)[1], 1)+0.3), label= paste("italic(k)==", object$mod_table$K), parse = TRUE, hjust = "right", size = 3.5) +
+    ggplot2::geom_point(colour = "#FFD700", size = 1) +
+    
+    #ggplot2::facet_grid(moderator~., scales = "free_y", space = "free") +
+    ggplot2::facet_wrap(~moderator, scales = "free_y", nrow = GN,  strip.position = "left") +
     ggplot2::theme_bw() +
-    ggplot2::guides(fill = "none", colour = "none") + 
-    ggplot2::theme(legend.position= c(1, 0), legend.justification = c(1, 0)) +
-    ggplot2::theme(legend.title = element_text(size = 9)) +
-    ggplot2::theme(legend.direction="horizontal") +
-    ggplot2::theme(legend.background = element_blank()) +
-    ggplot2::labs(x = label, y = "", size = legend) +
-    ggplot2::theme(axis.text.y = element_text(size = 10, colour ="black", 
-                                              hjust = 0.5, 
-                                              angle = angle))
+    ggplot2::theme(strip.text.y = element_text(angle = 0, size = 8),# margin = margin(t=15, r=15, b=15, l=15)), 
+          strip.background = element_rect(colour = NULL,
+                                          linetype = "blank",
+                                          fill = "gray90"),
+          axis.text.y = element_blank(),
+          axis.ticks.y = element_blank()) +
+    ggplot2::labs(x = "Effect Size (SMD)", y = "")
+   
+  plot <- plot + 
+     ggplot2::geom_segment(data = mod_table, aes(x = lowerPR, y = Y, xend = upperPR, yend = Y, group = moderator)) +
+     ggplot2::geom_polygon(data = sum_data, aes(x = x.diamond, y = y.diamond, group = moderator), fill = "red") 
+
+  
+  (g <- ggplotGrob(plot))  
+  
+      
+    # inserting k - if 
+    #ggplot2::annotate('text', x = (max(data$yi) + (max(data$yi)*0.10)), y = (seq(1, dim(object$mod_table)[1], 1)+0.3), label= paste("italic(k)==", object$mod_table$K), parse = TRUE, hjust = "right", size = 3.5) +
+    
+
   # putting colours in
   if(cb == TRUE){
     plot <- plot + 
@@ -80,3 +117,90 @@ caterpillars <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, ang
   
   return(plot)
 }
+
+
+
+#####
+
+###### test    
+# data frame for the effect size level data set
+# we need ID for y axis (should sort them out according to yi group_by moderator)
+data <- res3$data
+data$lower <- data$yi - stats::qnorm(0.975)*sqrt(data$vi)
+data$upper <- data$yi + stats::qnorm(0.975)*sqrt(data$vi)
+data$moderator <- factor(data$moderator, labels = mod_table$name)
+
+
+# data frame for the meta-analytic results
+mod_table <- res3$mod_table
+mod_table$Y <- -2
+mod_table$K <- as.vector(by(data, data[,"moderator"], function(x) length(x[,"yi"])))
+mod_table$moderator <- mod_table$name
+# the number of groups in a moderator
+GN <- dim(mod_table)[1]
+groups <- 
+  
+  # use dplyr here - need to change....
+  data <- data %>% group_by(moderator) %>% arrange(moderator, desc(yi)) %>%  
+  ungroup() %>% 
+  mutate(ID = unlist(lapply(mod_table$K, function(x) 1:x))) %>% 
+  data.frame()
+
+if(transfm == "tanh"){
+  cols <- sapply(mod_table, is.numeric)
+  mod_table[,cols] <- Zr_to_r(mod_table[,cols])
+  data$yi <- Zr_to_r(data$yi)
+  data$lower <- Zr_to_r(data$lower)
+  data$upper <- Zr_to_r(data$upper)
+  label <- xlab
+}else{
+  label <- xlab
+}
+
+# preparing for diamons for summary - we need to prep y axis 
+# copying from internal_viz_classicforest() from R package 
+sum_data <- data.frame("x.diamond" = c(mod_table$lowerCL,
+                                       mod_table$estimate ,
+                                       mod_table$upperCL,
+                                       mod_table$estimate ),
+                       "y.diamond" = c(mod_table$Y,
+                                       mod_table$Y + 1.2,
+                                       mod_table$Y,
+                                       mod_table$Y - 1.2),
+                       "moderator" = rep(mod_table$name, times = 4)
+)
+
+# Make the orchard plot
+plot <- ggplot2::ggplot(data = data, aes(x = yi, y = ID)) +
+  # pieces of fruit (bee-swarm and bubbles)
+  
+  # 95 % CI
+  ggplot2::geom_errorbarh(aes(xmin = lower, xmax = upper), colour = "#00CD00", height = 0, show.legend = FALSE, size = 0.5, alpha = 0.6) +
+  # 95 %CI: branches
+  
+  ggplot2::geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = 0.5) +
+  # diamond
+  # creating dots for truncks
+  ggplot2::geom_point(colour = "#FFD700", size = 1) +
+  
+  #ggplot2::facet_grid(moderator~., scales = "free_y", space = "free") +
+  ggplot2::facet_wrap(~moderator, scales = "free_y", nrow = GN,  strip.position = "left") +
+  ggplot2::theme_bw() +
+  ggplot2::theme(strip.text.y = element_text(angle = 0, size = 8),# margin = margin(t=15, r=15, b=15, l=15)), 
+                 strip.background = element_rect(colour = NULL,
+                                                 linetype = "blank",
+                                                 fill = "gray90"),
+                 axis.text.y = element_blank(),
+                 axis.ticks.y = element_blank()) +
+  ggplot2::labs(x = "Effect Size (SMD)", y = "")
+
+plot <- plot + 
+  ggplot2::geom_segment(data = mod_table, aes(x = lowerPR, y = Y, xend = upperPR, yend = Y, group = moderator)) +
+  ggplot2::geom_polygon(data = sum_data, aes(x = x.diamond, y = y.diamond, group = moderator), fill = "red") 
+
+
+(g <- ggplotGrob(plot))  
+
+
+# inserting k - if 
+#ggplot2::annotate('text', x = (max(data$yi) + (max(data$yi)*0.10)), y = (seq(1, dim(object$mod_table)[1], 1)+0.3), label= paste("italic(k)==", object$mod_table$K), parse = TRUE, hjust = "right", size = 3.5) +

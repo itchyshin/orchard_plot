@@ -140,7 +140,9 @@ mod_table$moderator <- mod_table$name
 GN <- dim(mod_table)[1]
 groups <- 
   
-  # use dplyr here - need to change....
+  # use dplyr here - need to change.... 
+  # Dan can you make this basic R code - maybe I got it
+  # data <- data[order(data$moderator, -data$yi),]
   data <- data %>% group_by(moderator) %>% arrange(moderator, desc(yi)) %>%  
   ungroup() %>% 
   mutate(ID = unlist(lapply(mod_table$K, function(x) 1:x))) %>% 

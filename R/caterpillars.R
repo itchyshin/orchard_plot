@@ -137,7 +137,7 @@ mod_table$Y <- -2
 mod_table$K <- as.vector(by(data, data[,"moderator"], function(x) length(x[,"yi"])))
 mod_table$moderator <- mod_table$name
 # the number of groups in a moderator
-GN <- dim(mod_table)[1]
+GN <- nrow(mod_table)
 #groups <- 
   
   # use dplyr here - need to change.... 
@@ -228,7 +228,7 @@ mod_table$Y <- -2 #TODO
 mod_table$K <- as.vector(by(data, data[,"moderator"], function(x) length(x[,"yi"])))
 mod_table$moderator <- mod_table$name
 # the number of groups in a moderator
-GN <- dim(mod_table)[1]
+GN <- nrow(mod_table)
 #groups <- 
   
   # use dplyr here - need to change.... 

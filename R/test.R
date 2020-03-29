@@ -9,11 +9,13 @@ install.packages("devtools")
 install.packages("tidyverse")
 install.packages("metafor")
 install.packages("patchwork")
-devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE,
-                         build_vignettes = TRUE)
+install.packages("R.rsp")
+
+devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE, build_vignettes = TRUE)
+
 library(orchaRd)
-library(patchwork) 
-library(tidyverse) 
+library(patchwork)
+library(tidyverse)
 library(metafor)
 
 english <- escalc(measure = "SMD", n1i = NStartControl, sd1i = SD_C, m1i = MeanC,

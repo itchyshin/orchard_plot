@@ -230,7 +230,6 @@ internal_viz_classicforest <- function(plotdata, madata,
   
   
   # Set Color palette for shading
-  
   if(type != "summary_only") {
     
     if(all(col %in% c("Blues", "Greys", "Oranges", "Greens", "Reds", "Purples"))) {

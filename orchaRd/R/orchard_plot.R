@@ -55,6 +55,13 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, ang
 			object <- mod_results(object, mod)
 		} else{
 			object <- mod_results(object, mod = "Int")
+		}	if(transfm == "tanh"){
+		  cols <- sapply(object$mod_table, is.numeric)
+		  object$mod_table[,cols] <- Zr_to_r(object$mod_table[,cols])
+		  data$yi <- Zr_to_r(data$yi)
+		  label <- xlab
+		}else{
+		  label <- xlab
 		}
 	}
 	        data <- object$data
@@ -91,15 +98,15 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, ang
 	  	ggplot2::geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = alpha) +
 	  	# creating dots for truncks
 	  	ggplot2::geom_point(aes(fill = object$mod_table$name), size = 3, shape = 21) + 
-	  	# setting colours
-	  	ggplot2::annotate('text', x = (max(data$yi) + (max(data$yi)*0.10)), y = (seq(1, dim(object$mod_table)[1], 1)+0.3), label= paste("italic(k)==", object$mod_table$K), parse = TRUE, hjust = "right", size = 3.5) +
+	  	# putting labels
+	  	ggplot2::annotate('text', x = (max(data$yi) + (max(data$yi)*0.10)), y = (seq(1, nrow(object$mod_table), 1)+0.3), label= paste("italic(k)==", object$mod_table$K), parse = TRUE, hjust = "right", size = 3.5) +
 	  	ggplot2::theme_bw() +
 	    ggplot2::guides(fill = "none", colour = "none") + 
 	    ggplot2::theme(legend.position= c(1, 0), legend.justification = c(1, 0)) +
 	    ggplot2::theme(legend.title = element_text(size = 9)) +
 	    ggplot2::theme(legend.direction="horizontal") +
 	    ggplot2::theme(legend.background = element_blank()) +
-	  	ggplot2::labs(x = label, y = "", size = legend) +
+	  	ggplot2::labs(x = label, y = "", size = legend) + #????? #TODO
 	    ggplot2::theme(axis.text.y = element_text(size = 10, colour ="black", 
 	                                              hjust = 0.5, 
 	                                              angle = angle))

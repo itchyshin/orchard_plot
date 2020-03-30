@@ -3,13 +3,13 @@
 
 # test
 
-install.packages("devtools")
-install.packages("tidyverse")
-install.packages("metafor")
-install.packages("patchwork")
-install.packages("R.rsp")
+# install.packages("devtools")
+# install.packages("tidyverse")
+# install.packages("metafor")
+# install.packages("patchwork")
+# install.packages("R.rsp")
 
-devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE, build_vignettes = TRUE)
+#devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE, build_vignettes = TRUE)
 
 library(orchaRd)
 library(patchwork)
@@ -23,6 +23,14 @@ summary(english_MA_int)
 
 
 english <- escalc(measure = "CVR", n1i = NStartControl, sd1i = SD_C, m1i = MeanC, n2i = NStartExpt, sd2i = SD_E, m2i = MeanE, var.names = c("lnCVR", "vlnCVR"), data = english)
+
+
+english_MA <- rma.mv(yi = SMD, V = vSMD, random = list(~1 |StudyNo, ~1 | EffectID), data = english) 
+summary(english_MR)
+
+res1 <- mod_results(english_MA, mod = "Int")
+print(res1)
+
 # Now we can fit the meta-regression model (contrast)
 english_MR <- rma.mv(yi = SMD, V = vSMD, mods = ~ManipType - 1, random = list(~1 |StudyNo, ~1 | EffectID), data = english) 
 summary(english_MR)
@@ -30,11 +38,18 @@ summary(english_MR)
 res2 <- mod_results(english_MR, mod = "ManipType")
 print(res2)
 
+res12<-submerge(res1, res2)
+print(res12)
+
+
 senior_MR <- rma.mv(yi = lnCVR, V = vlnCVR, mods = ~ManipType - 1, random = list(~1 | StudyNo, ~1 | EffectID), data = english)
 summary(senior_MR)
 
 res3 <- mod_results(senior_MR, "ManipType") 
 print(res3) 
+
+
+
 
 
 data(lim)

@@ -1,21 +1,29 @@
-# to work on
+#' @title Zr_to_r
+#' @description Converts Zr back to r (Pearson's correlation coefficient)
+#' @param df data frame of results of class 'orchard'
+#' @return A data frame containing all the model results including mean effect size estimate, confidence and prediction intervals with estimates converted back to r
+#' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
+#' @author Daniel Noble - daniel.noble@anu.edu.au 
+#' @export
+
+Zr_to_r <- function(df){
+  return(sapply(df, tanh))
+}
 
 #' @title caterpillars
-#' @description Using a metafor model object of class rma or rma.mv or a results table of class orchard, it creates a an orchard plot from mean effect size estimates for all levels of a given categorical moderator, their corresponding confidence intervals and prediction intervals
+#' @description Using a metafor model object of class rma or rma.mv or a results table of class orchard, it creates a an caterpillars plot from mean effect size estimates for all levels of a given categorical moderator, their corresponding confidence intervals and prediction intervals
 #' @param object model object of class 'rma.mv', 'rma' or 'orchard' table of model results
 #' @param mod the name of a moderator. Otherwise, "Int" for intercept only model.
 #' @param xlab The effect size measure label.
-#' @param angle The angle of y labels. The default is 90 degrees
-#' @param cb If TRUE, it uses 8 colour blind friendly colors (7 colours plus grey)
-#' @param transfm If set to "tanh", a tanh transformation will be applied to effect sizes, converting Zr will to a correlation or pulling in extreme values for other effect sizes (lnRR, lnCVR, SMD). If "none" is chosen then it will default to 
-#' @return Orchard plot
+#' @param overall Relabelling "Intrcpt" (the defualt label from rma or rma.mv intercept only models or meta-analyses) to "Overall",
+#' @param transfm If set to "tanh", a tanh transformation will be applied to effect sizes, converting Zr will to a correlation or pulling in extreme, values for other effect sizes (lnRR, lnCVR, SMD). If "none" is chosen then it will default,
+#' @return Caterpillars plot
 #' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
 #' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @examples
 #' @export
 
-caterpillars <- function(object, mod = "Int", xlab, overall = TRUE, transfm = "none") { #TODO
-  
+caterpillars <- function(object, mod = "Int", xlab, overall = TRUE, transfm = c("none", "tanh")) { 
   if(any(class(object) %in% c("rma.mv", "rma"))){
     if(mod != "Int"){
       object <- mod_results(object, mod)
@@ -23,6 +31,9 @@ caterpillars <- function(object, mod = "Int", xlab, overall = TRUE, transfm = "n
       object <- mod_results(object, mod = "Int")
     }
   }
+  
+  ## evaluate choices
+  transfm <- match.arg(transfm) # if not sepcificed it takes the first choice
   
   # meta-analytic results
   mod_table <- object$mod_table
@@ -53,7 +64,8 @@ caterpillars <- function(object, mod = "Int", xlab, overall = TRUE, transfm = "n
   # data frame for the meta-analytic results
   mod_table$K <- as.vector(by(data, data[,"moderator"], function(x) length(x[,"yi"])))
   mod_table$moderator <- mod_table$name
-  # the number of groups in a moderator
+  
+  # the number of groups in a moderator & data points
   group_no <- nrow(mod_table)
   data_no <- nrow(data)
   
@@ -72,8 +84,8 @@ caterpillars <- function(object, mod = "Int", xlab, overall = TRUE, transfm = "n
     summarise(Y = first(Y)) %>% 
     select(Y) %>% t() %>% as.vector() -2
   
-  # preparing for diamons for summary - we need to prep y axis 
-  # copying from internal_viz_classicforest() from R package 
+  # preparing for diamons for summary 
+  # modefied from internal_viz_classicforest() from R package 
   sum_data <- data.frame("x.diamond" = c(mod_table$lowerCL,
                                          mod_table$estimate ,
                                          mod_table$upperCL,
@@ -87,21 +99,17 @@ caterpillars <- function(object, mod = "Int", xlab, overall = TRUE, transfm = "n
   
   # Make - 
   plot <- ggplot2::ggplot(data = data, aes(x = yi, y = Y)) +
-    # pieces of fruit (bee-swarm and bubbles)
-    
     # 95 % CI
     ggplot2::geom_errorbarh(aes(xmin = lower, xmax = upper), 
                             colour = "#00CD00", height = 0, show.legend = FALSE, size = 0.5, alpha = 0.6) +
-    # 95 %CI: branches
-    
     ggplot2::geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = 0.5) +
-    # creating dots for truncks
+    # creating dots for point estimates
     ggplot2::geom_point(colour = "#FFD700", size = 1) +
     # creating 95% prediction intervals
     ggplot2::geom_segment(data = mod_table, aes(x = lowerPR, y = Y, xend = upperPR, yend = Y, group = moderator)) +
     # creating diamonsts (95% CI)
     ggplot2::geom_polygon(data = sum_data, aes(x = x.diamond, y = y.diamond, group = moderator), fill = "red") +
-    #ggplot2::facet_wrap(~moderator, scales = "free_y", nrow = GN,  strip.position = "left") +
+    #ggplot2::facet_wrap(~moderator, scales = "free_y", nrow = GN,  strip.position = "left") + # using facet_wrap - does not really work well
     ggplot2::theme_bw() +
     ggplot2::theme(strip.text.y = element_text(angle = 0, size = 8),# margin = margin(t=15, r=15, b=15, l=15)), 
                    strip.background = element_rect(colour = NULL,
@@ -109,10 +117,13 @@ caterpillars <- function(object, mod = "Int", xlab, overall = TRUE, transfm = "n
                                                    fill = "gray90"),
                    axis.text.y = element_blank(),
                    axis.ticks.y = element_blank()) +
-    ggplot2::labs(x = label, y = "") +
+    ggplot2::labs(x = label, y = "", parse = TRUE) +
     # putting k
-    ggplot2::annotate('text', x = max(data$upper)*0.9, y = mod_table$Y, label= paste("italic(k)==", mod_table$K), parse = TRUE, hjust = "right", size = 3.5) +
-    ggplot2::annotate('text', x = min(data$lower)*0.9, y = mod_table$Y, label= mod_table$moderator, hjust = "left", size = 3.5) +
+    ggplot2::annotate('text', x = max(data$upper)*0.975, y = mod_table$Y-1.7, 
+                      label= paste("italic(k)==", mod_table$K), parse = TRUE, hjust = "right", size = 3.5) +
+    # putting moderator names 
+    ggplot2::annotate('text', x = min(data$lower)*0.975, y = mod_table$Y, 
+                      label= mod_table$moderator, hjust = "left", size = 3.5) +
     coord_cartesian(xlim = c(min(data$lower)*1.05, max(data$upper)*1.05),
                     ylim = c((min(data$Y)-10), (max(data$Y)+4))
                     , expand = F)

@@ -80,25 +80,20 @@ If we instead want to create an orchard plot and visualise the results we can do
 
 ```{r Figure1, echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 4, fig.cap = "\\label{fig:Figure1}Orchard plot of the impact caloric restriction using standardised mean difference"}
 orchard_plot(english_MR_int, mod="Int", xlab = "Standardised mean difference", 
-  transfm = "none") +
-
-scale_fill_manual(values="grey") +
-
-scale_colour_manual(values="grey")
+  transfm = "none") 
 ```
 
-In \ref{fig:Figure1} we simply add in the metafor model and it will create a default orchard plot. Alternatively, we could also add in the table of results.
+In Figure \ref{fig:Figure1}, we simply add in the metafor model and it will create a default orchard plot. Alternatively, we could also add in the table of results (also, we change the colours of the 'trunk and furit' by adding a few arguments).
 
 ```{r Figure2, echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 4, fig.cap = "\\label{fig:Figure2}Orchard plot of the impact caloric restriction using standardised mean difference but instead of using the metafor model, using the model results table", messages = FALSE, warnings = FALSE}
-orchard_plot(model_results, mod="Int", xlab = "Standardised mean difference", transfm = "none")+ 
-scale_fill_manual(values="grey") +
-  
-scale_colour_manual(values="grey")
+orchard_plot(model_results, mod="Int", xlab = "Standardised mean difference") + 
+  scale_fill_manual(values="grey") +
+  scale_colour_manual(values="grey")
 ```
 
 Figure \ref{fig:Figure2} and Figure \ref{fig:Figure1} above show that overall estimate from a random-effects meta-analysis of 77 effect sizes is centered on zero, with a 95% CI that spans the line of no-effect. The prediction intervals clearly demonstrate the high level of heterogeneity, with effects size less than -0.5 and greater than 0.5 predicted to be observed. 
 
-In a subsequent publication, Senior et al. (2017) analysed this dataset for effects of dietary-restriction on among-individual variation in the age at death using the log coefficient of variation ratio. A major prediction in both English & Uller (2016) and Senior et al. (2017) was that the type of manipulation, whether the study manipulated quality of food versus the quantity of food would be important. As such, we can fit a meta-regression model to test whether the moderator "Manipulation Type" impacts our results on the mean and variance
+In a subsequent publication, Senior et al. (2017) analysed this dataset for effects of dietary-restriction on among-individual variation in the age at death using the log coefficient of variation ratio. A major prediction in both English & Uller (2016) and Senior et al. (2017) was that the type of manipulation, whether the study manipulated quality of food versus the quantity of food would be important. As such, we can fit a meta-regression model to test whether the moderator "Manipulation Type" `ManipType` impacts our results on the mean and variance
 
 ```{r Figure3, fig.width = 6, fig.height = 8, fig.cap = "\\label{fig:Figure3}Orchard plot of diet qualities impact on SMD (top) and log coefficient of variation (bottom)"}
 # First we need to calculate the lnCVR
@@ -124,10 +119,9 @@ print(senior_results)
 
 
 # We can now plot SMD and lnCVR beside each other and compar ethe results
-p1 <- orchard_plot(english_MR, mod = "ManipType", xlab = "Standardised mean difference", transfm = "none")
+p1 <- orchard_plot(english_MR, mod = "ManipType", xlab = "Standardised mean difference")
 
-p2 <- orchard_plot(senior_MR, mod = "ManipType", xlab = "log(CV ratio) (lnCVR)", 
-  transfm = "none")
+p2 <- orchard_plot(senior_MR, mod = "ManipType", xlab = "log(CV ratio) (lnCVR)")
 
 p1/p2
 
@@ -165,11 +159,8 @@ Above we have fit a meta-regression model using "Grazer Type" as a moderator whi
 
 ```{r Figure4, echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 8, fig.cap = "\\label{fig:Figure4}Orchard plots of the effects of predation on benthic invertebrate communities compared using the log response ratio. Top panel is the default plot and bottom panel a plot containing changes in label axes"}
 
-p3 <- orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)", 
-  transfm = "none") 
-
-p4 <- orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)", 
-  transfm = "none", angle = 45) 
+p3 <- orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)")
+p4 <- orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)", angle = 45) 
 
 p3/p4
 
@@ -179,11 +170,9 @@ The other thing we can change is the type of scaling we wish to use. Lets say we
 
 ```{r Figure5, echo = TRUE, eval = TRUE, messages = FALSE, warnings = FALSE, fig.width = 6, fig.height = 8, fig.cap = "\\label{fig:Figure5}Orchard plots of the effects of predation on benthic invertebrate communities compared using the log response ratio. Top panel is the default plot and bottom panel a plot containing changes in label axes and scaling with sample size instead of precision"}
 
-p5 <- orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)", 
-  transfm = "none") 
+p5 <- orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)") 
 
-p6 <- orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)", 
-  transfm = "none", angle = 45, N = eklof$N) 
+p6 <- orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)", angle = 45, N = eklof$N) 
 
 p5/p6
 
@@ -222,6 +211,8 @@ Here we have used an orchard plot to represent the results obtained when meta-an
   lim_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~Phylum-1, random=list(~1|Article, ~1|Datapoint), data=lim)
   summary(lim_MR)
 
+  
+  
   # From the above models, we can also calculate the R2, the proportion of variance explained by Phylum, which will be useful down the line.  - SHIN, PLEASE CHECK THIS IS CORRECT, Best way to deal with sampling variance???? Also, I did one, but then found a post by Wolfgang suggesting an "alternative", but they give different answers so worth you checking this..(https://stackoverflow.com/questions/22356450/getting-r-squared-from-a-mixed-effects-multilevel-model-in-metafor)
   
   R2 <- round(var(predict(lim_MR)$pred) / (sum(lim_MR$sigma2)+var(predict(lim_MR)$pred)), digits = 3) # Alternative approach

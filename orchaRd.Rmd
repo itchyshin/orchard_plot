@@ -1,5 +1,5 @@
 ---
-title: "orchaRd: An R package for plotting prediction intervals and orchard plots"
+title: "orchaRd: An R package for drawing 'orchard' plots (and 'caterpillars' plots) from meta-analyses and meta-regressions with categorical moderators"
 author: "S. Nakagawa, M. Lagisz, R. E. O’Dea, J. Rutkowska, Y. Yang, D.W.A. Noble, and A. M. Senior"
 date: "`r Sys.Date()`"
 geometry: margin=1.5cm
@@ -19,14 +19,15 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-`orchaRd` allows users to create pretty orchard plots that contain both confidence and prediction intervals around mean effect size estimates, plots the effect size distribution over top such estimates and weights effect sizes by their precision (1/sampling error) or sample size. `orchaRd` takes a `metafor` object of class `rma.mv` or `rma` (Viechtbauer, 2010) and plots the results for the meta-analytic or meta-regression model. Currently, only meta-regression models with a single moderator variable are allowed or intercept only meta-analytic models. `orchaRd` uses `ggplot` (Wickham, 2009) for plotting, and as such, layers can be added directly to make plots customizable to the users needs.
+`orchaRd` allows users to create pretty orchard plots that contain both confidence intervals (CIs) and prediction intervals (PIs) around point estimates for different categorical moderators, plots the effect size distribution over top such estimates and weights effect sizes by their precision (1/standard error, SE) or sample size. `orchaRd` takes a `metafor` object of class `rma.mv` or `rma` (Viechtbauer, 2010) and plots the results for the meta-analytic or meta-regression model. Currently, only meta-regression models with a single moderator variable are allowed or intercept only meta-analytic models. `orchaRd` uses `ggplot2` (Wickham, 2009) for plotting, and as such, layers can be added directly to make plots customizable to the users needs. Also, the function `orchard_plot` uses the principles of bee swarm plots to visualise indiviudal effect sizes (Elund 2012; also see Clarke & Sherrill-Mix 2012; Sherrill-Mix & Clarke 2012).
+
+In addition to orchard plots, we have another plotting function `caterpillars` . Furthermore, the pacakge `orchaRd` comes with two functions useful for mulitlevel meta-analysis and meta-regression (i.e., `rma.mv`): 1) `i2_ml` to calculate the 'total' I^2^ along with I^2^ for each level (*sensu* Nakagawa & Santos 2012; see also higgins....XXXX; Senior et al. 2016) and 2) `r2_ml` to calcuate marginal and conditional R^2^ () for mixed models (*sensu* Nakagawa & Schielzeth 2013; see also ....). 
 
 # Citing orchaRd
 
 To cite `orchaRd` in publications one can use the following reference:
 
-Nakagawa, S. et al. 2020. The Orchard Plot: Cutlivatinng the Forest Plot 
-for Use in Ecology,  Evolution and Beyond. Research Synthesis Methods, in review
+Nakagawa, S. et al. 2020. The Orchard Plot: Cutlivatinng the Forest Plot for Use in Ecology, Evolution and Beyond. *Research Synthesis Methods*, (revision) (*EcoEvoRxiv*: https://ecoevorxiv.org/epqa7/)
 
 # Installation
 
@@ -47,9 +48,11 @@ library(metafor)
 
 Installation will make the primary functions accessible to users along with their help files. You will also need the `tidyverse` and `metafor` packages.
 
-# Examples of how it works 
+# Examples of orchard plots along with caterpillars plot
 
 In this vignette we'll walk the reader through a number of case studies and show you how you can create beautiful looking orchard plots. We overview three different case studies that make use of different effect sizes and moderators. The datasets associated with each case study come as part of the `orchaRd` package.
+
+
 
 #### Example 1: Dietary Restriction and Lifespan
 English and Uller (2016) performed a systematic review and meta-analysis on the effects of early life dietary restriction (a reduction in a major component of the diet without malnutrition; e.g. caloric restriction) on average at death, using the standardised mean difference (often called d). They found that across the whole dataset, there was little evidence for an effect of dietary restriction on mean age at death. Here we'll use the dataset to first calculate the effect size measures and then fit an intercept only, meta-analytic model.
@@ -62,8 +65,8 @@ data(english)
 english<-metafor::escalc(measure="SMD", n1i=NStartControl, sd1i=SD_C, m1i=MeanC, n2i=NStartExpt, sd2i=SD_E, m2i=MeanE, data=english)
 
 
-english_MR_int<-metafor::rma.mv(yi=yi, V=vi, random=list(~1|EffectID), data=english)
-summary(english_MR_int)
+english_MA<-metafor::rma.mv(yi=yi, V=vi, random=list(~1|EffectID), data=english)
+summary(english_MA)
 
 ```
 
@@ -71,7 +74,7 @@ We can see from the above that we have fit a meta-analytic model without an inte
 
 ```{r echo = TRUE, eval = TRUE}
 
-model_results <- orchaRd::mod_results(english_MR_int, mod="Int")
+model_results <- orchaRd::mod_results(english_MA, mod="Int")
 print(model_results)
  
 ```
@@ -83,10 +86,15 @@ orchard_plot(english_MR_int, mod="Int", xlab = "Standardised mean difference",
   transfm = "none") 
 ```
 
-In Figure \ref{fig:Figure1}, we simply add in the metafor model and it will create a default orchard plot. Alternatively, we could also add in the table of results (also, we change the colours of the 'trunk and furit' by adding a few arguments).
+In Figure \ref{fig:Figure1}, we simply add in the metafor model and it will create a default orchard plot. Alternatively, we could also add in the table of results. Some people may wish to present the heterogeneity index, I^2^ (also, we change the colours of the 'trunk and furit' by adding a few arguments). <---comments ---->
 
 ```{r Figure2, echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 4, fig.cap = "\\label{fig:Figure2}Orchard plot of the impact caloric restriction using standardised mean difference but instead of using the metafor model, using the model results table", messages = FALSE, warnings = FALSE}
+
+# use i2_sn function to obtain the total I^2
+
+
 orchard_plot(model_results, mod="Int", xlab = "Standardised mean difference") + 
+  
   scale_fill_manual(values="grey") +
   scale_colour_manual(values="grey")
 ```
@@ -192,48 +200,21 @@ Here we have used an orchard plot to represent the results obtained when meta-an
 # Add in the sampling variance
 	lim$vi<-(1/sqrt(lim$N - 3))^2
 
-# Here we will fit an intercept only meta-analytic model to ascertain the overall correlation between maternal and offspring size.
-  lim_MR_int<-metafor::rma.mv(yi=yi, V=vi, random=list(~1|Article, ~1|Datapoint), data=lim)
-  summary(lim_MR_int)
-
-# Lets estimate heterogenity for the model using I2 - SHIN, PLEASE CHECK THIS IS CORRECT
-      # calculate weights and total sampling variance
-          wi <- 1/ lim$vi
-          Vw <- sum((wi) * (length(wi) - 1))  / (((sum(wi)^2) - sum((wi)^2)))
-  
-      # Extract the between study and residual variance estimates from the model
-      sigma2 <- matrix(lim_MR_int$sigma2, nrow = 1, ncol = length(lim_MR_int$sigma2))
-
-      # calculate between study I2
-        I2_study <- round(sigma2[1,1] / (sum(sigma2) + Vw), digits = 2)
-
 # Lets fit a meta-regression - I will do Article non-independence. The phylogenetic model found phylogenetic effects, however, instead we could fit Phylum as a fixed effect and explore them with an Orchard Plot
   lim_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~Phylum-1, random=list(~1|Article, ~1|Datapoint), data=lim)
   summary(lim_MR)
-
   
-  
-  # From the above models, we can also calculate the R2, the proportion of variance explained by Phylum, which will be useful down the line.  - SHIN, PLEASE CHECK THIS IS CORRECT, Best way to deal with sampling variance???? Also, I did one, but then found a post by Wolfgang suggesting an "alternative", but they give different answers so worth you checking this..(https://stackoverflow.com/questions/22356450/getting-r-squared-from-a-mixed-effects-multilevel-model-in-metafor)
-  
-  R2 <- round(var(predict(lim_MR)$pred) / (sum(lim_MR$sigma2)+var(predict(lim_MR)$pred)), digits = 3) # Alternative approach
-
-  R2_2 <- (sum(lim_MR_int$sigma2) - sum(lim_MR$sigma2)) / sum(lim_MR_int$sigma2) # Value seems awfully small, check.
-
-  
-
 ```
 
 Noe we can plot a default orchard plot, scaling each effect size by N. Also, because we are using Zr, we can use transfm = "tanh" and it will do the conversions for us:
 
 ```{r Figure6, echo = TRUE, eval = TRUE, messages = FALSE, warnings = FALSE, fig.width = 6, fig.height = 8, fig.cap = "\\label{fig:Figure6}Orchard plot of the the strength of correlation between maternal and offspring size within-species"}
   
-  #Plot the intercept only model
-  orchard_plot(lim_MR_int, mod = "Phylum", xlab = "Correlation coefficient", 
+  #Plot the meta-regression model
+	p7 <- orchard_plot(lim_MR, mod = "Phylum", xlab = "Correlation coefficient", 
     alpha = 0.5, transfm = "tanh", angle = 45, N = lim$N, cb = FALSE)
 
-  #Plot the meta-regression model
-	orchard_plot(lim_MR, mod = "Phylum", xlab = "Correlation coefficient", 
-    alpha = 0.5, transfm = "tanh", angle = 45, N = lim$N, cb = FALSE)
+  p7
 ```
 
 Now that we have Figure \ref{fig:Figure6} we can do some small changes to make it pretty and add some more details, such as between study heterogenity and R2 for phylum. Currently, the cb argument is "FALSE", we can change this to "TRUE" to use colour blind friendly colours. Additionally, because we are using `ggplot` we can add element to the figure to make it look pretty. 
@@ -268,6 +249,7 @@ orchard_plot(lim_MR_int, mod = "Phylum", xlab = "Correlation coefficient",
 
 As in Figure \ref{fig:Figure7}, new elements can be added to the `orchard_plot` to modify it as one sees fit. It will overwrite existing elements. From our orchard plots above, it is clear that the analysis is dominated by data from Chordates and Arthropods, with the other Phyla being much more poorly represented. Second, there is a difference between the strength of a typical correlation within these two well represented groups (the correlation is stronger in Chordates), which arguably would explain the phylogenetic signals detected by Lim et al. (2014). Lastly, although there are differences within the typical correlation between Chordates and Arthropods, there remains a large overlap in predicted range of individual effect sizes; individual species within Phyla are still highly variable.
 
+
 \newpage
 # References 
 
@@ -283,4 +265,4 @@ Viechtbauer W. 2010. Conducting meta-analyses in R with the metafor package. Jou
 
 Wickham H. 2009. ggplot2 : elegant graphics for data analysis. New York ; London: Springer.
 
-
+TODO - add ggswarm plot ref and related - NS x 2 papers

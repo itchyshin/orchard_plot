@@ -1,5 +1,5 @@
-#' @title i2_ns
-#' @description I2 (I-squared) for mulilevel meta-analytic models, based on Nakagawa & Santos (2012). Alternatively, the method based method by Wolfgang Viechtbauer (http://www.metafor-project.org/doku.php/tips:i2_multilevel_multivariate?s[]=multilevel) 
+#' @title i2_ml
+#' @description I2 (I-squared) for mulilevel meta-analytic models, based on Nakagawa & Santos (2012). Under multilevel models, we can have a multiple I2 (see also Senior et al. 2016). Alternatively, the method based method by Wolfgang Viechtbauer (http://www.metafor-project.org/doku.php/tips:i2_multilevel_multivariate?s[]=multilevel).
 #' @param model
 #' @param method
 #' @return A data frame containing all the model results including mean effect size estimate, confidence and prediction intervals with estimates converted back to r
@@ -7,7 +7,7 @@
 #' @author Daniel Noble - daniel.noble@anu.edu.au 
 #' @export
 
-i2_ns <- function(model, method = c("ns", "wv")) {
+i2_ml <- function(model, method = c("ns", "wv")) {
   
   ## evaluate choices
   method <- match.arg(method)
@@ -34,3 +34,5 @@ i2_ns <- function(model, method = c("ns", "wv")) {
   
   return(I2s)
 }
+
+# TODO - ref 

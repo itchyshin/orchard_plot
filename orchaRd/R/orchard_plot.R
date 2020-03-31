@@ -62,15 +62,6 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, ang
 	}
   
 	mod_table <- object$mod_table  
-	
-	if(transfm == "tanh"){ #TODO check here
-		  cols <- sapply(mod_table, is.numeric)
-		  mod_table[,cols] <- Zr_to_r(mod_table[,cols])
-		  data$yi <- Zr_to_r(data$yi)
-		  label <- xlab
-		}else{
-		  label <- xlab
-		}
 
   data <- object$data
 	data$scale <- (1/sqrt(data[,"vi"]))

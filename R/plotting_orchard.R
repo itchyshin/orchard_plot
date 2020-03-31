@@ -36,7 +36,6 @@ orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)")
 dev.off()  
 
 # F
-
 pdf("./fig/F2.pdf", height=10.5, width=6)
 
 orchard_plot(lim_MR, mod = "Phylum", xlab = "Correlaiton coefficent", transfm = "tanh")

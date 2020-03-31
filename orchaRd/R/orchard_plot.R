@@ -67,9 +67,9 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, ang
 	data$scale <- (1/sqrt(data[,"vi"]))
 	legend <- "Precision (1/SE)"
 
-	if(N != "none"){
+	if(any(N != "none")){
 		  data$scale <- N
-		      legend <- "Sample Size (N)"
+		  legend <- "Sample Size (N)"
 	}
 
 	if(transfm == "tanh"){

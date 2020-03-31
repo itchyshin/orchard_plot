@@ -7,16 +7,6 @@
 #' @author Daniel Noble - daniel.noble@anu.edu.au 
 #' @export
 
-#' Title Function to obtain total and separate I2 from multilevel-meta-analytic model
-#'
-#' @param model
-#' @param method
-#'
-#' @return
-#' @export
-#'
-#' @examples
-
 i2_ns <- function(model, method = c("ns", "wv")) {
   
   ## evaluate choices

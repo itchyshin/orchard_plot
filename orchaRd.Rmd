@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 geometry: margin=1.5cm
 fontsize: 10pt
 output: 
-  bookdown::pdf_document2: default
+  pdf_document
   bookdown::html_document2: default
 ---
 
@@ -45,7 +45,7 @@ devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = T
 
 Installation will make the primary functions accessible to users along with their help files. You will also need the `tidyverse` and `metafor` packages.
 
-```{r echo = FALSE, eval = TRUE}
+```{r echo = FALSE, eval = TRUE, results = 'hide'}
 library(orchaRd)
 library(patchwork)
 library(tidyverse)
@@ -172,7 +172,7 @@ Our orchard plot for the log coefficient of variation demonstrates that, while r
 
 Let's draw comparable caterpillar plots to compare these two results again. 
 
-```{r Figure5, echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 8, fig.cap = "Catterpilar plot of diet qualities impact on the standardised mean difference (SMD) (Top Panel) and log coefficient of variation (lnCVR) (Bottom panel)", messages = FALSE, warnings = FALSE}
+```{r Figure5, echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 8, fig.cap = "Caterpillar plot of diet qualities impact on the standardised mean difference (SMD) (Top Panel) and log coefficient of variation (lnCVR) (Bottom panel)", messages = FALSE, warnings = FALSE}
 
 # We can now plot SMD and lnCVR beside each other and compare the results
 p1c <- caterpillars(english_MR, 
@@ -187,7 +187,7 @@ Now compare between Figure \@ref(fig:Figure4) and Figure \@ref(fig:Figure5). We 
 
 ## Example 2: Predation and Invertebrate Community 
 
-Eklof et al. (2012) evaluated the effects of predation on benthic invertebrate communities. Using the log response ratio they quantified differences in abundance and/or biomass of gastropods and Amphipods in groups with and without predation in an experimental setting. 
+Eklof et al. (2012) evaluated the effects of predation on benthic invertebrate communities. Using the log response ratio they quantified differences in abundance and/or biomass of gastropods and amphipods in groups with and without predation in an experimental setting. 
 
 Here again, we can create orchard plots of the model results, but we'll show how a few simple things can be modified. Again, we can fit the meta-analytic model first: 
 

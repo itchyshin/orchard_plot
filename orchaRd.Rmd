@@ -323,7 +323,7 @@ Finally, we make a comparable caterpillars plot.
   #Plot the meta-regression model
   caterpillars(lim_MR, mod = "Phylum", xlab = "Correlation coefficient", transfm = "tanh")
 ```
-Compared to the orchard plot (Figure \ref{fig:Figure10}), Figure \ref{fig:Figure11} does not look as elegant, unlike the previous comparisions.
+Compared to the orchard plot (Figure \ref{fig:Figure10}), Figure \ref{fig:Figure11} does not look as elegant, unlike the previous comparisions. This is becuase the groups with samll sample sizes are packed at the top of the figure. 
 
 \newpage
 # References 

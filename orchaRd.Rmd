@@ -5,9 +5,8 @@ date: "`r Sys.Date()`"
 geometry: margin=1.5cm
 fontsize: 10pt
 output: 
-  bookdown::html_document2
-  bookdown::pdf_document2
-  
+  bookdown::pdf_document2: default
+  bookdown::html_document2: default
 ---
 
 ```{r setup, include = FALSE}

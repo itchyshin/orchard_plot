@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 geometry: margin=1.5cm
 fontsize: 10pt
 output: 
-  pdf_document
+  bookdown::pdf_document2: default
   bookdown::html_document2: default
 ---
 
@@ -183,6 +183,7 @@ p2c <- caterpillars(senior_MR,
 
 p1c / p2c
 ```
+
 Now compare between Figure \@ref(fig:Figure4) and Figure \@ref(fig:Figure5). We think they both look nice. 
 
 ## Example 2: Predation and Invertebrate Community 
@@ -256,11 +257,12 @@ Overall, our orchard plot shows the results of a re-analysis of their data. The 
 
 Again, we can also draw the caterpillar-plot counterparts for this dataset (\@ref(fig:Figure8)):
 
-```{r Figure8, echo = TRUE, eval = TRUE, messages = FALSE, warnings = FALSE, fig.width = 6, fig.height = 4, fig.cap = "Caterpillars plot of the effects of predation on benthic invertebrate communities compared using the log response ratio"}
+```{r Figure8, echo = TRUE, eval = TRUE, messages = FALSE, warnings = FALSE, fig.width = 5, fig.height = 3, fig.cap = "Caterpillars plot of the effects of predation on benthic invertebrate communities compared using the log response ratio"}
 
 caterpillars(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)") 
 
 ```
+
 Like last time, comparing between Figure \@ref(fig:Figure7) and Figure \@ref(fig:Figure8) shows that both types of plots have their merits in conveying a rich amount of information about the distribution of effect sizes and their overall estimates and uncertainty.
 
 ## Example 3: Maternal-Offspring Morphological Correlations
@@ -281,7 +283,7 @@ Here we have used an orchard plot to represent the results obtained when meta-an
   
 ```
 
-Noe we can plot a default orchard plot, scaling each effect size by N. Also, because we are using Zr, we can use transfm = "tanh" and it will do the conversions for us back to the scale of raw correlation coefficients:
+Now we can plot a default orchard plot, scaling each effect size by N. Also, because we are using Zr, we can use transfm = "tanh" and it will do the conversions for us back to the scale of raw correlation coefficients:
 
 ```{r Figure9, echo = TRUE, eval = TRUE, messages = FALSE, warnings = FALSE, fig.width = 6, fig.height = 8, fig.cap = "Orchard plot of the the strength of correlation between maternal and offspring size within-species"}
   
@@ -297,7 +299,8 @@ Now that we have Figure \@ref(fig:Figure9), we can do some small changes to make
   R2 <- r2_ml(lim_MR)
 
   # We can draw an orchard plot with R2
-  orchard_plot(lim_MR, mod = "Phylum", xlab = "Correlation coefficient (r)", alpha = 0.5, transfm = "tanh", angle = 45, N = lim$N, cb = TRUE) +
+  orchard_plot(lim_MR, mod = "Phylum", xlab = "Correlation coefficient (r)", 
+               alpha = 0.5, transfm = "tanh", angle = 45, N = lim$N, cb = TRUE) +
 
     theme(legend.position= c(0.05, 0.99), 
         
@@ -313,26 +316,27 @@ Now that we have Figure \@ref(fig:Figure9), we can do some small changes to make
 
   	scale_x_continuous(expand = c(0.1,0.1)) +
 
-    annotate(geom="text", x=-0.5, y=0.7, label=paste0("italic(R)^{2} == ", round(R2[1]*100, 2)),color="black", parse = TRUE, size = 4) +
+    annotate(geom="text", x=-0.5, y=0.7, label=paste0("italic(R)^{2} == ", round(R2[1]*100, 2)),
+             color="black", parse = TRUE, size = 4) +
 
         annotate(geom="text", x=-0.31, y=0.67, label="%",color="black", parse = FALSE, size = 4)
 ```
 
-In \@ref(fig:Figure10), new elements can be added to the `orchard_plot` to modify it as one sees fit. It will overwrite existing elements. From our orchard plots above, it is clear that the analysis is dominated by data from Chordates and Arthropods, with the other Phyla being much more poorly represented. Second, there is a difference between the strength of a typical correlation within these two well represented groups (the correlation is stronger in Chordates), which arguably would explain the phylogenetic signals detected by Lim et al. (2014). Lastly, although there are differences within the typical correlation between Chordates and Arthropods, there remains a large overlap in predicted range of individual effect sizes; individual species within Phyla are still highly variable.
+In Figure \@ref(fig:Figure10), new elements can be added to the `orchard_plot` to modify it as one sees fit. It will overwrite existing elements. From our orchard plots above, it is clear that the analysis is dominated by data from Chordates and Arthropods, with the other Phyla being much more poorly represented. Second, there is a difference between the strength of a typical correlation within these two well represented groups (the correlation is stronger in Chordates), which arguably would explain the phylogenetic signals detected by Lim et al. (2014). Lastly, although there are differences within the typical correlation between Chordates and Arthropods, there remains a large overlap in predicted range of individual effect sizes; individual species within Phyla are still highly variable.
 
 Finally, we make a comparable caterpillar plot.
-```{r Figure11, echo = TRUE, eval = TRUE, messages = FALSE, warnings = FALSE, fig.width = 6, fig.height = 10, fig.cap = "Caterpillars plot of the the strength of correlation between maternal and offspring size within-species"}
+```{r Figure11, echo = TRUE, eval = TRUE, messages = FALSE, warnings = FALSE, fig.width = 6, fig.height = 8, fig.cap = "Caterpillars plot of the the strength of correlation between maternal and offspring size within-species"}
   
   #Plot the meta-regression model
   caterpillars(lim_MR, mod = "Phylum", xlab = "Correlation coefficient", transfm = "tanh")
 ```
+
 Compared to the orchard plot (Figure \@ref(fig:Figure10)), Figure \@ref(fig:Figure11) does not look as elegant, unlike the previous comparisons. This is because the groups with small sample sizes are packed at the top of the figure. 
 
 \newpage
 # References 
 
 Clarke E, Sherrill-Mix S. ggbeeswarm: categorical scatter (violin point) plots. 2017. *R package* version 0.6.0 
-
 Eklof J.S., Alsterberg C., Havenhand J.N., Sundback K., Wood H.L., Gamfeldt L. 2012. Experimental climate change weakens the insurance effect of biodiversity. *Ecology Letters*, 15:864-872.
 
 Eklund A. Beeswarm: the bee swarm plot, an alternative to stripchart. 2012. *R package* version 0.1. 
@@ -343,15 +347,14 @@ Lim J.N., Senior A.M., Nakagawa S. 2014. Heterogeneity in individual quality and
 
 Nakagawa, S, and Santos, E.S.A. 2012. Methodological issues and advances in biological meta-analysis. *Evolutionary Ecology* 26(5): 1253-1274.
 
-Nakagawa, S, and Schielzeth, H. 2013. A general and simple method for obtaining R2 from generalized linear mixed‐effects models. *Methods in Ecology and Evolution* 4(2): 133-142.
+Nakagawa, S, and Schielzeth, H. 2013. A general and simple method for obtaining R2 from generalized linear mixed-effects models. *Methods in Ecology and Evolution* 4(2): 133-142.
 
 Sherrill-Mix S, Clarke E. Plot categorical data using quasirandom noise and density estimates. 2017. *R package* version 0.4.5. 
 
-Senior, A. M., Grueber, C. E., Kamiya, T., Lagisz, M., O’Dwyer, K., Santos, E. S. A. & Nakagawa S. 2016. Heterogeneity in ecological and evolutionary meta-analyses: its magnitudes and implications. *Ecology* 97(12): 3293-3299.
+Senior, A. M., Grueber, C. E., Kamiya, T., Lagisz, M., O'Dwyer, K., Santos, E. S. A. & Nakagawa S. 2016. Heterogeneity in ecological and evolutionary meta-analyses: its magnitudes and implications. *Ecology* 97(12): 3293-3299.
 
 Senior, A.M., Nakagawa, S., Simpson, S.J., Raubenheimer, D., Noble D.W.A. 2017. Dietary restriction increases variability in longevity. *Biology Letters*, 13: http://doi.org/10.1098/rsbl.2017.0057
 
 Viechtbauer W. 2010. Conducting meta-analyses in R with the metafor package. *Journal of Statistical Software*, 36(3):1-48.
 
 Wickham H. 2009. ggplot2: elegant graphics for data analysis. New York ; London: Springer.
-

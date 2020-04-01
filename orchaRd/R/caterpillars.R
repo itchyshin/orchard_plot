@@ -1,21 +1,9 @@
-#' @title Zr_to_r
-#' @description Converts Zr back to r (Pearson's correlation coefficient)
-#' @param df data frame of results of class 'orchard'
-#' @return A data frame containing all the model results including mean effect size estimate, confidence and prediction intervals with estimates converted back to r
-#' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
-#' @author Daniel Noble - daniel.noble@anu.edu.au 
-#' @export
-
-Zr_to_r <- function(df){
-  return(sapply(df, tanh))
-}
-
 #' @title caterpillars
 #' @description Using a metafor model object of class rma or rma.mv or a results table of class orchard, it creates a an caterpillars plot from mean effect size estimates for all levels of a given categorical moderator, their corresponding confidence intervals and prediction intervals
-#' @param object model object of class 'rma.mv', 'rma' or 'orchard' table of model results
-#' @param mod the name of a moderator. Otherwise, "Int" for intercept only model.
+#' @param object Model object of class 'rma.mv', 'rma' or 'orchard' table of model results
+#' @param mod The name of a moderator. Otherwise, "Int" for intercept only model.
 #' @param xlab The effect size measure label.
-#' @param overall Relabelling "Intrcpt" (the defualt label from rma or rma.mv intercept only models or meta-analyses) to "Overall",
+#' @param overall Logical indicating whether to relabel "Intrcpt" (the default label from rma or rma.mv intercept only models or meta-analyses) to "Overall",
 #' @param transfm If set to "tanh", a tanh transformation will be applied to effect sizes, converting Zr will to a correlation or pulling in extreme, values for other effect sizes (lnRR, lnCVR, SMD). If "none" is chosen then it will default,
 #' @return Caterpillars plot
 #' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
@@ -107,7 +95,7 @@ caterpillars <- function(object, mod = "Int", xlab, overall = TRUE, transfm = c(
     select(Y) %>% t() %>% as.vector() -2
   
   # preparing for diamons for summary 
-  # modefied from internal_viz_classicforest() from R package 
+  # modified from internal_viz_classicforest() from R package 
   sum_data <- data.frame("x.diamond" = c(mod_table$lowerCL,
                                          mod_table$estimate ,
                                          mod_table$upperCL,

@@ -42,16 +42,16 @@ eklof$Datapoint<-as.factor(seq(1, dim(eklof)[1], 1))
 eklof_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~ Grazer.type-1, random=list(~1|ExptID,
 ~1|Datapoint), data=eklof)
 results <- mod_results(eklof_MR, mod = "Grazer.type")
-orchard_plot(results, data = eklof, mod = Grazer.type, es_type = "Zr")
+orchard_plot(results, mod = Grazer.type, xlab = "log(Response ratio) (lnRR)")
 # or
-orchard_plot(eklof_MR, data = eklof, mod = Grazer.type, es_type = "Zr")
+orchard_plot(eklof_MR, mod = Grazer.type, xlab = "log(Response ratio) (lnRR)")
 
 # Example 2
 data(lim)
-lim$vi<-(1/sqrt(lim$N - 3))^2
+lim$vi<- 1/(lim$N - 3)
 lim_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~Phylum-1, random=list(~1|Article,
 ~1|Datapoint), data=lim)
-orchard_plot(lim_MR, data = lim, mod = "Phylum", es_type = "Zr")
+orchard_plot(lim_MR, mod = "Phylum", xlab = "Correlaiton coefficent", transfm = "tanh", N = lim$N)
 }
 }
 \author{

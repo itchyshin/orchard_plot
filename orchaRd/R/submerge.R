@@ -25,7 +25,7 @@ submerge <- function(object1, object2, ..., mix = FALSE){
   # renaming 
   if(mix == TRUE){
   names <- lapply(orchard_list, function(x) x$data$moderator)
-  names <- names <- as.vector(unlist(mapply(function(x, y) paste0(x, y), x = names, y = 1:len)))
+  names <- as.vector(unlist(mapply(function(x, y) paste0(x, y), x = names, y = 1:len)))
   datas$moderator <- factor(names)
   tables$name <- levels(factor(names))
   }

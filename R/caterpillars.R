@@ -20,7 +20,29 @@ Zr_to_r <- function(df){
 #' @return Caterpillars plot
 #' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
 #' @author Daniel Noble - daniel.noble@anu.edu.au
-#' @examples
+#' @examples 
+#' \dontrun{
+#' data(eklof) 
+#' eklof<-metafor::escalc(measure="ROM", n1i=N_control, sd1i=SD_control,
+#' m1i=mean_control, n2i=N_treatment, sd2i=SD_treatment, m2i=mean_treatment,
+#' data=eklof)
+#' # Add the unit level predictor
+#' eklof$Datapoint<-as.factor(seq(1, dim(eklof)[1], 1))
+#' # fit a MLMR - accouting for some non-independence
+#' eklof_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~ Grazer.type-1, random=list(~1|ExptID,
+#' ~1|Datapoint), data=eklof)
+#' results <- mod_results(eklof_MR, mod = "Grazer.type")
+#' caterpillars(results, mod = Grazer.type, xlab = "log(Response ratio) (lnRR)")
+#' # or
+#' caterpillars(eklof_MR, mod = Grazer.type, xlab = "log(Response ratio) (lnRR)")
+#' 
+#' # Example 2
+#' data(lim)
+#' lim$vi<- 1/(lim$N - 3)
+#' lim_MR<-metafor::rma.mv(yi=yi, V=vi, mods=~Phylum-1, random=list(~1|Article,
+#' ~1|Datapoint), data=lim)
+#' caterpillars(lim_MR, mod = "Phylum", xlab = "Correlaiton coefficent", transfm = "tanh", N = lim$N)
+#' }
 #' @export
 
 caterpillars <- function(object, mod = "Int", xlab, overall = TRUE, transfm = c("none", "tanh")) { 
@@ -97,7 +119,7 @@ caterpillars <- function(object, mod = "Int", xlab, overall = TRUE, transfm = c(
                          "moderator" = rep(mod_table$name, times = 4)
   )
   
-  # Make - 
+  # make caterpillars plot
   plot <- ggplot2::ggplot(data = data, aes(x = yi, y = Y)) +
     # 95 % CI
     ggplot2::geom_errorbarh(aes(xmin = lower, xmax = upper), 

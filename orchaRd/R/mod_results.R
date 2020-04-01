@@ -51,27 +51,6 @@ get_pred <- function (model, mod) {
   return(table)
 }
 
-
-#Here are links for how to do confidence regions for rma.mv regression lines
-#https://www.rdocumentation.org/packages/metafor/versions/1.9-9/topics/predict.rma
-#https://stackoverflow.com/questions/50804464/out-of-sample-prediction-for-rma-object-in-metafor
-
-
-#' @title cont_gen
-#' @description Creates all combinations of moderator level names
-#' @param name a vector of character strings
-#' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
-#' @author Daniel Noble - daniel.noble@anu.edu.au
-#' @return Returns a character string with all combinations of the moderator level names
-#' @export
-#' 
-cont_gen <- function (name) {
-  combination <- utils::combn(name,2)
-     name_dat <- t(combination)
-        names <- paste(name_dat[ ,1], name_dat[, 2], sep = "-")
-  return(names)
-}
-
 #' @title firstup
 #' @description Uppercase moderator names
 #' @param x a character string
@@ -134,8 +113,6 @@ return(data)
 #' }
 #' @export
 
-#model = senior_MR
- #mod = "ManipType"
 mod_results <- function(model, mod) { 
 
 	if(all(class(model) %in% c("rma.mv", "rma")) == FALSE) {stop("Sorry, you need to fit a metafor model of class rma.mv or rma")}

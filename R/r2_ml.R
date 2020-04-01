@@ -15,7 +15,6 @@ r2_ml <- function(model) {
   # marginal
   R2m <- fix / (fix + sum(model$sigma2))
   R2
-  # Rm <- round(100*R2m, 3)
   
   # conditional
   R2c <- (fix + sum(model$sigma2) - model$sigma2[length(model$sigma2)]) /

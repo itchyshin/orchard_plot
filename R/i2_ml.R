@@ -12,7 +12,7 @@ i2_ml <- function(model, method = c("ns", "wv")) {
   ## evaluate choices
   method <- match.arg(method)
   
-  # Wolfgang's method
+  # Wolfgang Viechtbauer's method
   if (method == "wv") {
     W <- solve(model$V)
     X <- model.matrix(model)
@@ -20,7 +20,7 @@ i2_ml <- function(model, method = c("ns", "wv")) {
     I2_total <- sum(model$sigma2) / (sum(model$sigma2) + (model$k - model$p) / sum(diag(P)))
     I2_each <- model$sigma2 / (sum(model$sigma2) + (model$k - model$p) / sum(diag(P)))
     names(I2_each) <- paste0("I2_", model$s.names)
-    # or my way
+    # or Nakagawa & Santos (2012); they usually produce indentical values
   } else {
     # sigma2_v = typical sampling error variance
     sigma2_v <- sum(1 / model$vi) * (model$k - 1) / (sum(1 / model$vi)^2 - sum((1 / model$vi)^2))
@@ -35,4 +35,6 @@ i2_ml <- function(model, method = c("ns", "wv")) {
   return(I2s)
 }
 
-# TODO - ref 
+# TODO - How to add REF???
+# TODO - Dan pleas add an example
+

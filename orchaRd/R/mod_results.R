@@ -95,7 +95,7 @@ return(data)
 #' @title mod_results
 #' @description Using a metafor model object of class rma or rma.mv it creates a table of model results containing the mean effect size estimates for all levels of a given categorical moderator, their corresponding confidence intervals and prediction intervals
 #' @param model rma.mv object 
-#' @param mod the name of a moderator 
+#' @param mod the name of a moderator; put "Int" if the intercept model (meta-analysis) or no moderators. 
 #' @return A data frame containing all the model results including mean effect size estimate, confidence and prediction intervals
 #' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
 #' @author Daniel Noble - daniel.noble@anu.edu.au
@@ -132,7 +132,7 @@ mod_results <- function(model, mod) {
 	return(model_results)
 
 }
-
+# TODO - I think we can improve `mod` bit?
 
 #' @title print.orchard
 #' @description Print method for class 'orchard'

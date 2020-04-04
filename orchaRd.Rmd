@@ -88,7 +88,7 @@ I2 <- i2_ml(english_MA)
 
 orchard_plot(model_results, mod="Int", xlab = "Standardised mean difference") + 
   annotate(geom="text", x= -0.7, y= 1.5, label= paste0("italic(I)^{2} == ", round(I2[1]*100,2)), color="black", parse = TRUE, size = 5) +
-  #annotate(geom="text", x= -0.47, y= 1.49, label="%", color="black", parse = FALSE, size = 5) + # if you want to add %
+annotate(geom="text", x= -0.45, y= 1.49, label="%", color="black", parse = FALSE, size = 5) + 
   scale_fill_manual(values="grey") +
   scale_colour_manual(values="grey")
 ```
@@ -100,7 +100,8 @@ We can now draw a comparable caterpillar plot by using the function `caterpillar
 ```{r Figure3, echo = TRUE, eval = TRUE, fig.width = 6, fig.height = 6, fig.cap = "Caterpillar plot of the impact of caloric restriction on the average age at death using standardised mean difference", messages = FALSE, warnings = FALSE}
 # a caterpillar plot (not a caterpillars plot)
 caterpillars(model_results, mod="Int", xlab = "Standardised mean difference") +
-    annotate(geom="text", x= 1.5, y= 80, label= paste0("italic(I)^{2} == ", round(I2[1]*100,2) "%"), color="black", parse = TRUE, size = 5)
+    annotate(geom="text", x= 1.5, y= 80, label= paste0("italic(I)^{2} == ", round(I2[1]*100,2)), color="black", parse = TRUE, size = 5) + 
+  annotate(geom="text", x= 1.9, y= 79.5, label="%", color="black", parse = FALSE, size = 5)
 ```
 
 It is now interesting to compare how the same data set can be visualised differently by looking at Figure \@ref(fig:Figure2) and Figure \@ref(fig:Figure3). The caterpillar plot can show CIs for each effect size. This is depicted in the orchard plot by the size of fruit when using precision to adjust the size of each effect size.
@@ -222,7 +223,7 @@ p4 <- orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (l
 p3/p4
 ```
 
-The other thing that we can change is the type of scaling we wish to use. Let's say we are interested in scaling the effect size by the total sample size of the study. We can use a vector of N, sample size, to acheive this (bottom of Figure \@ref(fig:Figure7)):
+The other thing that we can change is the type of scaling we wish to use. Let's say we are interested in scaling the effect size by the total sample size of the study. We can use a vector of N, sample size, to achieve this (bottom of Figure \@ref(fig:Figure7)):
 
 ```{r Figure7, echo = TRUE, eval = TRUE, messages = FALSE, warnings = FALSE, fig.width = 6, fig.height = 8, fig.cap = "Orchard plots of the effects of predation on benthic invertebrate communities compared using the log response ratio. Top panel is the default plot and the bottom panel a plot containing changes in label axes and scaling with sample size instead of precision"}
 p5 <- orchard_plot(eklof_MR, mod = "Grazer.type", xlab = "log(Response ratio) (lnRR)") 
@@ -269,7 +270,7 @@ Now we can plot a default orchard plot, scaling each effect size by N. Also, bec
     alpha = 0.5, transfm = "tanh", angle = 45, N = lim$N, cb = FALSE)
 ```
 
-Now that we have Figure \@ref(fig:Figure9), we can do some small changes to make it pretty and add some more detail, such as between study heterogeneity and R2 for phylum. Here we will just add R2 to the plot. Currently, the cb argument is "FALSE", we can change this to "TRUE" to use colour blind friendly colours. Additionally, because we are using `ggplot` we can add elements to the figure to make it look even prettier! 
+Now that we have Figure \@ref(fig:Figure9), we can do some small changes to make it pretty and add some more detail, such as between study heterogeneity and *R*^2^ for phylum. Here we will just add *R*^2^ to the plot. Currently, the cb argument is "FALSE", we can change this to "TRUE" to use colour blind friendly colours. Additionally, because we are using `ggplot` we can add elements to the figure to make it look even prettier! 
 
 ```{r Figure10, echo = TRUE, eval = TRUE, messages = FALSE, warnings = FALSE, fig.width = 6.5, fig.height = 8, fig.cap = "Orchard plot of the the strength of correlation between maternal and offspring size within-species"}
 # Lets add the R2 on the figure as well as a few little modifications. First we need R2.
@@ -294,6 +295,7 @@ orchard_plot(lim_MR, mod = "Phylum", xlab = "Correlation coefficient (r)",
 
   annotate(geom="text", x=-0.5, y=0.7, label=paste0("italic(R)^{2} == ", round(R2[1]*100, 2)),
              color="black", parse = TRUE, size = 4) +
+  
   annotate(geom="text", x=-0.32, y=0.67, label="%",color="black", parse = FALSE, size = 4)
 ```
 
@@ -322,7 +324,7 @@ Lim J.N., Senior A.M., Nakagawa S. 2014. Heterogeneity in individual quality and
 
 Nakagawa, S, and Santos, E.S.A. 2012. Methodological issues and advances in biological meta-analysis. *Evolutionary Ecology* 26(5): 1253-1274.
 
-Nakagawa, S, and Schielzeth, H. 2013. A general and simple method for obtaining R2 from generalized linear mixed-effects models. *Methods in Ecology and Evolution* 4(2): 133-142.
+Nakagawa, S, and Schielzeth, H. 2013. A general and simple method for obtaining *R*^2^ from generalized linear mixed-effects models. *Methods in Ecology and Evolution* 4(2): 133-142.
 
 Sherrill-Mix S, Clarke E. Plot categorical data using quasirandom noise and density estimates. 2017. *R package* version 0.4.5. 
 

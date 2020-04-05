@@ -7,13 +7,13 @@
 #' @export
 
 get_est <- function (model, mod) {
-      name <- firstup(as.character(stringr::str_replace(row.names(model$beta), {{mod}}, "")))
+  name <- firstup(as.character(stringr::str_replace(row.names(model$beta), {{mod}}, "")))
 
   estimate <- as.numeric(model$beta)
-   lowerCL <- model$ci.lb
-   upperCL <- model$ci.ub 
+  lowerCL <- model$ci.lb
+  upperCL <- model$ci.ub 
   
-  table <- tibble::tibble(name = factor(name, labels = name), estimate = estimate, lowerCL = lowerCL, upperCL = upperCL)
+  table <- tibble::tibble(name = factor(name, levels = name, labels = name), estimate = estimate, lowerCL = lowerCL, upperCL = upperCL)
 
   return(table)
 }
@@ -37,6 +37,7 @@ get_pred <- function (model, mod) {
   for(i in 1:len) {
     # getting the position of unique case from X (design matrix)
     pos <- which(model$X[,i] == 1)[[1]]
+    # I think this is the other way around but it is diag(len) so fine
     newdata[, i] <- model$X[pos,]
     }
   pred <- metafor::predict.rma(model, newmods = newdata)
@@ -47,7 +48,7 @@ get_pred <- function (model, mod) {
   lowerPR <- pred$cr.lb
   upperPR <- pred$cr.ub 
   
-  table <- tibble::tibble(name = factor(name, labels = name), lowerPR = lowerPR, upperPR = upperPR)
+  table <- tibble::tibble(name = factor(name, levels = name, labels = name), lowerPR = lowerPR, upperPR = upperPR)
   return(table)
 }
 
@@ -58,8 +59,7 @@ get_pred <- function (model, mod) {
 #' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @return Returns a character string with all combinations of the moderator level names with upper case first letters
 #' @export
-#' 
-      firstup <- function(x) {
+firstup <- function(x) {
         substr(x, 1, 1) <- toupper(substr(x, 1, 1))
         x
       }

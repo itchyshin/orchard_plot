@@ -64,6 +64,8 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, ang
 	mod_table <- object$mod_table  
 
   data <- object$data
+  data$moderator <- factor(data$moderator, levels = mod_table$name, labels = mod_table$name)
+  
 	data$scale <- (1/sqrt(data[,"vi"]))
 	legend <- "Precision (1/SE)"
 

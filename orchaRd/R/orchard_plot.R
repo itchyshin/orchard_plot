@@ -19,6 +19,7 @@ Zr_to_r <- function(df){
 #' @param alpha The level of transparency for pieces of fruit (effect size)
 #' @param angle The angle of y labels. The default is 90 degrees
 #' @param cb If TRUE, it uses 8 colour blind friendly colors (7 colours plus grey)
+#' @param k If TRUE, it displays k (number of effect sizes) on the plot
 #' @param transfm If set to "tanh", a tanh transformation will be applied to effect sizes, converting Zr will to a correlation or pulling in extreme values for other effect sizes (lnRR, lnCVR, SMD). If "none" is chosen then it will default to 
 #' @return Orchard plot
 #' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
@@ -48,7 +49,7 @@ Zr_to_r <- function(df){
 #' }
 #' @export
 
-orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, angle = 90, cb = TRUE, transfm = c("none", "tanh")) {
+orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, angle = 90, cb = TRUE, k = TRUE, transfm = c("none", "tanh")) {
   
   ## evaluate choices
   transfm <- match.arg(transfm) # if not sepcificed it takes the first choice
@@ -104,8 +105,8 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, ang
 	  	# creating dots for truncks
 	  	ggplot2::geom_point(aes(fill = name), size = 3, shape = 21) + 
 	  	# putting labels
-	  	ggplot2::annotate('text', x = (max(data$yi) + (max(data$yi)*0.10)), y = (seq(1, group_no, 1)+0.3), 
-	  	                  label= paste("italic(k)==", mod_table$K), parse = TRUE, hjust = "right", size = 3.5) +
+	  	#ggplot2::annotate('text', x = (max(data$yi) + (max(data$yi)*0.10)), y = (seq(1, group_no, 1)+0.3), 
+	  	#                 label= paste("italic(k)==", mod_table$K), parse = TRUE, hjust = "right", size = 3.5) +
 	  	ggplot2::theme_bw() +
 	    ggplot2::guides(fill = "none", colour = "none") + 
 	    ggplot2::theme(legend.position= c(1, 0), legend.justification = c(1, 0)) +
@@ -122,6 +123,13 @@ orchard_plot <- function(object, mod = "Int", xlab, N = "none", alpha = 0.5, ang
 	      scale_fill_manual(values=cbpl) +
 	      scale_colour_manual(values=cbpl)
 	  }
+
+				     # putting k in
+          if(k == TRUE){
+                plot <- plot + 
+                  ggplot2::annotate('text', x = (max(data$yi) + (max(data$yi)*0.10)), y = (seq(1, group_no, 1)+0.3), 
+                  label= paste("italic(k)==", mod_table$K), parse = TRUE, hjust = "right", size = 3.5)
+          }
 
 	  return(plot)
 }

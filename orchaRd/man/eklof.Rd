@@ -4,7 +4,8 @@
 \name{eklof}
 \alias{eklof}
 \title{eklof}
-\format{A data frame :
+\format{
+A data frame :
 \describe{
   \item{ExptID}{Experiment / effect size ID}
   \item{First.author}{First author of publication}
@@ -19,7 +20,8 @@
 	 \item{SD_control}{Standard deviation in abundance/biomass of invertebrates in control group}
 	 \item{N_control}{Sample size of invertebrate sample in control group}
   ...
-}}
+}
+}
 \description{
 Eklof et al. (2012) evaluated the effects of predation on benthic invertebrate communities. Using the log response ratio they quantified differences in abundance and/or biomass of gastropods and Amphipods in groups with and without predation in an experimental setting. Below we describe the variables used in our examples and analyses.
 }

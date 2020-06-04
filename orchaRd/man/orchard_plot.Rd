@@ -4,8 +4,17 @@
 \alias{orchard_plot}
 \title{orchard_plot}
 \usage{
-orchard_plot(object, mod = "Int", xlab, N = "none", alpha = 0.5,
-  angle = 90, cb = TRUE, transfm = c("none", "tanh"))
+orchard_plot(
+  object,
+  mod = "Int",
+  xlab,
+  N = "none",
+  alpha = 0.5,
+  angle = 90,
+  cb = TRUE,
+  k = TRUE,
+  transfm = c("none", "tanh")
+)
 }
 \arguments{
 \item{object}{model object of class 'rma.mv', 'rma' or 'orchard' table of model results}
@@ -21,6 +30,8 @@ orchard_plot(object, mod = "Int", xlab, N = "none", alpha = 0.5,
 \item{angle}{The angle of y labels. The default is 90 degrees}
 
 \item{cb}{If TRUE, it uses 8 colour blind friendly colors (7 colours plus grey)}
+
+\item{k}{If TRUE, it displays k (number of effect sizes) on the plot}
 
 \item{transfm}{If set to "tanh", a tanh transformation will be applied to effect sizes, converting Zr will to a correlation or pulling in extreme values for other effect sizes (lnRR, lnCVR, SMD). If "none" is chosen then it will default to}
 }

@@ -4,7 +4,8 @@
 \name{english}
 \alias{english}
 \title{english}
-\format{A data frame :
+\format{
+A data frame :
 \describe{
   \item{StudyNo}{Study ID}
   \item{EffectID}{Effect size ID}
@@ -25,7 +26,8 @@
 		\item{SD_C}{Standard deviation of the control group}
 		\item{SD_E}{Standard deviation of the treatment/experimental group}
   ...
-}}
+}
+}
 \description{
 English and Uller (2016) performed a systematic review and meta-analysis on the effects of early life dietary restriction (a reduction in a major component of the diet without malnutrition; e.g. caloric restriction) on average at death, using the standardised mean difference (often called *d*). In a subsequent publication, Senior et al. (2017) analysed this dataset for effects of dietary-restriction on among-individual variation in the age at death using the log coefficient of variation ratio. A major prediction in both English & Uller (2016) and Senior et al. (2017) was that the type pf manipulation, whether the study manipulated quality of food versus the quantity of food would be important.
 }

@@ -9,7 +9,7 @@ mod_results(model, mod)
 \arguments{
 \item{model}{rma.mv object}
 
-\item{mod}{the name of a moderator}
+\item{mod}{the name of a moderator; put "Int" if the intercept model (meta-analysis) or no moderators.}
 }
 \value{
 A data frame containing all the model results including mean effect size estimate, confidence and prediction intervals

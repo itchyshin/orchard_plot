@@ -13,7 +13,7 @@ r2_ml(model)
 A data frame containing all the model results including mean effect size estimate, confidence and prediction intervals with estimates converted back to r
 }
 \description{
-R2 for mixed (mulitlevel) models, based on Nakagawa & Schielzeth (2013)
+R2 (R-squared) for mixed (mulitlevel) models, based on Nakagawa & Schielzeth (2013)
 }
 \examples{
 \dontrun{

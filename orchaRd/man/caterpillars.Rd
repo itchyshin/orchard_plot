@@ -4,8 +4,13 @@
 \alias{caterpillars}
 \title{caterpillars}
 \usage{
-caterpillars(object, mod = "Int", xlab, overall = TRUE,
-  transfm = c("none", "tanh"))
+caterpillars(
+  object,
+  mod = "Int",
+  xlab,
+  overall = TRUE,
+  transfm = c("none", "tanh")
+)
 }
 \arguments{
 \item{object}{Model object of class 'rma.mv', 'rma' or 'orchard' table of model results}
@@ -14,9 +19,9 @@ caterpillars(object, mod = "Int", xlab, overall = TRUE,
 
 \item{xlab}{The effect size measure label.}
 
-\item{overall}{Logical indicating whether to relabel "Intrcpt" (the default label from rma or rma.mv intercept only models or meta-analyses) to "Overall",}
+\item{overall}{Logical indicating whether to relabel "Intrcpt" (the default label from rma or rma.mv intercept only models or meta-analyses) to "Overall".}
 
-\item{transfm}{If set to "tanh", a tanh transformation will be applied to effect sizes, converting Zr will to a correlation or pulling in extreme, values for other effect sizes (lnRR, lnCVR, SMD). If "none" is chosen then it will default,}
+\item{transfm}{If set to "tanh", a tanh transformation will be applied to effect sizes, converting Zr will to a correlation or pulling in extreme, values for other effect sizes (lnRR, lnCVR, SMD). If "none" is chosen then it will default.}
 }
 \value{
 Caterpillars plot
@@ -26,7 +31,7 @@ Using a metafor model object of class rma or rma.mv or a results table of class 
 }
 \examples{
 \dontrun{
-data(eklof) 
+data(eklof)
 eklof<-metafor::escalc(measure="ROM", n1i=N_control, sd1i=SD_control,
 m1i=mean_control, n2i=N_treatment, sd2i=SD_treatment, m2i=mean_treatment,
 data=eklof)

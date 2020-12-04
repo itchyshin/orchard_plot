@@ -1,9 +1,9 @@
 #' @title get_est
 #' @description Function gets estimates from rma objects (metafor)
-#' @param model rma.mv object 
+#' @param model rma.mv object
 #' @param mod the name of a moderator. If meta-analysis (i.e. no moderator, se mod = "Int")
 #' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
-#' @author Daniel Noble - daniel.noble@anu.edu.au 
+#' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @export
 
 get_est <- function (model, mod) {
@@ -11,8 +11,8 @@ get_est <- function (model, mod) {
 
   estimate <- as.numeric(model$beta)
   lowerCL <- model$ci.lb
-  upperCL <- model$ci.ub 
-  
+  upperCL <- model$ci.ub
+
   table <- tibble::tibble(name = factor(name, levels = name, labels = name), estimate = estimate, lowerCL = lowerCL, upperCL = upperCL)
 
   return(table)
@@ -21,8 +21,8 @@ get_est <- function (model, mod) {
 
 #' @title get_pred
 #' @description Function to get prediction intervals (crediblity intervals) from rma objects (metafor)
-#' @param model rma.mv object 
-#' @param mod the name of a moderator 
+#' @param model rma.mv object
+#' @param mod the name of a moderator
 #' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
 #' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @export
@@ -31,7 +31,7 @@ get_pred <- function (model, mod) {
 
   name <- firstup(as.character(stringr::str_replace(row.names(model$beta), {{mod}}, "")))
   len <- length(name)
-  
+
   if(len != 1){
   newdata <- matrix(NA, ncol = len, nrow = len)
   for(i in 1:len) {
@@ -46,8 +46,8 @@ get_pred <- function (model, mod) {
     pred <- metafor::predict.rma(model)
     }
   lowerPR <- pred$cr.lb
-  upperPR <- pred$cr.ub 
-  
+  upperPR <- pred$cr.ub
+
   table <- tibble::tibble(name = factor(name, levels = name, labels = name), lowerPR = lowerPR, upperPR = upperPR)
   return(table)
 }
@@ -72,7 +72,7 @@ firstup <- function(x) {
 #' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @return Returns a data frame
 #' @export
-#' 
+#'
 get_data <- function(model, mod){
      X <- as.data.frame(model$X)
  names <- vapply(stringr::str_split(colnames(X), {{mod}}), function(x) paste(unique(x), collapse = ""), character(1L))
@@ -94,13 +94,13 @@ return(data)
 
 #' @title mod_results
 #' @description Using a metafor model object of class rma or rma.mv it creates a table of model results containing the mean effect size estimates for all levels of a given categorical moderator, their corresponding confidence intervals and prediction intervals
-#' @param model rma.mv object 
-#' @param mod the name of a moderator; put "Int" if the intercept model (meta-analysis) or no moderators. 
+#' @param model rma.mv object
+#' @param mod the name of a moderator; put "Int" if the intercept model (meta-analysis) or no moderators.
 #' @return A data frame containing all the model results including mean effect size estimate, confidence and prediction intervals
 #' @author Shinichi Nakagawa - s.nakagawa@unsw.edu.au
 #' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @examples
-#' \dontrun{data(eklof) 
+#' \dontrun{data(eklof)
 #' eklof<-metafor::escalc(measure="ROM", n1i=N_control, sd1i=SD_control,
 #' m1i=mean_control, n2i=N_treatment, sd2i=SD_treatment, m2i=mean_treatment,
 #' data=eklof)
@@ -113,9 +113,9 @@ return(data)
 #' }
 #' @export
 
-mod_results <- function(model, mod) { 
+mod_results <- function(model, mod) {
 
-	if(all(class(model) %in% c("rma.mv", "rma")) == FALSE) {stop("Sorry, you need to fit a metafor model of class rma.mv or rma")}
+	if(all(class(model) %in% c("rma.mv", "rma.uni", "rma")) == FALSE) {stop("Sorry, you need to fit a metafor model of class rma.mv or rma")}
 
   data <- get_data(model, mod)
 
@@ -142,7 +142,7 @@ mod_results <- function(model, mod) {
 #' @author Daniel Noble - daniel.noble@anu.edu.au
 #' @return Returns a data frame
 #' @export
-#' 
+#'
 print.orchard <- function(object, ...){
     return(object$mod_table)
 }

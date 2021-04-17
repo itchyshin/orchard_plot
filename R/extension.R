@@ -7,5 +7,4 @@
 #'
 #' @examples
 test <- function(data = x){
-  
 }

@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/227451114.svg)](https://zenodo.org/badge/latestdoi/227451114)
+
 ## Introducing the Orchard Plot for Meta-analysis
 
 # Citing orchaRd

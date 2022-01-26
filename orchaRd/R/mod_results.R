@@ -28,26 +28,23 @@ get_est <- function (model, mod) {
 #' @export
 
 get_pred <- function (model, mod) {
-
+  
   name <- firstup(as.character(stringr::str_replace(row.names(model$beta), {{mod}}, "")))
   len <- length(name)
-
+  
   if(len != 1){
-  newdata <- matrix(NA, ncol = len, nrow = len)
-  for(i in 1:len) {
-    # getting the position of unique case from X (design matrix)
-    pos <- which(model$X[,i] == 1)[[1]]
-    # I think this is the other way around but it is diag(len) so fine
-    newdata[, i] <- model$X[pos,]
-    }
-  pred <- metafor::predict.rma(model, newmods = newdata)
+    newdata <- matrix(NA, ncol = len, nrow = len)
+    
+    pred <- metafor::predict.rma(model, newmods = diag(len),
+                                 tau2.levels = 1:len,
+                                 gamma2.levels = 1:len)
   }
   else {
     pred <- metafor::predict.rma(model)
-    }
+  }
   lowerPR <- pred$cr.lb
   upperPR <- pred$cr.ub
-
+  
   table <- tibble::tibble(name = factor(name, levels = name, labels = name), lowerPR = lowerPR, upperPR = upperPR)
   return(table)
 }

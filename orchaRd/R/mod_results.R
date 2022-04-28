@@ -110,25 +110,8 @@ return(data)
 #' }
 #' @export
 
-mod_results <- function(model, mod) {
 
-	if(all(class(model) %in% c("rma.mv", "rma.uni", "rma")) == FALSE) {stop("Sorry, you need to fit a metafor model of class rma.mv or rma")}
 
-  data <- get_data(model, mod)
-
-	# Get confidence intervals
-	CI <- get_est(model, mod)
-
-	# Get prediction intervals
-	PI <- get_pred(model, mod)
-
-	model_results <- list(mod_table = cbind(CI, PI[,-1]), data = data)
-
-	class(model_results) <- "orchard"
-
-	return(model_results)
-
-}
 # TODO - I think we can improve `mod` bit?
 
 #' @title print.orchard

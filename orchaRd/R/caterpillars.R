@@ -34,7 +34,7 @@
 #' @export
 
 caterpillars <- function(object, mod = "Int", xlab, overall = TRUE, transfm = c("none", "tanh")) {
-  if(any(class(object) %in% c("rma.mv", "rma"))){
+  if(any(class(object) %in% c("rma.mv", "rma.uni", "rma"))){
     if(mod != "Int"){
       object <- mod_results(object, mod)
     } else{

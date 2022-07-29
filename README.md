@@ -1,7 +1,8 @@
+[![DOI](https://zenodo.org/badge/227451114.svg)](https://zenodo.org/badge/latestdoi/227451114)
+
 ## Introducing the Orchard Plot for Meta-analysis
 
 # IMPORTANT NOTE: `orchaRd` has now moved to a new site where it is being actively developed: https://github.com/daniel1noble/orchaRd
-
 
 [`orchaRd` 2.0](https://github.com/daniel1noble/orchaRd) can now take meta-regression models with a multitude of different predictor variables, produce marginal means, deal with heteroscedastic errors and even now produce bubble plots with continuous moderators. 
 

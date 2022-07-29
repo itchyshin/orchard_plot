@@ -9,7 +9,7 @@
 # install.packages("patchwork")
 # install.packages("R.rsp")
 
-#devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE, build_vignettes = TRUE)
+devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE, build_vignettes = TRUE)
 
 library(orchaRd)
 library(patchwork)
@@ -18,18 +18,30 @@ library(metafor)
 
 english <- escalc(measure = "SMD", n1i = NStartControl, sd1i = SD_C, m1i = MeanC,
                   n2i = NStartExpt, sd2i = SD_E, m2i = MeanE, var.names = c("SMD", "vSMD"), data = english)
-english_MA_int <- rma.mv(yi = SMD, V = vSMD, random = list(~1 | StudyNo, ~1 | EffectID), data = english)
-summary(english_MA_int)
-
-
-english <- escalc(measure = "CVR", n1i = NStartControl, sd1i = SD_C, m1i = MeanC, n2i = NStartExpt, sd2i = SD_E, m2i = MeanE, var.names = c("lnCVR", "vlnCVR"), data = english)
-
 
 english_MA <- rma.mv(yi = SMD, V = vSMD, random = list(~1 |StudyNo, ~1 | EffectID), data = english) 
 summary(english_MR)
 
 res1 <- mod_results(english_MA, mod = "Int")
 print(res1)
+
+## getting predicted values from the model
+
+intercept <- predict(english_MA)[[1]]
+study_effect <- ranef(english_MA)$StudyNo[factor(english$StudyNo),][[1]]
+es_effect <- ranef(english_MA)$EffectID[factor(english$EffectID),][[1]]
+
+# this is predicted values
+pred_values <- intercept + study_effect + es_effect
+res1$data
+# yes correlates well
+cor(pred_values, res1$data$yi)
+
+#english_MA_int <- rma.mv(yi = SMD, V = vSMD, random = list(~1 | StudyNo, ~1 | EffectID), data = english)
+#summary(english_MA_int)
+
+
+#english <- escalc(measure = "CVR", n1i = NStartControl, sd1i = SD_C, m1i = MeanC, n2i = NStartExpt, sd2i = SD_E, m2i = MeanE, var.names = c("lnCVR", "vlnCVR"), data = english)
 
 # Now we can fit the meta-regression model (contrast)
 english_MR <- rma.mv(yi = SMD, V = vSMD, mods = ~ManipType - 1, random = list(~1 |StudyNo, ~1 | EffectID), data = english) 
